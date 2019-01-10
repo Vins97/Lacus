@@ -1,4 +1,6 @@
 package sample;
+import javafx.scene.control.*;
+import sample.DataBase.*;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -6,10 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -53,6 +51,12 @@ public class Controller implements Initializable {
 
     @FXML
     private Pane pnlProfile;
+
+    @FXML
+    private TextField txtUsername;
+
+    @FXML
+    private PasswordField txtPassword;
 
     @FXML
     private TextField txtBoxName;
@@ -110,7 +114,14 @@ public class Controller implements Initializable {
     }
 
     private void dashboardPanel(){
-        ancPnDash.toFront();
+
+        Users user = new Users();
+        if(user.searchUser(txtUsername.getText(), txtPassword.getText())) {
+
+            ancPnDash.toFront();
+        } else {
+            System.out.println("Codice Errato");
+        }
     }
     private void loginPanel(){
         ancPnLogin.toFront();
