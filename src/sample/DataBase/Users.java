@@ -120,11 +120,14 @@ public class Users extends ConnectionDataBase {
             getConnection();
             rs = createStatementAndRSForQuery(sql);
             rs.first();
-            int firstPosition = rs.getRow();
+            if(DataBaseOperation.resultSetRows(rs)==1)
+                responce = true;
+            else responce =  false;
+            /*int firstPosition = rs.getRow();
             if (firstPosition == 0)
                 responce = false;
             else if (firstPosition == 1)
-                responce = true;
+                responce = true;*/
 
             closeResultSet();
             closeStatement();

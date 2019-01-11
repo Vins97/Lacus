@@ -24,17 +24,7 @@ public class ConnectionDataBase {
         return conn;
     }
 
-    public static void closeConnection() {
-        if (conn != null)
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        else
-            System.out.println("La connessione non è aperta");
-    }
+
 
     public ResultSet createStatementAndRSForQuery(String sql) {
         try {
@@ -55,6 +45,17 @@ public class ConnectionDataBase {
         } catch (SQLException e) {
             System.err.println(e);
         }
+    }
+    public static void closeConnection() {
+        if (conn != null)
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        else
+            System.out.println("La connessione non è aperta");
     }
 
     public void closeStatement() {

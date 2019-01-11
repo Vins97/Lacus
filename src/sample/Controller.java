@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import sample.Model.Login;
 
 import java.io.IOException;
 import java.net.URL;
@@ -113,7 +114,7 @@ public class Controller implements Initializable {
         pnlProfile.toFront();
     }
 
-    private void dashboardPanel(){
+   /* private void dashboardPanel(){
 
         Users user = new Users();
         if(user.searchUser(txtUsername.getText(), txtPassword.getText())) {
@@ -122,7 +123,19 @@ public class Controller implements Initializable {
         } else {
             System.out.println("Codice Errato");
         }
-    }
+    }*/
+   private void  dashboardPanel() {
+       int loginCode=Login.userLogin(txtUsername.getText(), txtPassword.getText());;
+
+        switch(loginCode= Login.userLogin(txtUsername.getText(), txtPassword.getText())){
+            case 1 : ancPnDash.toFront();
+            case -1: System.out.print("Id o password errati!");
+            case -2: System.out.print("I campi non ammettono caratteri alfanumerici!");
+       }
+
+
+   }
+
     private void loginPanel(){
         ancPnLogin.toFront();
     }
