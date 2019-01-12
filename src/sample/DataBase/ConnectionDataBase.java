@@ -17,12 +17,13 @@ public class ConnectionDataBase {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(CONN, USERNAME, PASSWORD);
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return conn;
     }
+
 
 
 

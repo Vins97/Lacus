@@ -114,7 +114,7 @@ public class Controller implements Initializable {
         pnlProfile.toFront();
     }
 
-   /* private void dashboardPanel(){
+    /*private void dashboardPanel(){
 
         Users user = new Users();
         if(user.searchUser(txtUsername.getText(), txtPassword.getText())) {
@@ -125,15 +125,13 @@ public class Controller implements Initializable {
         }
     }*/
    private void  dashboardPanel() {
-       int loginCode=Login.userLogin(txtUsername.getText(), txtPassword.getText());;
-
-        switch(loginCode= Login.userLogin(txtUsername.getText(), txtPassword.getText())){
-            case 1 : ancPnDash.toFront();
-            case -1: System.out.print("Id o password errati!");
-            case -2: System.out.print("I campi non ammettono caratteri alfanumerici!");
-       }
+       switch(Login.userLogin(txtUsername.getText(), txtPassword.getText())){
+           case -2: {System.out.print("I campi non ammettono caratteri non alfanumerici!");break;}
+           case -1: {System.out.print("Id o password errati!");break;}
+           case  1: {ancPnDash.toFront();break;}
 
 
+        }
    }
 
     private void loginPanel(){

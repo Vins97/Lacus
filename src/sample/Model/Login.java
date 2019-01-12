@@ -1,6 +1,9 @@
 package sample.Model;
 
+import sample.DataBase.ConnectionDataBase;
 import sample.DataBase.Users;
+
+import java.sql.SQLException;
 
 public class Login {
     public static int userLogin(String id , String psw) {
