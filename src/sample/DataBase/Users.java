@@ -113,7 +113,7 @@ public class Users extends ConnectionDataBase {
 
     public boolean searchUser(String id, String psw) {
 
-        String sql = "SELECT id_user,psw_user FROM Users WHERE id_user='" + id + "' AND psw_user='" + psw + "';";
+        String sql = "SELECT id_user,psw_user FROM Users WHERE id_user='" + Hash.getMd5(id) + "' AND psw_user='" + Hash.getMd5(psw) + "';";
         boolean responce = false;
         ResultSet rs = null;
         try {
@@ -193,7 +193,7 @@ public class Users extends ConnectionDataBase {
         return codUtente;
     }
 
-    public void listUsers() {
+    /*public void listUsers() {
         String sql = "SELECT * FROM Users";
         try {
             getConnection();
@@ -221,7 +221,7 @@ public class Users extends ConnectionDataBase {
             // return false;
         }
 
-    }
+    }*/
 
 
 

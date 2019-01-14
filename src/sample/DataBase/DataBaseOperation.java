@@ -58,7 +58,7 @@ public class DataBaseOperation extends ConnectionDataBase {
     }
 
     // metodo che restituisce tutte le città corrispondenti ad un CAP
-    public ResultSet getCitiesResultSet(String CAP) {
+    private ResultSet getCitiesResultSet(String CAP) {
         ResultSet citiesList = null;
         String sql = "SELECT city FROM cities where CAP='" + CAP + "%';";
         try {
