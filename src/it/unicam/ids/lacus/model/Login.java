@@ -1,9 +1,6 @@
-package sample.Model;
+package it.unicam.ids.lacus.model;
 
-import sample.DataBase.ConnectionDataBase;
-import sample.DataBase.Users;
-
-import java.sql.SQLException;
+import it.unicam.ids.lacus.database.Users;
 
 public class Login {
     public static int userLogin(String id , String psw) {

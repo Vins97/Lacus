@@ -1,6 +1,5 @@
-package sample;
+package it.unicam.ids.lacus.controller;
 import javafx.scene.control.*;
-import sample.DataBase.*;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -11,13 +10,15 @@ import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import sample.Model.Login;
+import it.unicam.ids.lacus.model.Login;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Controller implements Initializable {
+import it.unicam.ids.lacus.database.Users;
+
+public class HomeController implements Initializable {
 
 
     @FXML
@@ -147,7 +148,7 @@ public class Controller implements Initializable {
 
 
     @FXML
-    void handleClicks(ActionEvent event) {
+    void handleClicks(ActionEvent event) throws Exception {
         if (event.getSource() == btnHome) {
             initializeHomePanel();
         }
@@ -161,7 +162,13 @@ public class Controller implements Initializable {
             loginPanel();
         }
         if (event.getSource() == btnLogin){
-            dashboardPanel();
+            Users user = new Users();
+            if(user.searchUser(txtUsername.getText(), txtPassword.getText())) {
+                dashboardPanel();
+            } else {
+                System.out.println("Codice Errato");
+                //UNA FINESTRA (O ALTRO) SEGNALA USERNAME E PASSWORD ERRATI
+            }
         }
     }
 
@@ -172,7 +179,7 @@ public class Controller implements Initializable {
             try {
 
                 final int j = i;
-                nodes[i] = FXMLLoader.load(getClass().getResource("Shipment.fxml"));
+                nodes[i] = FXMLLoader.load(getClass().getResource("../view/Shipment.fxml"));
 
                 //give the items some effect
 
@@ -189,4 +196,3 @@ public class Controller implements Initializable {
         }
     }
 }
-

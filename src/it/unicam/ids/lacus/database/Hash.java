@@ -1,4 +1,4 @@
-package sample.DataBase;
+package it.unicam.ids.lacus.database;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

@@ -1,10 +1,8 @@
-package sample.DataBase;
-import java.lang.reflect.Array;
+package it.unicam.ids.lacus.database;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
+
 public class Users extends ConnectionDataBase {
 
     private String id, psw, name, surname, email, city, city_road;
@@ -85,13 +83,13 @@ public class Users extends ConnectionDataBase {
             this.age = age;
     }
 
-    public void addUser() throws SQLException {
+    public void addUser(String id_user, String psw_user, String nome, String surname, String email, String user_city, String city_road, String road_number) throws SQLException {
         // TODO Auto-generated method stubString
         String sql = "INSERT INTO Users (id_user,psw_user,nome,surname,email,user_city,"
-                + "user_road,user_road_number) values " + "('" + Hash.getMd5(getId()) + "','" + Hash.getMd5(getPsw())
-                + "','" + Hash.getMd5(getName()) + "','" + Hash.getMd5(getSurname()) + "','" + Hash.getMd5(getEmail())
-                + "','" + getCity() + "','" + getCity_road() + "','" + getRoad_number() + "');";
-        if (!verifyIDExistency(getId())) {
+                + "user_road,user_road_number) values " + "('" + Hash.getMd5(id_user) + "','" + Hash.getMd5(psw_user)
+                + "','" + Hash.getMd5(nome) + "','" + Hash.getMd5(surname) + "','" + Hash.getMd5(email)
+                + "','" + user_city + "','" + city_road + "','" + road_number + "');";
+        if (!verifyIDExistency(id_user)) {
             try {
                 getConnection();
                 stmt = conn.createStatement();
@@ -104,7 +102,7 @@ public class Users extends ConnectionDataBase {
                 System.err.println(e.getMessage());
             }
             // Semplice stampa per il controllo dell'aggiunta del record
-            if (verifyIDExistency(getId()))
+            if (verifyIDExistency(id_user))
                 System.out.println("Il recordo è stato aggiunto");
         } else
             System.out.print("L'id inserito esiste");

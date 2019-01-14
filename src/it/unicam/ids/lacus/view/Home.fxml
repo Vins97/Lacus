@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<StackPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unicam.ids.lacus.controller.HomeController">
    <children>
       <AnchorPane fx:id="ancPnDash" prefHeight="713.0" prefWidth="1161.0" style="-fx-background-color: #3B3E43;">
           <children>
@@ -390,7 +390,7 @@
                      <graphic>
                         <ImageView fitHeight="31.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../Lacus/src/it/unicam/ids/lacus/view/icons/icons8-facebook-circled-50.png" />
+                              <Image url="@../../../../../../../Lacus/src/it/unicam/ids/lacus/view/icons/icons8-facebook-circled-50.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -402,7 +402,7 @@
                      <graphic>
                         <ImageView fitHeight="31.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../Lacus/src/it/unicam/ids/lacus/view/icons/icons8-google-50.png" />
+                              <Image url="@../../../../../../../Lacus/src/it/unicam/ids/lacus/view/icons/icons8-google-50.png" />
                            </image>
                         </ImageView>
                      </graphic>

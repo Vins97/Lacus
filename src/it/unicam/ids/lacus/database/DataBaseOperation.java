@@ -1,10 +1,9 @@
-package sample.DataBase;
+package it.unicam.ids.lacus.database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import sample.StringChecker;
-import sample.StringChecker;
+import it.unicam.ids.lacus.controller.StringChecker;
 
 public class DataBaseOperation extends ConnectionDataBase {
     public boolean searEmailDomain(String emailDomain) {

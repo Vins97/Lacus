@@ -1,9 +1,9 @@
-package sample;
-
-import sample.DataBase.DataBaseOperation;
+package it.unicam.ids.lacus.model;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import it.unicam.ids.lacus.database.DataBaseOperation;
 
 public class StringChecker {
     // RITORNA TRU SE LA STRINGA NON CONTIENE CARATTERI SPECIALI USATO PER: ID , PSW
