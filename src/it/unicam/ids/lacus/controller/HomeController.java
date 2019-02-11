@@ -1,4 +1,5 @@
 package it.unicam.ids.lacus.controller;
+import it.unicam.ids.lacus.Main;
 import javafx.scene.control.*;
 
 import javafx.application.Platform;
@@ -20,6 +21,44 @@ import it.unicam.ids.lacus.database.Users;
 
 public class HomeController implements Initializable {
 
+    @FXML
+    private AnchorPane ancPnRegister;
+
+    @FXML
+    private TextField txtNome;
+
+    @FXML
+    private TextField txtCognome;
+
+    @FXML
+    private TextField txtEmail;
+
+    @FXML
+    private TextField txtUsernameReg;
+
+    @FXML
+    private TextField txtPasswordReg;
+
+    @FXML
+    private TextField txtConfermaPassword;
+
+    @FXML
+    private TextField txtCodiceFiscale;
+
+    @FXML
+    private TextField txtCitta;
+
+    @FXML
+    private TextField txtIndirizzo;
+
+    @FXML
+    private TextField txtNumero;
+
+    @FXML
+    private Button btnRegisterReg;
+
+	@FXML
+	private Button btnBackToLogin;
 
     @FXML
     private AnchorPane ancPnDash;
@@ -82,12 +121,6 @@ public class HomeController implements Initializable {
     private Button btnRegister;
 
     @FXML
-    private Button btnLoginFacebook;
-
-    @FXML
-    private Button btnLoginGoogle;
-
-    @FXML
     private Pane pnlShipping;
 
     @FXML
@@ -115,60 +148,78 @@ public class HomeController implements Initializable {
         pnlProfile.toFront();
     }
 
-    /*private void dashboardPanel(){
-
-        Users user = new Users();
-        if(user.searchUser(txtUsername.getText(), txtPassword.getText())) {
-
-            ancPnDash.toFront();
-        } else {
-            System.out.println("Codice Errato");
-        }
-    }*/
    private void  dashboardPanel() {
        switch(Login.userLogin(txtUsername.getText(), txtPassword.getText())){
-           case -2: {System.out.print("I campi non ammettono caratteri non alfanumerici!");break;}
-           case -1: {System.out.print("Id o password errati!");break;}
-           case  1: {ancPnDash.toFront();break;}
-
-
-        }
+           case -2: {
+           	Alert alert = new Alert(Alert.AlertType.ERROR);
+           	alert.setTitle("Errore di login");
+           	alert.setHeaderText(null);
+           	alert.setContentText("I campi non ammettono caratteri non alfanumerici!");
+           	alert.showAndWait();
+           	break;
+           }
+           case -1: {
+           	Alert alert = new Alert(Alert.AlertType.ERROR);
+           	alert.setTitle("Errore di login");
+			alert.setHeaderText(null);
+			alert.setContentText("Username o password errati!");
+			alert.showAndWait();
+           	break;
+           }
+           case  1: {
+           	ancPnDash.toFront();
+           	break;
+           }
+       }
    }
 
-    private void loginPanel(){
-        ancPnLogin.toFront();
+   private void loginPanel(){
+   		ancPnLogin.toFront();
+   }
+
+    private void registerPanel() {
+        ancPnRegister.toFront();
     }
-
-
 
     @FXML
     void btnCloseAction(ActionEvent event) {
         Platform.exit();
     }
 
+	@FXML
+	void btnMinimizeAction(ActionEvent event) {
+		Main main = new Main();
+		main.minimize();
+	}
 
     @FXML
     void handleClicks(ActionEvent event) throws Exception {
-        if (event.getSource() == btnHome) {
-            initializeHomePanel();
+        if (event.getSource() == btnLogin){
+            dashboardPanel();
         }
-        if (event.getSource() == btnProfile) {
-            initializeProfilePanel();
+        if (event.getSource() == btnRegister){
+            registerPanel();
         }
-        if (event.getSource() == btnShipping) {
-            initializeShippingPanel();
+        if (event.getSource() == btnRegisterReg){
+            Users user = new Users();
+            if(user.registerUser(txtNome.getText(), txtCognome.getText(), txtUsernameReg.getText(), txtPasswordReg.getText(), txtConfermaPassword.getText(), txtEmail.getText(), txtCodiceFiscale.getText(), txtCitta.getText(), txtIndirizzo.getText(), txtNumero.getText())) {
+				loginPanel();
+			}
         }
+		if (event.getSource() == btnBackToLogin){
+			loginPanel();
+		}
+		if (event.getSource() == btnHome) {
+			initializeHomePanel();
+		}
+		if (event.getSource() == btnProfile) {
+			initializeProfilePanel();
+		}
+		if (event.getSource() == btnShipping) {
+			initializeShippingPanel();
+		}
         if (event.getSource() == btnLogout){
             loginPanel();
-        }
-        if (event.getSource() == btnLogin){
-            Users user = new Users();
-            if(user.searchUser(txtUsername.getText(), txtPassword.getText())) {
-                dashboardPanel();
-            } else {
-                System.out.println("Codice Errato");
-                //UNA FINESTRA (O ALTRO) SEGNALA USERNAME E PASSWORD ERRATI
-            }
         }
     }
 

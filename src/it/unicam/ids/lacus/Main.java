@@ -8,31 +8,34 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class Main extends Application {
-    private double x,y;
+	private double x,y;
+	private static Stage primaryStage;
 
+	@Override
+	public void start(Stage primaryStage) throws Exception{
+		Parent root = FXMLLoader.load(getClass().getResource("view/Home.fxml"));
+		primaryStage.setScene(new Scene(root));
+		primaryStage.initStyle(StageStyle.UNDECORATED);
+		primaryStage.setTitle("Lacus");
+		this.primaryStage = primaryStage;
 
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("view/Home.fxml"));
-        primaryStage.setScene(new Scene(root));
-        primaryStage.initStyle(StageStyle.UNDECORATED);
-        primaryStage.setTitle("Lacus");
+		//fa traslare la finestra senza ridimensionarla
+		root.setOnMousePressed(event -> {
+			x = event.getSceneX();
+			y = event.getSceneY();
+		});
+		root.setOnMouseDragged(event -> {
+			primaryStage.setX(event.getScreenX()-x);
+			primaryStage.setY(event.getScreenY()-y);
+		});
+		primaryStage.show();
+	}
 
+	public void minimize() {
+		primaryStage.setIconified(true);
+	}
 
-        //fa traslare la finestra senza ridimensionarla
-        root.setOnMousePressed(event -> {
-            x = event.getSceneX();
-            y = event.getSceneY();
-        });
-        root.setOnMouseDragged(event -> {
-            primaryStage.setX(event.getScreenX()-x);
-            primaryStage.setY(event.getScreenY()-y);
-        });
-        primaryStage.show();
-    }
-
-
-    public static void main(String[] args) {
-        launch(args);
-    }
+	public static void main(String[] args) {
+		launch(args);
+	}
 }

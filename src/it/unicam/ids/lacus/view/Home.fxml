@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unicam.ids.lacus.controller.HomeController">
+<StackPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unicam.ids.lacus.controller.HomeController">
    <children>
       <AnchorPane fx:id="ancPnDash" prefHeight="713.0" prefWidth="1161.0" style="-fx-background-color: #3B3E43;">
           <children>
@@ -256,7 +256,7 @@
               </Label>
               <HBox alignment="CENTER_RIGHT" layoutX="1027.0" prefHeight="27.0" prefWidth="133.0">
                   <children>
-                      <Button fx:id="btnMinimize" mnemonicParsing="false" style="-fx-background-color: #313335;">
+                      <Button fx:id="btnMinimize" mnemonicParsing="false" onAction="#btnMinimizeAction" style="-fx-background-color: #313335;">
                           <graphic>
                               <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                   <rotationAxis>
@@ -284,11 +284,11 @@
               </HBox>
           </children>
       </AnchorPane>
-      <AnchorPane fx:id="ancPnLogin" prefHeight="713.0" prefWidth="1161.0" style="-fx-background-color: #3B3E43;">
+      <AnchorPane fx:id="ancPnRegister" prefHeight="713.0" prefWidth="1161.0" style="-fx-background-color: #3B3E43;">
          <children>
             <HBox alignment="CENTER_RIGHT" layoutX="1028.0" prefHeight="27.0" prefWidth="133.0">
                <children>
-                  <Button fx:id="btnMinimize1" mnemonicParsing="false" style="-fx-background-color: #313335;">
+                  <Button fx:id="btnMinimizeReg" mnemonicParsing="false" onAction="#btnMinimizeAction" style="-fx-background-color: #313335;">
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <rotationAxis>
@@ -300,7 +300,118 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="btnClose1" mnemonicParsing="false" onAction="#btnCloseAction" style="-fx-background-color: #313335;">
+                  <Button fx:id="btnCloseReg" mnemonicParsing="false" onAction="#btnCloseAction" style="-fx-background-color: #313335;">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <rotationAxis>
+                              <Point3D />
+                           </rotationAxis>
+                           <image>
+                              <Image url="@icons/icons8-delete-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+            <Pane layoutX="81.0" layoutY="57.0" prefHeight="600.0" prefWidth="999.0" style="-fx-background-color: #383B40;">
+               <children>
+                  <Label fx:id="lblTitle2" alignment="CENTER" contentDisplay="TOP" layoutX="273.0" prefHeight="78.0" prefWidth="453.0" text="Registrati" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="49.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="90.0" layoutY="95.0" text="Nome" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtNome" layoutX="224.0" layoutY="90.0" prefHeight="40.0" prefWidth="235.0" />
+                  <Label layoutX="579.0" layoutY="95.0" text="Cognome" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtCognome" layoutX="724.0" layoutY="90.0" prefHeight="40.0" prefWidth="235.0" />
+                  <Label layoutX="94.0" layoutY="175.0" text="Email" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtEmail" layoutX="224.0" layoutY="170.0" prefHeight="40.0" prefWidth="235.0" />
+                  <Label layoutX="578.0" layoutY="175.0" text="Username" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtUsernameReg" layoutX="724.0" layoutY="170.0" prefHeight="40.0" prefWidth="235.0" />
+                  <Label layoutX="74.0" layoutY="255.0" text="Password" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <PasswordField fx:id="txtPasswordReg" layoutX="224.0" layoutY="250.0" prefHeight="40.0" prefWidth="235.0" />
+                  <Label layoutX="532.0" layoutY="255.0" text="Conferma Password" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <PasswordField fx:id="txtConfermaPassword" layoutX="724.0" layoutY="250.0" prefHeight="40.0" prefWidth="235.0" />
+                  <Label layoutX="54.0" layoutY="335.0" text="Codice Fiscale" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtCodiceFiscale" layoutX="224.0" layoutY="330.0" prefHeight="40.0" prefWidth="235.0" />
+                  <Label layoutX="602.0" layoutY="335.0" text="Città" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtCitta" layoutX="724.0" layoutY="330.0" prefHeight="40.0" prefWidth="235.0" />
+                  <Label layoutX="79.0" layoutY="415.0" text="Indirizzo" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtIndirizzo" layoutX="224.0" layoutY="410.0" prefHeight="40.0" prefWidth="500.0" />
+                  <Label layoutX="803.0" layoutY="415.0" text="Numero" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtNumero" layoutX="909.0" layoutY="410.0" prefHeight="40.0" prefWidth="50.0" />
+                  <Button fx:id="btnRegisterReg" layoutX="224.0" layoutY="500.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="41.0" prefWidth="235.0" style="-fx-background-color: #313335;" text="Registrati" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnBackToLogin" layoutX="540.0" layoutY="500.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="41.0" prefWidth="235.0" style="-fx-background-color: #313335;" text="Torna al Login" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Button>
+               </children>
+            </Pane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="ancPnLogin" prefHeight="713.0" prefWidth="1161.0" style="-fx-background-color: #3B3E43;">
+         <children>
+            <HBox alignment="CENTER_RIGHT" layoutX="1028.0" prefHeight="27.0" prefWidth="133.0">
+               <children>
+                  <Button fx:id="btnMinimize2" mnemonicParsing="false" onAction="#btnMinimizeAction" style="-fx-background-color: #313335;">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <rotationAxis>
+                              <Point3D />
+                           </rotationAxis>
+                           <image>
+                              <Image url="@icons/icons8-compress-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btnClose2" mnemonicParsing="false" onAction="#btnCloseAction" style="-fx-background-color: #313335;">
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <rotationAxis>
@@ -319,19 +430,14 @@
                   <Image url="@icons/icons8-user-96.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="264.0" layoutY="192.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@icons/icons8-map-marker-100.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="150.0" fitWidth="100.0" layoutX="264.0" layoutY="544.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@icons/icons8-user-96.png" />
-               </image>
-            </ImageView>
             <ImageView fitHeight="41.0" fitWidth="48.0" layoutX="294.0" layoutY="140.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@icons/icons8-chevron-down-100.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="264.0" layoutY="192.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@icons/icons8-map-marker-100.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="41.0" fitWidth="48.0" layoutX="294.0" layoutY="323.0" pickOnBounds="true" preserveRatio="true">
@@ -349,6 +455,11 @@
                   <Image url="@icons/icons8-chevron-down-100.png" />
                </image>
             </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="100.0" layoutX="264.0" layoutY="544.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@icons/icons8-user-96.png" />
+               </image>
+            </ImageView>
             <Pane layoutX="589.0" layoutY="68.0" prefHeight="577.0" prefWidth="505.0" style="-fx-background-color: #383B40;">
                <children>
                   <Label fx:id="lblTitle1" alignment="CENTER" contentDisplay="TOP" layoutX="30.0" prefHeight="78.0" prefWidth="453.0" text="Benvenuto in Lacus" textAlignment="CENTER" textFill="WHITE">
@@ -362,50 +473,26 @@
                      </font>
                   </Label>
                   <TextField fx:id="txtUsername" layoutX="135.0" layoutY="112.0" prefHeight="40.0" prefWidth="235.0" />
+                  <Label layoutX="144.0" layoutY="160.0" text="Password" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
                   <PasswordField fx:id="txtPassword" layoutX="135.0" layoutY="187.0" prefHeight="40.0" prefWidth="235.0" />
                   <Button fx:id="btnLogin" layoutX="135.0" layoutY="240.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="41.0" prefWidth="235.0" style="-fx-background-color: #313335;" text="Login" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />
                      </font>
                   </Button>
-                  <Label layoutX="144.0" layoutY="160.0" text="Password" textFill="WHITE">
+                  <Label layoutX="215.0" layoutY="289.0" text="Oppure" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />
                      </font>
                   </Label>
-                  <Label layoutX="215.0" layoutY="346.0" text="Oppure" textFill="WHITE">
+                  <Button fx:id="btnRegister" layoutX="135.0" layoutY="328.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="41.0" prefWidth="235.0" style="-fx-background-color: #313335;" text="Registrati" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />
                      </font>
-                  </Label>
-                  <Button fx:id="btnRegister" layoutX="135.0" layoutY="386.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="235.0" style="-fx-background-color: #313335;" text="Registrati" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="21.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="btnLoginFacebook" layoutX="256.0" layoutY="289.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="115.0" style="-fx-background-color: #3C66C4;" text="Facebook" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="13.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="31.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../../../../Lacus/src/it/unicam/ids/lacus/view/icons/icons8-facebook-circled-50.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="btnLoginGoogle" layoutX="135.0" layoutY="289.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="115.0" style="-fx-background-color: #CF4332;" text="Google" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="15.0" />
-                     </font>
-                     <graphic>
-                        <ImageView fitHeight="31.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../../../../Lacus/src/it/unicam/ids/lacus/view/icons/icons8-google-50.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
                   </Button>
                </children>
             </Pane>
