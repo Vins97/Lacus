@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import it.unicam.ids.lacus.controller.StringChecker;
 
 public class DataBaseOperation extends ConnectionDataBase {
-	public boolean searEmailDomain(String emailDomain) {
+	public boolean searchEmailDomain(String emailDomain) {
 		String sql = "SELECT * FROM email WHERE email='" + emailDomain + "';";
 		boolean responce = false;
 		int resultSetRows = -1;
@@ -70,7 +70,7 @@ public class DataBaseOperation extends ConnectionDataBase {
 		return citiesList;
 	}
 
-	public String[] getCitiesFromCAP(String CAP) throws SQLException {
+	/*public String[] getCitiesFromCAP(String CAP) throws SQLException {
 		String[] citiesListArray = new String[50];
 
 		// controllo che il CAP sia di 5 cifre e che contenga solo numeri
@@ -94,7 +94,7 @@ public class DataBaseOperation extends ConnectionDataBase {
 		} else
 			System.out.println("IL FORMATO NON E' CORRETTO");
 		return citiesListArray;
-	}
+	}*/
 
 }
 

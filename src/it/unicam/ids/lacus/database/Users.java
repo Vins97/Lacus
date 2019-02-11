@@ -69,29 +69,87 @@ public class Users extends ConnectionDataBase {
 	}
 
 	public boolean checkText(String firstname, String surname, String id, String psw, String email, String cf, String city, String street, String street_number) {
+		//Raggruppa le stringhe per tipo (quelle che devono contenere solo lettere e quelle che possono contenere lettere e numeri
+		String[] characters = {firstname, surname, city, street};
+		String[] charandnumb = {id, psw, cf};
 		StringChecker check = new StringChecker();
-		String[] toCheck = {firstname, surname, id, psw, email, cf, city, street, street_number};
-		for(int i=0; i<10; i++) {
-			switch(check.nameAndSurnameChecker(toCheck[i])) {
+		//Controlla le stringhe che devono contenere solo lettere o spazi
+		for(int i=0; i<4; i++) {
+			switch(check.characterOnlyChecker(characters[i])) {
 				case 0: {
-					Alert alert = new Alert(Alert.AlertType.ERROR);
-					alert.setTitle("Errore di registrazione");
-					alert.setHeaderText(null);
-					alert.setContentText("Uno o più campi sono vuoti!");
-					alert.showAndWait();
+					printEmptyFieldsMessage();
 					return false;
 				}
 				case -1: {
-					Alert alert = new Alert(Alert.AlertType.ERROR);
-					alert.setTitle("Errore di registrazione");
-					alert.setHeaderText(null);
-					alert.setContentText("Uno o più campi contengono caratteri non validi!");
-					alert.showAndWait();
+					printInvalidCharactersMessage();
 					return false;
 				}
 			}
 		}
+		//Controlla le stringhe che devono contenere solo lettere o numeri
+		for(int i=0; i<3; i++) {
+			switch(check.characterAndNumberChecker(charandnumb[i])) {
+				case 0: {
+					printEmptyFieldsMessage();
+					return false;
+				}
+				case -1: {
+					printInvalidCharactersMessage();
+					return false;
+				}
+			}
+		}
+		//Controlla la correttezza dell'email
+		switch(check.emailChecker(email)) {
+			case 0: {
+				printEmptyFieldsMessage();
+				return false;
+			}
+			case -1: {
+				printInvalidCharactersMessage();
+				return false;
+			}
+			case -2: {
+				printInvalidEmailDomainMessage();
+				return false;
+			}
+		}
+		//Controlla la correttezza del numero della via
+		switch(check.numberOnlyChecker(street_number)) {
+			case 0: {
+				printEmptyFieldsMessage();
+				return false;
+			}
+			case -1: {
+				printInvalidCharactersMessage();
+				return false;
+			}
+		}
 		return true;
+	}
+
+	public void printEmptyFieldsMessage() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Errore di registrazione");
+		alert.setHeaderText(null);
+		alert.setContentText("Uno o più campi sono vuoti!");
+		alert.showAndWait();
+	}
+
+	private void printInvalidCharactersMessage() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Errore di registrazione");
+		alert.setHeaderText(null);
+		alert.setContentText("Uno o più campi contengono caratteri non validi!");
+		alert.showAndWait();
+	}
+
+	public void printInvalidEmailDomainMessage() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Errore di registrazione");
+		alert.setHeaderText(null);
+		alert.setContentText("Il dominio della mail non è valido!");
+		alert.showAndWait();
 	}
 
 	public boolean registerUser(String firstname, String surname, String id, String psw, String conf_psw, String email, String cf, String city, String street, String street_number) throws SQLException {

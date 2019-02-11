@@ -81,7 +81,7 @@ public class StringChecker {
 			String emailDomain = email.substring((email.indexOf("@") + 1), email.length());
 			// ESEGUO LA QUERY SUL DATABASE
 			DataBaseOperation operationForEmail = new DataBaseOperation();
-			if (operationForEmail.searEmailDomain(emailDomain))
+			if (operationForEmail.searchEmailDomain(emailDomain))
 				return 1;
 				// SE IL RESULT HA UNA RIGA ALLORA IL DOMINIO ESISTE
 			else

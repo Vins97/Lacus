@@ -21,83 +21,41 @@ import it.unicam.ids.lacus.database.Users;
 
 public class HomeController implements Initializable {
 
+	//Schermate principali del programma
     @FXML
-    private AnchorPane ancPnRegister;
+    private AnchorPane ancPnRegister, ancPnDash, ancPnLogin;
 
-    @FXML
-    private TextField txtNome;
-
-    @FXML
-    private TextField txtCognome;
-
-    @FXML
-    private TextField txtEmail;
-
-    @FXML
-    private TextField txtUsernameReg;
-
-    @FXML
-    private TextField txtPasswordReg;
-
-    @FXML
-    private TextField txtConfermaPassword;
-
-    @FXML
-    private TextField txtCodiceFiscale;
-
-    @FXML
-    private TextField txtCitta;
-
-    @FXML
-    private TextField txtIndirizzo;
-
-    @FXML
-    private TextField txtNumero;
-
-    @FXML
-    private Button btnRegisterReg;
-
+    //Caselle di testo della schermata di login
 	@FXML
-	private Button btnBackToLogin;
+	private TextField txtUsername;
 
-    @FXML
-    private AnchorPane ancPnDash;
+	//Caselle password della schermata di login
+	@FXML
+	private PasswordField txtPassword;
 
-    @FXML
-    private AnchorPane ancPnLogin;
+	//Pulsanti della schermata di login
+	@FXML
+	private Button btnLogin, btnRegister;
 
+    //Caselle di testo della schermata di registrazione
     @FXML
-    private Button btnHome;
+    private TextField txtNomeReg, txtCognomeReg, txtEmailReg, txtUsernameReg, txtCodiceFiscaleReg, txtCittaReg, txtIndirizzoReg, txtNumeroReg;
 
-    @FXML
-    private Button btnProfile;
+	//Caselle di testo della schermata di registrazione
+	@FXML
+	private PasswordField txtPasswordReg, txtConfermaPasswordReg;
 
+    //Pulsanti della schermata di registrazione
     @FXML
-    private Button btnShipping;
+    private Button btnRegisterReg, btnBackToLogin;
 
-    @FXML
-    private Button btnLogout;
+    //Pannelli della schermata home
+	@FXML
+	private Pane pnlHome, pnlProfile, pnlShipping;
 
+	//Pulsanti della schermata home
     @FXML
-    private Pane pnlHome;
-
-    @FXML
-    private Label shpAccettazione;
-
-    @FXML
-    private Label shpInAttesaCorriere;
-
-    @FXML
-    private Label shpConsegnate;
-
-    @FXML
-    private Pane pnlProfile;
-
-    @FXML
-    private TextField txtUsername;
-
-    @FXML
-    private PasswordField txtPassword;
+    private Button btnHome, btnProfile, btnShipping, btnLogout;
 
     @FXML
     private TextField txtBoxName;
@@ -115,25 +73,10 @@ public class HomeController implements Initializable {
     private TextField txtBoxEmail;
 
     @FXML
-    private Button btnLogin;
-
-    @FXML
-    private Button btnRegister;
-
-    @FXML
-    private Pane pnlShipping;
-
-    @FXML
     private VBox ordersHistory;
 
     @FXML
     private Label lblTitle;
-
-    @FXML
-    private Button btnMinimize;
-
-    @FXML
-    private Button btnClose;
 
     private void initializeShippingPanel(){
         lblTitle.setText("Lista spedizioni");
@@ -177,17 +120,17 @@ public class HomeController implements Initializable {
    		ancPnLogin.toFront();
    }
 
-    private void registerPanel() {
+   private void registerPanel() {
         ancPnRegister.toFront();
     }
 
     @FXML
-    void btnCloseAction(ActionEvent event) {
+    void btnCloseAction() {
         Platform.exit();
     }
 
 	@FXML
-	void btnMinimizeAction(ActionEvent event) {
+	void btnMinimizeAction() {
 		Main main = new Main();
 		main.minimize();
 	}
@@ -202,7 +145,7 @@ public class HomeController implements Initializable {
         }
         if (event.getSource() == btnRegisterReg){
             Users user = new Users();
-            if(user.registerUser(txtNome.getText(), txtCognome.getText(), txtUsernameReg.getText(), txtPasswordReg.getText(), txtConfermaPassword.getText(), txtEmail.getText(), txtCodiceFiscale.getText(), txtCitta.getText(), txtIndirizzo.getText(), txtNumero.getText())) {
+            if(user.registerUser(txtNomeReg.getText(), txtCognomeReg.getText(), txtUsernameReg.getText(), txtPasswordReg.getText(), txtConfermaPasswordReg.getText(), txtEmailReg.getText(), txtCodiceFiscaleReg.getText(), txtCittaReg.getText(), txtIndirizzoReg.getText(), txtNumeroReg.getText())) {
 				loginPanel();
 			}
         }
