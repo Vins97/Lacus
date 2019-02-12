@@ -1,5 +1,6 @@
 package it.unicam.ids.lacus.database;
 
+import javafx.scene.control.Alert;
 import java.sql.*;
 import java.sql.ResultSet;
 
@@ -7,25 +8,21 @@ public class ConnectionDataBase {
 
 	private static final String USERNAME = "root";
 	private static final String PASSWORD = "";
-	private static final String CONN = "jdbc:mysql://localhost/lacus?"
-			+ "useUnicode=true&useJDBCCompliantTimezoneShift=true" + "&useLegacyDatetimeCode=false&serverTimezone=UTC";
-	static Connection conn = null;
-	Statement stmt;
-	ResultSet rs = null;
+	private static final String CONN = "jdbc:mysql://localhost/lacus?" + "useUnicode=true&useJDBCCompliantTimezoneShift=true" + "&useLegacyDatetimeCode=false&serverTimezone=UTC";
+	public static Connection conn = null;
+	public Statement stmt;
+	public ResultSet rs = null;
 
-	public static Connection getConnection() throws SQLException {
+	public Connection getConnection() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn = DriverManager.getConnection(CONN, USERNAME, PASSWORD);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			databaseConnectionError();
 		}
 		return conn;
 	}
-
-
-
 
 	public ResultSet createStatementAndRSForQuery(String sql) {
 		try {
@@ -34,6 +31,7 @@ public class ConnectionDataBase {
 
 		} catch (SQLException e) {
 			System.err.println(e);
+			databaseConnectionError();
 		}
 		return rs;
 	}
@@ -45,15 +43,17 @@ public class ConnectionDataBase {
 
 		} catch (SQLException e) {
 			System.err.println(e);
+			databaseConnectionError();
 		}
 	}
-	public static void closeConnection() {
+
+	public void closeConnection() {
 		if (conn != null)
 			try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				databaseConnectionError();
 			}
 		else
 			System.out.println("La connessione non è aperta");
@@ -64,6 +64,7 @@ public class ConnectionDataBase {
 			if(stmt!=null)stmt.close();
 		} catch (SQLException e) {
 			System.err.println(e);
+			databaseConnectionError();
 		}
 	}
 
@@ -72,9 +73,15 @@ public class ConnectionDataBase {
 			if(rs!=null) rs.close();
 		} catch (SQLException e) {
 			System.err.println(e);
+			databaseConnectionError();
 		}
 	}
 
-
-
+	public void databaseConnectionError() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Errore di connessione al Database");
+		alert.setHeaderText(null);
+		alert.setContentText("La tua operazione non è andata a buon fine a causa di un problema di connessione al Database!");
+		alert.showAndWait();
+	}
 }

@@ -1,5 +1,6 @@
 package it.unicam.ids.lacus.model;
 
+import it.unicam.ids.lacus.database.Hash;
 import it.unicam.ids.lacus.database.Users;
 
 public class Login {
@@ -10,7 +11,7 @@ public class Login {
 			//2- SE LA STRINGA E' GIUSTA ESEGUO Users.searchUser(String id , String psw )
 			Users utente = new Users();
 			try {
-				if(utente.searchUser(id, psw)) {
+				if(utente.searchUser(Hash.getMd5(id), Hash.getMd5(psw))) {
 					utente.setActiveUser(id, psw);
 					responceCheck= 1;
 				}

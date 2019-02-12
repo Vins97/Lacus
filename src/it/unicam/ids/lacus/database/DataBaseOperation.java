@@ -10,20 +10,15 @@ public class DataBaseOperation extends ConnectionDataBase {
 		String sql = "SELECT * FROM email WHERE email='" + emailDomain + "';";
 		boolean responce = false;
 		int resultSetRows = -1;
-		try {
-			getConnection();
-			rs = createStatementAndRSForQuery(sql);
-			if (resultSetRows(rs) == 1) {
-				resultSetRows = 1;
-				closeResultSet();
-				closeStatement();
-				closeConnection();
-			} else
-				resultSetRows = 0;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block e.printStackTrace();
-			System.err.println(e.getMessage());
-		}
+		getConnection();
+		rs = createStatementAndRSForQuery(sql);
+		if (resultSetRows(rs) == 1) {
+			resultSetRows = 1;
+			closeResultSet();
+			closeStatement();
+			closeConnection();
+		} else
+			resultSetRows = 0;
 		if (resultSetRows == 1)
 			responce = true;
 		else if (resultSetRows == 0 || resultSetRows == -1)
@@ -60,13 +55,8 @@ public class DataBaseOperation extends ConnectionDataBase {
 	private ResultSet getCitiesResultSet(String CAP) {
 		ResultSet citiesList = null;
 		String sql = "SELECT city FROM cities where CAP='" + CAP + "%';";
-		try {
-			getConnection();
-			citiesList = createStatementAndRSForQuery(sql);
-
-		} catch (SQLException e) {
-			e.getMessage();
-		}
+		getConnection();
+		citiesList = createStatementAndRSForQuery(sql);
 		return citiesList;
 	}
 

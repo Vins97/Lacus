@@ -8,9 +8,9 @@ import java.sql.SQLException;
 
 public class Users extends ConnectionDataBase {
 
-	private String id, psw;
-
-	private String name, surname;
+	private static String id = null;
+	private static String psw = null;
+	private static String name, surname;
 
 	public String getId() {
 		return this.id;
@@ -41,11 +41,11 @@ public class Users extends ConnectionDataBase {
 	}
 
 	public boolean addUser(String firstname, String surname, String id, String psw, String email, String cf, String city, String street, String street_number) {
-		// TODO Auto-generated method stubString
-		String sql = "INSERT INTO users (firstname, surname, id, psw, email, cf, city, street, street_number) values " + "('"
+		String sql = "INSERT INTO users (firstname, surname, id, psw, email, cf, city, street, street_number) VALUES " + "('"
 				+ Hash.getMd5(firstname) + "','" + Hash.getMd5(surname) + "','" + Hash.getMd5(id) + "','" + Hash.getMd5(psw)
 				+ "','" + Hash.getMd5(email) + "','" + cf + "','" + city + "','" + street + "','" + street_number + "');";
-		if (!verifyCFExistency(cf)) {
+		//Controllo che il codice fiscale e la coppia id/password non siano già registrati
+		if (!verifyCFExistency(cf) && !searchUser(Hash.getMd5(id), Hash.getMd5(psw))) {
 			try {
 				getConnection();
 				stmt = conn.createStatement();
@@ -54,22 +54,30 @@ public class Users extends ConnectionDataBase {
 				closeConnection();
 
 			} catch (SQLException e) {
-				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Errore di registrazione");
-				alert.setHeaderText(null);
-				alert.setContentText("La tua registrazione non è andata a buon fine!");
-				alert.showAndWait();
+				databaseConnectionError();
 			}
-			// Semplice stampa per il controllo dell'aggiunta del record
-			if (verifyCFExistency(cf)) {
-				return true;
-			}
+			return true;
 		}
 		return false;
 	}
 
-	public boolean checkText(String firstname, String surname, String id, String psw, String email, String cf, String city, String street, String street_number) {
-		//Raggruppa le stringhe per tipo (quelle che devono contenere solo lettere e quelle che possono contenere lettere e numeri
+	//Metodi che modificano i dati degli utenti quando essi li inseriscono dalla schermata del profilo
+	public boolean updateUser(String sql) {
+		try {
+			getConnection();
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sql);
+			closeStatement();
+			closeConnection();
+
+		} catch (SQLException e) {
+			return false;
+		}
+		return true;
+	}
+
+	public boolean checkText(String firstname, String surname, String id, String psw, String email, String cf, String city, String street, String street_number, boolean empty_allowed) {
+		//Raggruppa le stringhe per tipo (quelle che devono contenere solo lettere e quelle che possono contenere lettere e numeri)
 		String[] characters = {firstname, surname, city, street};
 		String[] charandnumb = {id, psw, cf};
 		StringChecker check = new StringChecker();
@@ -77,8 +85,11 @@ public class Users extends ConnectionDataBase {
 		for(int i=0; i<4; i++) {
 			switch(check.characterOnlyChecker(characters[i])) {
 				case 0: {
-					printEmptyFieldsMessage();
-					return false;
+					if(!empty_allowed) {
+						printEmptyFieldsMessage();
+						return false;
+					}
+					break;
 				}
 				case -1: {
 					printInvalidCharactersMessage();
@@ -90,8 +101,11 @@ public class Users extends ConnectionDataBase {
 		for(int i=0; i<3; i++) {
 			switch(check.characterAndNumberChecker(charandnumb[i])) {
 				case 0: {
-					printEmptyFieldsMessage();
-					return false;
+					if(!empty_allowed) {
+						printEmptyFieldsMessage();
+						return false;
+					}
+					break;
 				}
 				case -1: {
 					printInvalidCharactersMessage();
@@ -102,8 +116,11 @@ public class Users extends ConnectionDataBase {
 		//Controlla la correttezza dell'email
 		switch(check.emailChecker(email)) {
 			case 0: {
-				printEmptyFieldsMessage();
-				return false;
+				if(!empty_allowed) {
+					printEmptyFieldsMessage();
+					return false;
+				}
+				break;
 			}
 			case -1: {
 				printInvalidCharactersMessage();
@@ -117,8 +134,11 @@ public class Users extends ConnectionDataBase {
 		//Controlla la correttezza del numero della via
 		switch(check.numberOnlyChecker(street_number)) {
 			case 0: {
-				printEmptyFieldsMessage();
-				return false;
+				if(!empty_allowed) {
+					printEmptyFieldsMessage();
+					return false;
+				}
+				break;
 			}
 			case -1: {
 				printInvalidCharactersMessage();
@@ -130,7 +150,7 @@ public class Users extends ConnectionDataBase {
 
 	public void printEmptyFieldsMessage() {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setTitle("Errore di registrazione");
+		alert.setTitle("Errore di inserimento");
 		alert.setHeaderText(null);
 		alert.setContentText("Uno o più campi sono vuoti!");
 		alert.showAndWait();
@@ -138,7 +158,7 @@ public class Users extends ConnectionDataBase {
 
 	private void printInvalidCharactersMessage() {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setTitle("Errore di registrazione");
+		alert.setTitle("Errore di inserimento");
 		alert.setHeaderText(null);
 		alert.setContentText("Uno o più campi contengono caratteri non validi!");
 		alert.showAndWait();
@@ -146,14 +166,14 @@ public class Users extends ConnectionDataBase {
 
 	public void printInvalidEmailDomainMessage() {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setTitle("Errore di registrazione");
+		alert.setTitle("Errore di inserimento");
 		alert.setHeaderText(null);
 		alert.setContentText("Il dominio della mail non è valido!");
 		alert.showAndWait();
 	}
 
-	public boolean registerUser(String firstname, String surname, String id, String psw, String conf_psw, String email, String cf, String city, String street, String street_number) throws SQLException {
-		if(checkText(firstname, surname, id, psw, email, cf, city , street, street_number)) {
+	public boolean registerUser(String firstname, String surname, String id, String psw, String conf_psw, String email, String cf, String city, String street, String street_number) {
+		if(checkText(firstname, surname, id, psw, email, cf, city , street, street_number, false)) {
 			if(!verifyPasswordMatch(psw, conf_psw)) {
 				Alert alert = new Alert(Alert.AlertType.ERROR);
 				alert.setTitle("Errore di registrazione");
@@ -173,17 +193,15 @@ public class Users extends ConnectionDataBase {
 				Alert alert = new Alert(Alert.AlertType.ERROR);
 				alert.setTitle("Errore di registrazione");
 				alert.setHeaderText(null);
-				alert.setContentText("Il tuo codice fiscale è già stato registrato su un altro account!");
+				alert.setContentText("Il tuo Codice Fiscale o il tuo Username sono già stati registrati su un altro account!");
 				alert.showAndWait();
 			}
 		}
 		return false;
-
 	}
 
-	public boolean searchUser(String id, String psw) {
-
-		String sql = "SELECT id, psw FROM users WHERE id = '" + Hash.getMd5(id) + "' AND psw = '" + Hash.getMd5(psw) + "';";
+	public boolean searchUser(String hashedid, String hashedpsw) {
+		String sql = "SELECT id, psw FROM users WHERE id = '" + hashedid + "' AND psw = '" + hashedpsw + "';";
 		boolean responce = false;
 		ResultSet rs = null;
 		try {
@@ -193,12 +211,6 @@ public class Users extends ConnectionDataBase {
 			if(DataBaseOperation.resultSetRows(rs)==1)
 				responce = true;
 			else responce =  false;
-            /*int firstPosition = rs.getRow();
-            if (firstPosition == 0)
-                responce = false;
-            else if (firstPosition == 1)
-                responce = true;*/
-
 			closeResultSet();
 			closeStatement();
 			closeConnection();
@@ -208,12 +220,17 @@ public class Users extends ConnectionDataBase {
 
 		}
 		return responce;
-
 	}
 
 	public void setActiveUser(String id, String psw) {
-		setId(id);
-		setPsw(psw);
+		if(id == null || psw == null) {
+			setId(null);
+			setPsw(null);
+		}
+		else {
+			setId(Hash.getMd5(id));
+			setPsw(Hash.getMd5(psw));
+		}
 	}
 
 	public boolean verifyCFExistency(String cf) {
@@ -234,11 +251,10 @@ public class Users extends ConnectionDataBase {
 			closeResultSet();
 			closeStatement();
 			closeConnection();
-
-		} catch (SQLException e) {
+		}
+		catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-
 		}
 
 		return response;
