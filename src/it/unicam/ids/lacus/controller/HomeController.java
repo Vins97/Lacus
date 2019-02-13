@@ -24,7 +24,7 @@ public class HomeController implements Initializable {
 
 	//Schermate principali del programma
     @FXML
-    private AnchorPane ancPnRegister, ancPnDash, ancPnLogin;
+    private AnchorPane ancPnRegister, ancPnDash, ancPnLogin, ancPnNewShipment;
 
     //Caselle di testo della schermata di login
 	@FXML
@@ -50,19 +50,31 @@ public class HomeController implements Initializable {
     @FXML
     private Button btnRegisterReg, btnBackToLogin;
 
-    //Titolo della schermata home
+    //Titolo della dashboard
 	@FXML
 	private Label lblTitle;
 
-    //Pannelli della schermata home
+    //Pannelli della dashboard
 	@FXML
 	private Pane pnlHome, pnlProfile, pnlShipping;
 
-	//Pulsanti della schermata home
+	//Pulsanti della dashboard
     @FXML
     private Button btnHome, btnProfile, btnShipping, btnLogout;
 
-    //Caselle di testo della schermata del profilo
+	//Caselle di testo della schermata home
+	@FXML
+	private TextField txtCodBoxHome;
+
+	//Pulsanti della schermata home
+	@FXML
+	private Button btnCreaSpedizione;
+
+	//Pulsanti della schermata di creazione di una nuova spedizione
+	@FXML
+	private Button btnCreaSpedizioneSped, btnBackToDash;
+
+	//Caselle di testo della schermata del profilo
     @FXML
     private TextField txtNomeProf, txtCognomeProf, txtEmailProf, txtUsernameProf, txtCodiceFiscaleProf, txtCittaProf, txtIndirizzoProf, txtNumeroProf;
 
@@ -109,19 +121,24 @@ public class HomeController implements Initializable {
            	break;
            }
            case  1: {
-           	ancPnDash.toFront();
+           	displayCod(txtUsername.getText(), txtPassword.getText());
+           	dashPanel();
            	break;
            }
        }
    }
-
-   private void loginPanel(){
-   		ancPnLogin.toFront();
-   }
-
-   private void registerPanel() {
-        ancPnRegister.toFront();
-    }
+	private void loginPanel(){
+		ancPnLogin.toFront();
+	}
+	private void registerPanel() {
+		ancPnRegister.toFront();
+	}
+	private void dashPanel() {
+		ancPnDash.toFront();
+	}
+	private void newShipmentPanel() {
+    	ancPnNewShipment.toFront();
+	}
 
     @FXML
     void btnCloseAction() {
@@ -135,7 +152,7 @@ public class HomeController implements Initializable {
 	}
 
     @FXML
-    void handleClicks(ActionEvent event) throws Exception {
+    void handleClicks(ActionEvent event) {
         if(event.getSource() == btnLogin){
             dashboardPanel();
 			clearLoginFields();
@@ -157,6 +174,21 @@ public class HomeController implements Initializable {
 		}
 		if(event.getSource() == btnHome) {
 			initializeHomePanel();
+		}
+		if(event.getSource() == btnCreaSpedizione) {
+			newShipmentPanel();
+		}
+		if(event.getSource() == btnCreaSpedizioneSped){
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("A cojone");
+			alert.setHeaderText(null);
+			alert.setContentText("Ma che pensavi funzionasse? Te sto a pija per culo!");
+			alert.showAndWait();
+			return;
+		}
+		if(event.getSource() == btnBackToDash){
+			dashPanel();
+			clearNewShipmentFields();
 		}
 		if(event.getSource() == btnProfile) {
 			initializeProfilePanel();
@@ -192,6 +224,10 @@ public class HomeController implements Initializable {
 		txtNumeroReg.clear();
 	}
 
+	private void clearNewShipmentFields() {
+
+	}
+
 	private void clearProfFields() {
 		txtNomeProf.clear();
 		txtCognomeProf.clear();
@@ -203,6 +239,11 @@ public class HomeController implements Initializable {
 		txtCittaProf.clear();
 		txtIndirizzoProf.clear();
 		txtNumeroProf.clear();
+	}
+
+	private void displayCod(String id, String psw) {
+    	Users user = new Users();
+		txtCodBoxHome.setText(Integer.toString(user.getCod(Hash.getMd5(id), Hash.getMd5(psw))));
 	}
 
 	private void editProfile() {

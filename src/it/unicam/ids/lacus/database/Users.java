@@ -274,14 +274,14 @@ public class Users extends ConnectionDataBase {
 	 * DEGLI UTENTI
 	 */
 
-	public int getCod(String nome, String surname) {
-		String sql = "SELECT userid FROM users WHERE(nome='" + nome + "'AND surname='" + surname + "');";
+	public int getCod(String hashedid, String hashedpsw) {
+		String sql = "SELECT userid FROM users WHERE(id='" + hashedid + "'AND psw='" + hashedpsw + "');";
 		int codUtente = 0;
 		try {
 			getConnection();
 			rs = createStatementAndRSForQuery(sql);
 			rs.first();
-			codUtente = rs.getInt("cod_user");
+			codUtente = rs.getInt("userid");
 			closeResultSet();
 			closeStatement();
 			closeConnection();

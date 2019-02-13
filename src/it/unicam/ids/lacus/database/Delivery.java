@@ -21,7 +21,7 @@ public class Delivery extends ConnectionDataBase {
 	 * essere usata in futuro
 	 */
 	// 1- METODO X EFFETTUARE UNA RICHIESTA DI SPEDIZIONE
-	public void addDelivery(Users utente, String nomeDestinatario, String cognomeDestinatario) throws SQLException {
+	public void addDelivery(Users utente, String nomeDestinatario, String cognomeDestinatario) {
 		Users destinatario = new Users();
 		int codDest = destinatario.getCod(nomeDestinatario, cognomeDestinatario);
 		// codDest = -1 indica che non esiste
