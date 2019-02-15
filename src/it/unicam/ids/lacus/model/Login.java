@@ -1,31 +1,47 @@
 package it.unicam.ids.lacus.model;
 
-import it.unicam.ids.lacus.database.Hash;
-import it.unicam.ids.lacus.database.Users;
+import it.unicam.ids.lacus.view.Alerts;
 
 public class Login {
-	public static int userLogin(String id , String psw) {
-		int responceCheck = 0;
-		//1- ESEGUO CONTROLLI SULLA STRINGA
-		if(StringChecker.specialCharacterChecker(id) && StringChecker.specialCharacterChecker(psw)){
-			//2- SE LA STRINGA E' GIUSTA ESEGUO Users.searchUser(String id , String psw )
-			Users utente = new Users();
-			try {
-				if(utente.searchUser(Hash.getMd5(id), Hash.getMd5(psw))) {
-					utente.setActiveUser(id, psw);
-					responceCheck= 1;
-				}
-				else {
-					responceCheck= -1; //Credenziali errate
-				}
-			}catch(Exception e ) {
-				e.getMessage();
+	public boolean userLogin(String id , String psw) {
+		StringChecker check = new StringChecker();
+		Users user = new Users();
+		Alerts alert = new Alerts();
+		switch(check.characterAndNumberChecker(id)) {
+			case -1: {
+				alert.printInvalidCharactersMessage();
+				return false;
 			}
-		}else if(!(StringChecker.specialCharacterChecker(id)) || !(StringChecker.specialCharacterChecker(psw))) {
-			responceCheck= -2;
+			case 0: {
+				alert.printEmptyFieldsMessage();
+				return false;
+			}
+			case  1: {
+				switch(check.characterAndNumberChecker(psw)) {
+					case -1: {
+						alert.printInvalidCharactersMessage();
+						return false;
+					}
+					case 0: {
+						alert.printEmptyFieldsMessage();
+						return false;
+					}
+					case  1: {
+						try {
+							if(user.searchUser(Hash.getMd5(id), Hash.getMd5(psw))) {
+								user.setActiveUser(id, psw);
+								return true;
+							}
+							alert.printLoginErrorMessage();
+						}catch(Exception e ) {
+							e.getMessage();
+							return false;
+						}
+					}
+				}
+			}
 		}
-		return responceCheck;
+		return false;
 	}
-
 }
 

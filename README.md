@@ -6,9 +6,9 @@ Font da installare: Nexa Light
 
 TODO LIST
 
-Pagina home (buona parte)\
-Pagina crea spedizione (praticamente tutto)\
-Pagina spedizioni (tutto)\
+Pagina home (counter delle spedizioni)\
+Pagina lista spedizioni (tutto)\
+Pagina spedizioni personali (tutto anche la grafica)\
 Pagina pagamenti (tutto anche la grafica)\
 Pagina richieste (tutto anche la grafica)\
-Organizzare meglio i metodi nelle classi
+Organizzare meglio i metodi nelle classi (parzialmente fatto)

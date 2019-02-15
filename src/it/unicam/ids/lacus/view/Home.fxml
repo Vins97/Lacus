@@ -60,67 +60,182 @@
                         <Font name="NexaLight" size="21.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtNomeReg" layoutX="224.0" layoutY="90.0" prefHeight="40.0" prefWidth="235.0" />
+                  <TextField fx:id="txtNomeReg" alignment="CENTER" layoutX="224.0" layoutY="90.0" prefHeight="40.0" prefWidth="235.0" />
                   <Label layoutX="579.0" layoutY="95.0" text="Cognome" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtCognomeReg" layoutX="724.0" layoutY="90.0" prefHeight="40.0" prefWidth="235.0" />
+                  <TextField fx:id="txtCognomeReg" alignment="CENTER" layoutX="724.0" layoutY="90.0" prefHeight="40.0" prefWidth="235.0" />
                   <Label layoutX="94.0" layoutY="175.0" text="Email" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtEmailReg" layoutX="224.0" layoutY="170.0" prefHeight="40.0" prefWidth="235.0" />
+                  <TextField fx:id="txtEmailReg" alignment="CENTER" layoutX="224.0" layoutY="170.0" prefHeight="40.0" prefWidth="235.0" />
                   <Label layoutX="578.0" layoutY="175.0" text="Username" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtUsernameReg" layoutX="724.0" layoutY="170.0" prefHeight="40.0" prefWidth="235.0" />
+                  <TextField fx:id="txtUsernameReg" alignment="CENTER" layoutX="724.0" layoutY="170.0" prefHeight="40.0" prefWidth="235.0" />
                   <Label layoutX="74.0" layoutY="255.0" text="Password" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />
                      </font>
                   </Label>
-                  <PasswordField fx:id="txtPasswordReg" layoutX="224.0" layoutY="250.0" prefHeight="40.0" prefWidth="235.0" />
+                  <PasswordField fx:id="txtPasswordReg" alignment="CENTER" layoutX="224.0" layoutY="250.0" prefHeight="40.0" prefWidth="235.0" />
                   <Label layoutX="532.0" layoutY="255.0" text="Conferma Password" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />
                      </font>
                   </Label>
-                  <PasswordField fx:id="txtConfermaPasswordReg" layoutX="724.0" layoutY="250.0" prefHeight="40.0" prefWidth="235.0" />
+                  <PasswordField fx:id="txtConfermaPasswordReg" alignment="CENTER" layoutX="724.0" layoutY="250.0" prefHeight="40.0" prefWidth="235.0" />
                   <Label layoutX="54.0" layoutY="335.0" text="Codice Fiscale" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtCodiceFiscaleReg" layoutX="224.0" layoutY="330.0" prefHeight="40.0" prefWidth="235.0" />
+                  <TextField fx:id="txtCodiceFiscaleReg" alignment="CENTER" layoutX="224.0" layoutY="330.0" prefHeight="40.0" prefWidth="235.0" />
                   <Label layoutX="602.0" layoutY="335.0" text="Città" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtCittaReg" layoutX="724.0" layoutY="330.0" prefHeight="40.0" prefWidth="235.0" />
+                  <TextField fx:id="txtCittaReg" alignment="CENTER" layoutX="724.0" layoutY="330.0" prefHeight="40.0" prefWidth="235.0" />
                   <Label layoutX="79.0" layoutY="415.0" text="Indirizzo" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtIndirizzoReg" layoutX="224.0" layoutY="410.0" prefHeight="40.0" prefWidth="500.0" />
+                  <TextField fx:id="txtIndirizzoReg" alignment="CENTER" layoutX="224.0" layoutY="410.0" prefHeight="40.0" prefWidth="500.0" />
                   <Label layoutX="803.0" layoutY="415.0" text="Numero" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtNumeroReg" layoutX="909.0" layoutY="410.0" prefHeight="40.0" prefWidth="50.0" />
+                  <TextField fx:id="txtNumeroReg" alignment="CENTER" layoutX="909.0" layoutY="410.0" prefHeight="40.0" prefWidth="50.0" />
                   <Button fx:id="btnRegisterReg" layoutX="224.0" layoutY="500.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="41.0" prefWidth="235.0" style="-fx-background-color: #313335;" text="Registrati" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />
                      </font>
                   </Button>
                   <Button fx:id="btnBackToLogin" layoutX="540.0" layoutY="500.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="41.0" prefWidth="235.0" style="-fx-background-color: #313335;" text="Torna al Login" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Button>
+               </children>
+            </Pane>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="ancPnNewShipment" prefHeight="713.0" prefWidth="1161.0" style="-fx-background-color: #3B3E43;">
+         <children>
+            <HBox alignment="CENTER_RIGHT" layoutX="1028.0" prefHeight="27.0" prefWidth="133.0">
+               <children>
+                  <Button fx:id="btnMinimizeReg" mnemonicParsing="false" onAction="#btnMinimizeAction" style="-fx-background-color: #313335;">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <rotationAxis>
+                              <Point3D />
+                           </rotationAxis>
+                           <image>
+                              <Image url="@icons/icons8-compress-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btnCloseReg" mnemonicParsing="false" onAction="#btnCloseAction" style="-fx-background-color: #313335;">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <rotationAxis>
+                              <Point3D />
+                           </rotationAxis>
+                           <image>
+                              <Image url="@icons/icons8-delete-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+            <Pane layoutX="81.0" layoutY="57.0" prefHeight="600.0" prefWidth="999.0" style="-fx-background-color: #383B40;">
+               <children>
+                  <Label fx:id="lblTitle2" alignment="CENTER" contentDisplay="TOP" layoutX="273.0" prefHeight="78.0" prefWidth="453.0" text="Crea Spedizione" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="49.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="129.0" layoutY="96.0" text="Descrizione Spedizione" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtDescrizioneShip" alignment="CENTER" layoutX="386.0" layoutY="91.0" prefHeight="40.0" prefWidth="420.0" />
+                  <Label layoutX="343.0" layoutY="148.0" text="Informazioni per il ritiro" textFill="WHITE">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="27.0" layoutY="215.0" text="Codice Utente Mittente" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtCodiceMittenteSped" alignment="CENTER" editable="false" layoutX="265.0" layoutY="210.0" prefHeight="40.0" prefWidth="235.0" />
+                  <Label layoutX="549.0" layoutY="215.0" text="Città Mittente" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtCittaMittenteSped" alignment="CENTER" layoutX="724.0" layoutY="210.0" prefHeight="40.0" prefWidth="235.0" />
+                  <Label layoutX="53.0" layoutY="285.0" text="Indirizzo Mittente" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtIndirizzoMittenteSped" alignment="CENTER" layoutX="265.0" layoutY="280.0" prefHeight="40.0" prefWidth="420.0" />
+                  <Label layoutX="722.0" layoutY="285.0" text="Numero Mittente" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtNumeroMittenteSped" alignment="CENTER" layoutX="909.0" layoutY="280.0" prefHeight="40.0" prefWidth="50.0" />
+                  <Label layoutX="307.0" layoutY="330.0" text="Informazioni per la consegna" textFill="WHITE">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="10.0" layoutY="397.0" text="Codice Utente Destinatario" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtCodiceDestinatarioSped" alignment="CENTER" layoutX="265.0" layoutY="392.0" prefHeight="40.0" prefWidth="235.0" />
+                  <Label layoutX="532.0" layoutY="397.0" text="Città Destinatario" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtCittaDestinatarioSped" alignment="CENTER" layoutX="724.0" layoutY="392.0" prefHeight="40.0" prefWidth="235.0" />
+                  <Label layoutX="36.0" layoutY="467.0" text="Indirizzo Destinatario" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtIndirizzoDestinatarioSped" alignment="CENTER" layoutX="265.0" layoutY="462.0" prefHeight="40.0" prefWidth="420.0" />
+                  <Label layoutX="706.0" layoutY="467.0" text="Numero Destinatario" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtNumeroDestinatarioSped" alignment="CENTER" layoutX="909.0" layoutY="462.0" prefHeight="40.0" prefWidth="50.0" />
+                  <Button fx:id="btnCreaSpedizioneSped" layoutX="224.0" layoutY="532.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="41.0" prefWidth="235.0" style="-fx-background-color: #313335;" text="Crea Spedizione" textFill="WHITE">
+                     <font>
+                        <Font name="NexaLight" size="21.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnBackToDash" layoutX="540.0" layoutY="532.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="41.0" prefWidth="235.0" style="-fx-background-color: #313335;" text="Annulla" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />
                      </font>
@@ -219,49 +334,49 @@
                                         <Font name="NexaLight" size="21.0" />
                                     </font>
                                 </Label>
-                        <TextField fx:id="txtNomeProf" layoutX="200.0" layoutY="40.0" prefHeight="40.0" prefWidth="235.0" />
+                        <TextField fx:id="txtNomeProf" alignment="CENTER" layoutX="200.0" layoutY="40.0" prefHeight="40.0" prefWidth="235.0" />
                                 <Label layoutX="545.0" layoutY="45.0" text="Cognome" textFill="WHITE">
                                     <font>
                                         <Font name="NexaLight" size="21.0" />
                                     </font>
                                 </Label>
-                        <TextField fx:id="txtCognomeProf" layoutX="685.0" layoutY="40.0" prefHeight="40.0" prefWidth="235.0" />
+                        <TextField fx:id="txtCognomeProf" alignment="CENTER" layoutX="685.0" layoutY="40.0" prefHeight="40.0" prefWidth="235.0" />
                                 <Label layoutX="79.0" layoutY="125.0" text="Email" textFill="WHITE">
                                     <font>
                                         <Font name="NexaLight" size="21.0" />
                                     </font>
                                 </Label>
-                        <TextField fx:id="txtEmailProf" layoutX="200.0" layoutY="120.0" prefHeight="40.0" prefWidth="235.0" />
+                        <TextField fx:id="txtEmailProf" alignment="CENTER" layoutX="200.0" layoutY="120.0" prefHeight="40.0" prefWidth="235.0" />
                                 <Label layoutX="544.0" layoutY="125.0" text="Username" textFill="WHITE">
                                     <font>
                                         <Font name="NexaLight" size="21.0" />
                                     </font>
                                 </Label>
-                        <TextField fx:id="txtUsernameProf" layoutX="685.0" layoutY="120.0" prefHeight="40.0" prefWidth="235.0" />
+                        <TextField fx:id="txtUsernameProf" alignment="CENTER" layoutX="685.0" layoutY="120.0" prefHeight="40.0" prefWidth="235.0" />
                                 <Label layoutX="39.0" layoutY="205.0" text="Codice Fiscale" textFill="WHITE">
                                     <font>
                                         <Font name="NexaLight" size="21.0" />
                                     </font>
                                 </Label>
-                        <TextField fx:id="txtCodiceFiscaleProf" layoutX="200.0" layoutY="200.0" prefHeight="40.0" prefWidth="235.0" />
+                        <TextField fx:id="txtCodiceFiscaleProf" alignment="CENTER" layoutX="200.0" layoutY="200.0" prefHeight="40.0" prefWidth="235.0" />
                         <Label layoutX="569.0" layoutY="205.0" text="Città" textFill="WHITE">
                            <font>
                               <Font name="NexaLight" size="21.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="txtCittaProf" layoutX="685.0" layoutY="200.0" prefHeight="40.0" prefWidth="235.0" />
+                        <TextField fx:id="txtCittaProf" alignment="CENTER" layoutX="685.0" layoutY="200.0" prefHeight="40.0" prefWidth="235.0" />
                         <Label layoutX="65.0" layoutY="285.0" text="Indirizzo" textFill="WHITE">
                            <font>
                               <Font name="NexaLight" size="21.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="txtIndirizzoProf" layoutX="200.0" layoutY="280.0" prefHeight="40.0" prefWidth="500.0" />
+                        <TextField fx:id="txtIndirizzoProf" alignment="CENTER" layoutX="200.0" layoutY="280.0" prefHeight="40.0" prefWidth="500.0" />
                         <Label layoutX="749.0" layoutY="285.0" text="Numero" textFill="WHITE">
                            <font>
                               <Font name="NexaLight" size="21.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="txtNumeroProf" layoutX="870.0" layoutY="280.0" prefHeight="40.0" prefWidth="50.0" />
+                        <TextField fx:id="txtNumeroProf" alignment="CENTER" layoutX="870.0" layoutY="280.0" prefHeight="40.0" prefWidth="50.0" />
                         <Label layoutX="331.0" layoutY="333.0" prefHeight="55.0" prefWidth="298.0" text="Modifica Password" textAlignment="CENTER" textFill="WHITE">
                            <font>
                               <Font size="36.0" />
@@ -272,13 +387,13 @@
                                         <Font name="NexaLight" size="21.0" />
                                     </font>
                                 </Label>
-                        <PasswordField fx:id="txtPasswordProf" layoutX="200.0" layoutY="412.0" prefHeight="40.0" prefWidth="235.0" />
+                        <PasswordField fx:id="txtPasswordProf" alignment="CENTER" layoutX="200.0" layoutY="412.0" prefHeight="40.0" prefWidth="235.0" />
                         <Label layoutX="477.0" layoutY="417.0" text="Conferma Password" textFill="WHITE">
                            <font>
                               <Font name="NexaLight" size="21.0" />
                            </font>
                         </Label>
-                        <PasswordField fx:id="txtConfermaPasswordProf" layoutX="685.0" layoutY="412.0" prefHeight="40.0" prefWidth="235.0" />
+                        <PasswordField fx:id="txtConfermaPasswordProf" alignment="CENTER" layoutX="685.0" layoutY="412.0" prefHeight="40.0" prefWidth="235.0" />
                                 <Button id="btnHome" fx:id="btnModificaDatiProf" alignment="CENTER" graphicTextGap="5.0" layoutX="254.0" layoutY="492.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="50.0" prefWidth="453.0" style="-fx-background-color: #313335;" text="Modifica Dati" textAlignment="CENTER" textFill="WHITE">
                                     <graphic>
                                         <ImageView fitHeight="29.0" fitWidth="56.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
@@ -291,62 +406,6 @@
                                         <Font name="NexaLight" size="26.0" />
                                     </font>
                                 </Button>
-                          </children>
-                      </Pane>
-                      <Pane id="pnlHome" fx:id="pnlHome" prefHeight="588.0" prefWidth="960.0" style="-fx-background-color: #3B3E43;">
-                          <children>
-                                <Label layoutX="45.0" layoutY="41.0" prefHeight="31.0" prefWidth="230.0" text="In attesa del destinatario" textFill="WHITE">
-                                    <font>
-                                        <Font name="NexaLight" size="21.0" />
-                                    </font>
-                                </Label>
-                                <Label fx:id="shpAccettazione" layoutX="103.0" layoutY="71.0" prefHeight="103.0" prefWidth="114.0" text="321" textFill="#b60101">
-                                    <font>
-                                        <Font name="NexaLight" size="70.0" />
-                                    </font>
-                                </Label>
-                                <Label layoutX="394.0" layoutY="41.0" prefHeight="31.0" prefWidth="173.0" text="Affidate al corriere" textFill="WHITE">
-                                    <font>
-                                        <Font name="NexaLight" size="21.0" />
-                                    </font>
-                                </Label>
-                                <Label fx:id="shpInAttesaCorriere" layoutX="424.0" layoutY="71.0" prefHeight="103.0" prefWidth="114.0" text="321" textFill="#e0e84f">
-                                    <font>
-                                        <Font name="NexaLight" size="70.0" />
-                                    </font>
-                                </Label>
-                                <Label layoutX="745.0" layoutY="41.0" prefHeight="31.0" prefWidth="111.0" text="Consegnate" textFill="WHITE">
-                                    <font>
-                                        <Font name="NexaLight" size="21.0" />
-                                    </font>
-                                </Label>
-                                <Label fx:id="shpConsegnate" layoutX="744.0" layoutY="71.0" prefHeight="103.0" prefWidth="114.0" text="321" textFill="#088e0a">
-                                    <font>
-                                        <Font name="NexaLight" size="70.0" />
-                                    </font>
-                                </Label>
-                        <Label layoutX="367.0" layoutY="220.0" prefHeight="53.0" prefWidth="226.0" text="Codice Utente" textFill="WHITE">
-                           <font>
-                              <Font size="36.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="txtCodBoxHome" alignment="CENTER" editable="false" layoutX="367.0" layoutY="290.0" prefHeight="40.0" prefWidth="226.0">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </TextField>
-                        <Button id="btnHome" fx:id="btnCreaSpedizione" alignment="CENTER" graphicTextGap="5.0" layoutX="280.0" layoutY="410.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="60.0" prefWidth="400.0" style="-fx-background-color: #313335;" text="Crea una nuova spedizione" textAlignment="CENTER" textFill="WHITE">
-                           <graphic>
-                              <ImageView fitHeight="29.0" fitWidth="48.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@icons/icons8-truck-resized.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                           <font>
-                              <Font name="NexaLight" size="26.0" />
-                           </font>
-                        </Button>
                           </children>
                       </Pane>
                       <Pane id="pnlHome" fx:id="pnlShipping" prefHeight="642.0" prefWidth="960.0" style="-fx-background-color: #3B3E43;">
@@ -385,9 +444,65 @@
                         </ScrollPane>
                           </children>
                       </Pane>
+                      <Pane id="pnlHome" fx:id="pnlHome" prefHeight="588.0" prefWidth="960.0" style="-fx-background-color: #3B3E43;">
+                          <children>
+                                <Label layoutX="56.0" layoutY="41.0" prefHeight="31.0" prefWidth="208.0" text="In attesa di spedizione" textFill="WHITE">
+                                    <font>
+                                        <Font name="NexaLight" size="21.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="lblWaitingHome" alignment="CENTER" layoutX="103.0" layoutY="71.0" prefHeight="103.0" prefWidth="114.0" text="0" textFill="#b60101">
+                                    <font>
+                                        <Font name="NexaLight" size="70.0" />
+                                    </font>
+                                </Label>
+                                <Label layoutX="394.0" layoutY="41.0" prefHeight="31.0" prefWidth="173.0" text="Affidate al corriere" textFill="WHITE">
+                                    <font>
+                                        <Font name="NexaLight" size="21.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="lblDeliveringHome" alignment="CENTER" layoutX="424.0" layoutY="71.0" prefHeight="103.0" prefWidth="114.0" text="0" textFill="#e0e84f">
+                                    <font>
+                                        <Font name="NexaLight" size="70.0" />
+                                    </font>
+                                </Label>
+                                <Label layoutX="745.0" layoutY="41.0" prefHeight="31.0" prefWidth="111.0" text="Consegnate" textFill="WHITE">
+                                    <font>
+                                        <Font name="NexaLight" size="21.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="lblDeliveredHome" alignment="CENTER" layoutX="744.0" layoutY="71.0" prefHeight="103.0" prefWidth="114.0" text="0" textFill="#088e0a">
+                                    <font>
+                                        <Font name="NexaLight" size="70.0" />
+                                    </font>
+                                </Label>
+                        <Label layoutX="367.0" layoutY="220.0" prefHeight="53.0" prefWidth="226.0" text="Codice Utente" textFill="WHITE">
+                           <font>
+                              <Font size="36.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="txtCodBoxHome" alignment="CENTER" editable="false" layoutX="367.0" layoutY="290.0" prefHeight="40.0" prefWidth="226.0">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </TextField>
+                        <Button id="btnHome" fx:id="btnCreaSpedizione" alignment="CENTER" graphicTextGap="5.0" layoutX="280.0" layoutY="410.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="60.0" prefWidth="400.0" style="-fx-background-color: #313335;" text="Crea una nuova spedizione" textAlignment="CENTER" textFill="WHITE">
+                           <graphic>
+                              <ImageView fitHeight="29.0" fitWidth="48.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/icons8-truck-resized.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <font>
+                              <Font name="NexaLight" size="26.0" />
+                           </font>
+                        </Button>
+                          </children>
+                      </Pane>
                   </children>
               </StackPane>
-              <Label fx:id="lblTitle" alignment="TOP_CENTER" contentDisplay="TOP" layoutX="415.0" layoutY="43.0" prefHeight="73.0" prefWidth="453.0" text="Riepilogo Spedizioni" textAlignment="CENTER" textFill="WHITE">
+              <Label fx:id="lblTitle" alignment="TOP_CENTER" contentDisplay="TOP" layoutX="415.0" layoutY="43.0" prefHeight="73.0" prefWidth="453.0" text="Home" textAlignment="CENTER" textFill="WHITE">
                   <font>
                       <Font name="NexaLight" size="49.0" />
                   </font>
@@ -421,117 +536,6 @@
                   </children>
               </HBox>
           </children>
-      </AnchorPane>
-      <AnchorPane fx:id="ancPnNewShipment" prefHeight="713.0" prefWidth="1161.0" style="-fx-background-color: #3B3E43;">
-         <children>
-            <HBox alignment="CENTER_RIGHT" layoutX="1028.0" prefHeight="27.0" prefWidth="133.0">
-               <children>
-                  <Button fx:id="btnMinimizeReg" mnemonicParsing="false" onAction="#btnMinimizeAction" style="-fx-background-color: #313335;">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <rotationAxis>
-                              <Point3D />
-                           </rotationAxis>
-                           <image>
-                              <Image url="@icons/icons8-compress-50.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="btnCloseReg" mnemonicParsing="false" onAction="#btnCloseAction" style="-fx-background-color: #313335;">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <rotationAxis>
-                              <Point3D />
-                           </rotationAxis>
-                           <image>
-                              <Image url="@icons/icons8-delete-50.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-               </children>
-            </HBox>
-            <Pane layoutX="81.0" layoutY="57.0" prefHeight="600.0" prefWidth="999.0" style="-fx-background-color: #383B40;">
-               <children>
-                  <Label fx:id="lblTitle2" alignment="CENTER" contentDisplay="TOP" layoutX="273.0" prefHeight="78.0" prefWidth="453.0" text="Crea Spedizione" textAlignment="CENTER" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="49.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="90.0" layoutY="95.0" text="Nome" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="21.0" />
-                     </font>
-                  </Label>
-                  <TextField layoutX="224.0" layoutY="90.0" prefHeight="40.0" prefWidth="235.0" />
-                  <Label layoutX="579.0" layoutY="95.0" text="Cognome" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="21.0" />
-                     </font>
-                  </Label>
-                  <TextField layoutX="724.0" layoutY="90.0" prefHeight="40.0" prefWidth="235.0" />
-                  <Label layoutX="94.0" layoutY="175.0" text="Email" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="21.0" />
-                     </font>
-                  </Label>
-                  <TextField layoutX="224.0" layoutY="170.0" prefHeight="40.0" prefWidth="235.0" />
-                  <Label layoutX="578.0" layoutY="175.0" text="Username" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="21.0" />
-                     </font>
-                  </Label>
-                  <TextField layoutX="724.0" layoutY="170.0" prefHeight="40.0" prefWidth="235.0" />
-                  <Label layoutX="74.0" layoutY="255.0" text="Password" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="21.0" />
-                     </font>
-                  </Label>
-                  <PasswordField layoutX="224.0" layoutY="250.0" prefHeight="40.0" prefWidth="235.0" />
-                  <Label layoutX="532.0" layoutY="255.0" text="Conferma Password" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="21.0" />
-                     </font>
-                  </Label>
-                  <PasswordField layoutX="724.0" layoutY="250.0" prefHeight="40.0" prefWidth="235.0" />
-                  <Label layoutX="54.0" layoutY="335.0" text="Codice Fiscale" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="21.0" />
-                     </font>
-                  </Label>
-                  <TextField layoutX="224.0" layoutY="330.0" prefHeight="40.0" prefWidth="235.0" />
-                  <Label layoutX="602.0" layoutY="335.0" text="Città" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="21.0" />
-                     </font>
-                  </Label>
-                  <TextField layoutX="724.0" layoutY="330.0" prefHeight="40.0" prefWidth="235.0" />
-                  <Label layoutX="79.0" layoutY="415.0" text="Indirizzo" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="21.0" />
-                     </font>
-                  </Label>
-                  <TextField layoutX="224.0" layoutY="410.0" prefHeight="40.0" prefWidth="500.0" />
-                  <Label layoutX="803.0" layoutY="415.0" text="Numero" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="21.0" />
-                     </font>
-                  </Label>
-                  <TextField layoutX="909.0" layoutY="410.0" prefHeight="40.0" prefWidth="50.0" />
-                  <Button fx:id="btnCreaSpedizioneSped" layoutX="224.0" layoutY="500.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="41.0" prefWidth="235.0" style="-fx-background-color: #313335;" text="Crea Spedizione" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="21.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="btnBackToDash" layoutX="540.0" layoutY="500.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="41.0" prefWidth="235.0" style="-fx-background-color: #313335;" text="Annulla" textFill="WHITE">
-                     <font>
-                        <Font name="NexaLight" size="21.0" />
-                     </font>
-                  </Button>
-               </children>
-            </Pane>
-         </children>
       </AnchorPane>
       <AnchorPane fx:id="ancPnLogin" prefHeight="713.0" prefWidth="1161.0" style="-fx-background-color: #3B3E43;">
          <children>
@@ -610,13 +614,13 @@
                         <Font name="NexaLight" size="21.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtUsername" layoutX="135.0" layoutY="112.0" prefHeight="40.0" prefWidth="235.0" />
+                  <TextField fx:id="txtUsername" alignment="CENTER" layoutX="135.0" layoutY="112.0" prefHeight="40.0" prefWidth="235.0" />
                   <Label layoutX="144.0" layoutY="160.0" text="Password" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />
                      </font>
                   </Label>
-                  <PasswordField fx:id="txtPassword" layoutX="135.0" layoutY="187.0" prefHeight="40.0" prefWidth="235.0" />
+                  <PasswordField fx:id="txtPassword" alignment="CENTER" layoutX="135.0" layoutY="187.0" prefHeight="40.0" prefWidth="235.0" />
                   <Button fx:id="btnLogin" defaultButton="true" layoutX="135.0" layoutY="240.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="41.0" prefWidth="235.0" style="-fx-background-color: #313335;" text="Login" textFill="WHITE">
                      <font>
                         <Font name="NexaLight" size="21.0" />

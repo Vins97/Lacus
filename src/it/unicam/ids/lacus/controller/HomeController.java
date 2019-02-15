@@ -1,6 +1,8 @@
 package it.unicam.ids.lacus.controller;
 import it.unicam.ids.lacus.Main;
-import it.unicam.ids.lacus.database.Hash;
+import it.unicam.ids.lacus.model.Shipment;
+import it.unicam.ids.lacus.model.Hash;
+import it.unicam.ids.lacus.view.Alerts;
 import javafx.scene.control.*;
 
 import javafx.application.Platform;
@@ -18,7 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import it.unicam.ids.lacus.database.Users;
+import it.unicam.ids.lacus.model.Users;
 
 public class HomeController implements Initializable {
 
@@ -62,6 +64,10 @@ public class HomeController implements Initializable {
     @FXML
     private Button btnHome, btnProfile, btnShipping, btnLogout;
 
+    //Contatori della shermata home
+	@FXML
+	private Label lblWaitingHome, lblDeliveringHome, lblDeliveredHome;
+
 	//Caselle di testo della schermata home
 	@FXML
 	private TextField txtCodBoxHome;
@@ -69,6 +75,10 @@ public class HomeController implements Initializable {
 	//Pulsanti della schermata home
 	@FXML
 	private Button btnCreaSpedizione;
+
+	//Caselle di testo della schermata di creazione di una nuova spedizione
+	@FXML
+	private TextField txtDescrizioneShip, txtCodiceMittenteSped, txtCittaMittenteSped, txtIndirizzoMittenteSped, txtNumeroMittenteSped, txtCodiceDestinatarioSped, txtCittaDestinatarioSped, txtIndirizzoDestinatarioSped, txtNumeroDestinatarioSped;
 
 	//Pulsanti della schermata di creazione di una nuova spedizione
 	@FXML
@@ -102,31 +112,18 @@ public class HomeController implements Initializable {
         pnlProfile.toFront();
     }
 
-   private void  dashboardPanel() {
-       switch(Login.userLogin(txtUsername.getText(), txtPassword.getText())){
-           case -2: {
-           	Alert alert = new Alert(Alert.AlertType.ERROR);
-           	alert.setTitle("Errore di login");
-           	alert.setHeaderText(null);
-           	alert.setContentText("I campi non ammettono caratteri non alfanumerici!");
-           	alert.showAndWait();
-           	break;
-           }
-           case -1: {
-           	Alert alert = new Alert(Alert.AlertType.ERROR);
-           	alert.setTitle("Errore di login");
-			alert.setHeaderText(null);
-			alert.setContentText("Username o password errati!");
-			alert.showAndWait();
-           	break;
-           }
-           case  1: {
-           	displayCod(txtUsername.getText(), txtPassword.getText());
-           	dashPanel();
-           	break;
-           }
-       }
-   }
+   private void dashboardPanel() {
+    	Login login = new Login();
+    	if(login.userLogin(txtUsername.getText(), txtPassword.getText())){
+    		Users user = new Users();
+    		lblWaitingHome.setText("1");
+			lblDeliveringHome.setText("2");
+			lblDeliveredHome.setText("3");
+			txtCodBoxHome.setText(Integer.toString(user.getCod(Hash.getMd5(txtUsername.getText()), Hash.getMd5(txtPassword.getText()))));
+			dashPanel();
+    	}
+    }
+
 	private void loginPanel(){
 		ancPnLogin.toFront();
 	}
@@ -153,6 +150,7 @@ public class HomeController implements Initializable {
 
     @FXML
     void handleClicks(ActionEvent event) {
+    	Users user = new Users();
         if(event.getSource() == btnLogin){
             dashboardPanel();
 			clearLoginFields();
@@ -162,7 +160,6 @@ public class HomeController implements Initializable {
             registerPanel();
         }
         if(event.getSource() == btnRegisterReg){
-            Users user = new Users();
             if(user.registerUser(txtNomeReg.getText(), txtCognomeReg.getText(), txtUsernameReg.getText(), txtPasswordReg.getText(), txtConfermaPasswordReg.getText(), txtEmailReg.getText(), txtCodiceFiscaleReg.getText(), txtCittaReg.getText(), txtIndirizzoReg.getText(), txtNumeroReg.getText())) {
 				clearRegFields();
             	loginPanel();
@@ -176,15 +173,15 @@ public class HomeController implements Initializable {
 			initializeHomePanel();
 		}
 		if(event.getSource() == btnCreaSpedizione) {
+			txtCodiceMittenteSped.setText(Integer.toString(user.getCod(user.getId(), user.getPsw())));
 			newShipmentPanel();
 		}
 		if(event.getSource() == btnCreaSpedizioneSped){
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("A cojone");
-			alert.setHeaderText(null);
-			alert.setContentText("Ma che pensavi funzionasse? Te sto a pija per culo!");
-			alert.showAndWait();
-			return;
+			Shipment shipment = new Shipment();
+			if(shipment.addShipment(txtDescrizioneShip.getText(), txtCodiceMittenteSped.getText(), txtCittaMittenteSped.getText(), txtIndirizzoMittenteSped.getText(), txtNumeroMittenteSped.getText(), txtCodiceDestinatarioSped.getText(), txtCittaDestinatarioSped.getText(), txtIndirizzoDestinatarioSped.getText(), txtNumeroDestinatarioSped.getText())) {
+				dashPanel();
+				clearNewShipmentFields();
+			}
 		}
 		if(event.getSource() == btnBackToDash){
 			dashPanel();
@@ -200,7 +197,6 @@ public class HomeController implements Initializable {
 			initializeShippingPanel();
 		}
         if(event.getSource() == btnLogout){
-        	Users user = new Users();
         	user.setActiveUser(null, null);
             loginPanel();
         }
@@ -225,7 +221,15 @@ public class HomeController implements Initializable {
 	}
 
 	private void clearNewShipmentFields() {
-
+    	txtDescrizioneShip.clear();
+    	txtCodiceMittenteSped.clear();
+    	txtCittaMittenteSped.clear();
+    	txtIndirizzoMittenteSped.clear();
+    	txtNumeroMittenteSped.clear();
+    	txtCodiceDestinatarioSped.clear();
+    	txtCittaDestinatarioSped.clear();
+    	txtIndirizzoDestinatarioSped.clear();
+    	txtNumeroDestinatarioSped.clear();
 	}
 
 	private void clearProfFields() {
@@ -241,13 +245,14 @@ public class HomeController implements Initializable {
 		txtNumeroProf.clear();
 	}
 
-	private void displayCod(String id, String psw) {
+	private String getUserCod(String id, String psw) {
     	Users user = new Users();
-		txtCodBoxHome.setText(Integer.toString(user.getCod(Hash.getMd5(id), Hash.getMd5(psw))));
+		return Integer.toString(user.getCod(Hash.getMd5(id), Hash.getMd5(psw)));
 	}
 
 	private void editProfile() {
 		Users user = new Users();
+		Alerts alert = new Alerts();
 		if(!user.checkText(txtNomeProf.getText(), txtCognomeProf.getText(), txtUsernameProf.getText(), txtPasswordProf.getText(), txtEmailProf.getText(), txtCodiceFiscaleProf.getText(), txtCittaProf.getText(), txtIndirizzoProf.getText(), txtNumeroProf.getText(), true)) {
 			return;
 		}
@@ -280,11 +285,7 @@ public class HomeController implements Initializable {
 				}
 			}
 			else {
-				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Errore nella modifica del profilo");
-				alert.setHeaderText(null);
-				alert.setContentText("L'Username inserito è già in uso!");
-				alert.showAndWait();
+				alert.printUsernameTakenMessage();
 				return;
 			}
 		}
@@ -296,11 +297,7 @@ public class HomeController implements Initializable {
 				}
 			}
 			else {
-				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Errore nella modifica del profilo");
-				alert.setHeaderText(null);
-				alert.setContentText("Il Codice Fiscale inserito è già in uso!");
-				alert.showAndWait();
+				alert.printCFTakenMessage();
 				return;
 			}
 		}
@@ -334,29 +331,17 @@ public class HomeController implements Initializable {
 					}
 				}
 				else {
-					Alert alert = new Alert(Alert.AlertType.ERROR);
-					alert.setTitle("Errore nella modifica del profilo");
-					alert.setHeaderText(null);
-					alert.setContentText("La password inserita non è valida!");
-					alert.showAndWait();
+					alert.printInvalidPasswordMessage();
 					return;
 				}
 			}
 			else {
-				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Errore nella modifica del profilo");
-				alert.setHeaderText(null);
-				alert.setContentText("Le password nei due campi non corrispondono!");
-				alert.showAndWait();
+				alert.printNoPasswordMatchMessage();
 				return;
 			}
 		}
 		clearProfFields();
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle("Modifiche effettuate");
-		alert.setHeaderText(null);
-		alert.setContentText("Il tuo profilo è stato modificato con successo!");
-		alert.showAndWait();
+		alert.printProfileEditedMessage();
 	}
 
     @Override

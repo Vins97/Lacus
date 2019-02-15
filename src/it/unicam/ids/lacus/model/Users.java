@@ -1,12 +1,14 @@
-package it.unicam.ids.lacus.database;
+package it.unicam.ids.lacus.model;
 
-import it.unicam.ids.lacus.controller.StringChecker;
-import javafx.scene.control.Alert;
+import it.unicam.ids.lacus.database.DatabaseConnection;
+import it.unicam.ids.lacus.database.DatabaseOperation;
+
+import it.unicam.ids.lacus.view.Alerts;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Users extends ConnectionDataBase {
+public class Users extends DatabaseConnection {
 
 	private static String id = null;
 	private static String psw = null;
@@ -54,7 +56,7 @@ public class Users extends ConnectionDataBase {
 				closeConnection();
 
 			} catch (SQLException e) {
-				databaseConnectionError();
+				alert.databaseConnectionError();
 			}
 			return true;
 		}
@@ -81,18 +83,19 @@ public class Users extends ConnectionDataBase {
 		String[] characters = {firstname, surname, city, street};
 		String[] charandnumb = {id, psw, cf};
 		StringChecker check = new StringChecker();
+		Alerts alert = new Alerts();
 		//Controlla le stringhe che devono contenere solo lettere o spazi
 		for(int i=0; i<4; i++) {
-			switch(check.characterOnlyChecker(characters[i])) {
+			switch(check.characterAndSpacesChecker(characters[i])) {
 				case 0: {
 					if(!empty_allowed) {
-						printEmptyFieldsMessage();
+						alert.printEmptyFieldsMessage();
 						return false;
 					}
 					break;
 				}
 				case -1: {
-					printInvalidCharactersMessage();
+					alert.printInvalidCharactersMessage();
 					return false;
 				}
 			}
@@ -102,13 +105,13 @@ public class Users extends ConnectionDataBase {
 			switch(check.characterAndNumberChecker(charandnumb[i])) {
 				case 0: {
 					if(!empty_allowed) {
-						printEmptyFieldsMessage();
+						alert.printEmptyFieldsMessage();
 						return false;
 					}
 					break;
 				}
 				case -1: {
-					printInvalidCharactersMessage();
+					alert.printInvalidCharactersMessage();
 					return false;
 				}
 			}
@@ -117,17 +120,17 @@ public class Users extends ConnectionDataBase {
 		switch(check.emailChecker(email)) {
 			case 0: {
 				if(!empty_allowed) {
-					printEmptyFieldsMessage();
+					alert.printEmptyFieldsMessage();
 					return false;
 				}
 				break;
 			}
 			case -1: {
-				printInvalidCharactersMessage();
+				alert.printInvalidCharactersMessage();
 				return false;
 			}
 			case -2: {
-				printInvalidEmailDomainMessage();
+				alert.printInvalidEmailDomainMessage();
 				return false;
 			}
 		}
@@ -135,66 +138,31 @@ public class Users extends ConnectionDataBase {
 		switch(check.numberOnlyChecker(street_number)) {
 			case 0: {
 				if(!empty_allowed) {
-					printEmptyFieldsMessage();
+					alert.printEmptyFieldsMessage();
 					return false;
 				}
 				break;
 			}
 			case -1: {
-				printInvalidCharactersMessage();
+				alert.printInvalidCharactersMessage();
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public void printEmptyFieldsMessage() {
-		Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setTitle("Errore di inserimento");
-		alert.setHeaderText(null);
-		alert.setContentText("Uno o più campi sono vuoti!");
-		alert.showAndWait();
-	}
-
-	private void printInvalidCharactersMessage() {
-		Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setTitle("Errore di inserimento");
-		alert.setHeaderText(null);
-		alert.setContentText("Uno o più campi contengono caratteri non validi!");
-		alert.showAndWait();
-	}
-
-	public void printInvalidEmailDomainMessage() {
-		Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setTitle("Errore di inserimento");
-		alert.setHeaderText(null);
-		alert.setContentText("Il dominio della mail non è valido!");
-		alert.showAndWait();
-	}
-
 	public boolean registerUser(String firstname, String surname, String id, String psw, String conf_psw, String email, String cf, String city, String street, String street_number) {
+		Alerts alert = new Alerts();
 		if(checkText(firstname, surname, id, psw, email, cf, city , street, street_number, false)) {
 			if(!verifyPasswordMatch(psw, conf_psw)) {
-				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Errore di registrazione");
-				alert.setHeaderText(null);
-				alert.setContentText("Le password nei due campi non corrispondono!");
-				alert.showAndWait();
+				alert.printNoPasswordMatchMessage();
 			}
 			else if(addUser(firstname, surname, id, psw, email, cf, city, street, street_number)) {
-				Alert alert = new Alert(Alert.AlertType.INFORMATION);
-				alert.setTitle("Utente Registrato");
-				alert.setHeaderText(null);
-				alert.setContentText("La tua registrazione è avvenuta con successo!");
-				alert.showAndWait();
+				alert.printRegisteredUserMessage();
 				return true;
 			}
 			else {
-				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.setTitle("Errore di registrazione");
-				alert.setHeaderText(null);
-				alert.setContentText("Il tuo Codice Fiscale o il tuo Username sono già stati registrati su un altro account!");
-				alert.showAndWait();
+				alert.printUsernameOrCFTakenMessage();
 			}
 		}
 		return false;
@@ -203,12 +171,13 @@ public class Users extends ConnectionDataBase {
 	public boolean searchUser(String hashedid, String hashedpsw) {
 		String sql = "SELECT id, psw FROM users WHERE id = '" + hashedid + "' AND psw = '" + hashedpsw + "';";
 		boolean responce = false;
-		ResultSet rs = null;
+		ResultSet rs;
+		DatabaseOperation dbop = new DatabaseOperation();
 		try {
 			getConnection();
 			rs = createStatementAndRSForQuery(sql);
 			rs.first();
-			if(DataBaseOperation.resultSetRows(rs)==1)
+			if(dbop.resultSetRows(rs)==1)
 				responce = true;
 			else responce =  false;
 			closeResultSet();

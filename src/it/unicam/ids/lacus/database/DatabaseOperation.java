@@ -3,33 +3,33 @@ package it.unicam.ids.lacus.database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import it.unicam.ids.lacus.controller.StringChecker;
-
-public class DataBaseOperation extends ConnectionDataBase {
-	public boolean searchEmailDomain(String emailDomain) {
-		String sql = "SELECT * FROM email WHERE email='" + emailDomain + "';";
+public class DatabaseOperation extends DatabaseConnection {
+	public boolean searchElement(String sql) {
 		boolean responce = false;
-		int resultSetRows = -1;
+		int resultSetRows;
 		getConnection();
 		rs = createStatementAndRSForQuery(sql);
-		if (resultSetRows(rs) == 1) {
+		if(resultSetRows(rs) == 1) {
 			resultSetRows = 1;
 			closeResultSet();
 			closeStatement();
 			closeConnection();
-		} else
+		}
+		else {
 			resultSetRows = 0;
-		if (resultSetRows == 1)
+		}
+		if(resultSetRows == 1) {
 			responce = true;
-		else if (resultSetRows == 0 || resultSetRows == -1)
+		}
+		else if(resultSetRows == 0 || resultSetRows == -1) {
 			responce = false;
+		}
 		return responce;
-
 	}
 
 	// ritorna il numero di righe di una query
-	public static int resultSetRows(ResultSet rs) {
-		int rsRows = -1;
+	public int resultSetRows(ResultSet rs) {
+		int rsRows;
 		try {
 			rs.first();
 			int firstRow = rs.getRow();
@@ -53,7 +53,7 @@ public class DataBaseOperation extends ConnectionDataBase {
 
 	// metodo che restituisce tutte le città corrispondenti ad un CAP
 	private ResultSet getCitiesResultSet(String CAP) {
-		ResultSet citiesList = null;
+		ResultSet citiesList;
 		String sql = "SELECT city FROM cities where CAP='" + CAP + "%';";
 		getConnection();
 		citiesList = createStatementAndRSForQuery(sql);
@@ -66,7 +66,7 @@ public class DataBaseOperation extends ConnectionDataBase {
 		// controllo che il CAP sia di 5 cifre e che contenga solo numeri
 		if (CAP.length() == 5 && StringChecker.numberStringChecker(CAP) == true) {
 
-			DataBaseOperation operationForCAP = new DataBaseOperation();
+			DatabaseOperation operationForCAP = new DatabaseOperation();
 
 			// controllo che ci sia almeno una città con quel CAP
 			if (operationForCAP.resultSetRows(operationForCAP.getCitiesResultSet(CAP)) >= 1) {

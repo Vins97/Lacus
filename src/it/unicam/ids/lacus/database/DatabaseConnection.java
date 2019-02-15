@@ -1,14 +1,15 @@
 package it.unicam.ids.lacus.database;
 
-import javafx.scene.control.Alert;
+import it.unicam.ids.lacus.view.Alerts;
 import java.sql.*;
 import java.sql.ResultSet;
 
-public class ConnectionDataBase {
+public class DatabaseConnection {
 
 	private static final String USERNAME = "root";
 	private static final String PASSWORD = "";
 	private static final String CONN = "jdbc:mysql://localhost/lacus?" + "useUnicode=true&useJDBCCompliantTimezoneShift=true" + "&useLegacyDatetimeCode=false&serverTimezone=UTC";
+	public static Alerts alert = new Alerts();
 	public static Connection conn = null;
 	public Statement stmt;
 	public ResultSet rs = null;
@@ -19,7 +20,7 @@ public class ConnectionDataBase {
 			conn = DriverManager.getConnection(CONN, USERNAME, PASSWORD);
 		} catch (Exception e) {
 			e.printStackTrace();
-			databaseConnectionError();
+			alert.databaseConnectionError();
 		}
 		return conn;
 	}
@@ -31,7 +32,7 @@ public class ConnectionDataBase {
 
 		} catch (SQLException e) {
 			System.err.println(e);
-			databaseConnectionError();
+			alert.databaseConnectionError();
 		}
 		return rs;
 	}
@@ -43,7 +44,7 @@ public class ConnectionDataBase {
 
 		} catch (SQLException e) {
 			System.err.println(e);
-			databaseConnectionError();
+			alert.databaseConnectionError();
 		}
 	}
 
@@ -53,7 +54,7 @@ public class ConnectionDataBase {
 				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-				databaseConnectionError();
+				alert.databaseConnectionError();
 			}
 		else
 			System.out.println("La connessione non è aperta");
@@ -64,7 +65,7 @@ public class ConnectionDataBase {
 			if(stmt!=null)stmt.close();
 		} catch (SQLException e) {
 			System.err.println(e);
-			databaseConnectionError();
+			alert.databaseConnectionError();
 		}
 	}
 
@@ -73,15 +74,7 @@ public class ConnectionDataBase {
 			if(rs!=null) rs.close();
 		} catch (SQLException e) {
 			System.err.println(e);
-			databaseConnectionError();
+			alert.databaseConnectionError();
 		}
-	}
-
-	public void databaseConnectionError() {
-		Alert alert = new Alert(Alert.AlertType.ERROR);
-		alert.setTitle("Errore di connessione al Database");
-		alert.setHeaderText(null);
-		alert.setContentText("La tua operazione non è andata a buon fine a causa di un problema di connessione al Database!");
-		alert.showAndWait();
 	}
 }
