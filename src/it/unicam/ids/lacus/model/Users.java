@@ -56,7 +56,7 @@ public class Users extends DatabaseConnection {
 				closeConnection();
 
 			} catch (SQLException e) {
-				alert.databaseConnectionError();
+				alert.printDatabaseConnectionError();
 			}
 			return true;
 		}

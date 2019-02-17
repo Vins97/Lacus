@@ -20,7 +20,7 @@ public class DatabaseConnection {
 			conn = DriverManager.getConnection(CONN, USERNAME, PASSWORD);
 		} catch (Exception e) {
 			e.printStackTrace();
-			alert.databaseConnectionError();
+			alert.printDatabaseConnectionError();
 		}
 		return conn;
 	}
@@ -32,7 +32,7 @@ public class DatabaseConnection {
 
 		} catch (SQLException e) {
 			System.err.println(e);
-			alert.databaseConnectionError();
+			alert.printDatabaseConnectionError();
 		}
 		return rs;
 	}
@@ -44,7 +44,7 @@ public class DatabaseConnection {
 
 		} catch (SQLException e) {
 			System.err.println(e);
-			alert.databaseConnectionError();
+			alert.printDatabaseConnectionError();
 		}
 	}
 
@@ -54,7 +54,7 @@ public class DatabaseConnection {
 				conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-				alert.databaseConnectionError();
+				alert.printDatabaseConnectionError();
 			}
 		else
 			System.out.println("La connessione non è aperta");
@@ -65,7 +65,7 @@ public class DatabaseConnection {
 			if(stmt!=null)stmt.close();
 		} catch (SQLException e) {
 			System.err.println(e);
-			alert.databaseConnectionError();
+			alert.printDatabaseConnectionError();
 		}
 	}
 
@@ -74,7 +74,7 @@ public class DatabaseConnection {
 			if(rs!=null) rs.close();
 		} catch (SQLException e) {
 			System.err.println(e);
-			alert.databaseConnectionError();
+			alert.printDatabaseConnectionError();
 		}
 	}
 }

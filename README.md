@@ -10,5 +10,5 @@ Pagina home (counter delle spedizioni)\
 Pagina lista spedizioni (tutto)\
 Pagina spedizioni personali (tutto anche la grafica)\
 Pagina pagamenti (tutto anche la grafica)\
-Pagina richieste (tutto anche la grafica)\
+Pagina richieste (qualche modifica finale)\
 Organizzare meglio i metodi nelle classi (parzialmente fatto)

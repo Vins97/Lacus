@@ -8,6 +8,17 @@ import java.sql.ResultSet;
 
 public class Shipment extends DatabaseConnection {
 	/*
+	Legenda spedizioni:
+	0 - Spedizione annullata
+	1 - Spedizione creata ma non accettata
+	2 - Spedizione accettata dal destinatario
+	3 - Spedizione scelta dal corriere ma non pagata
+	4 - Spedizione scelta dal corriere e pagata
+	5 - Spedizione in transito
+	6 - Spedizione consegnata
+	*/
+
+	/*
 	 * LA CLASSE IMPLEMENTA I SEGUENTI METODI: 1- METODO X EFFETTUARE UNA RICHIESTA
 	 * DI SPEDIZIONE 2- METODO CHE PERMETTE AL DESTINATARIO DI VISUALIZZARE UNA
 	 * RICHIESTA DI SPEDIZIONE IN ARRIVO 3- METODO PER ACCETTARE UNA RICHIESTA DI
@@ -29,7 +40,7 @@ public class Shipment extends DatabaseConnection {
 		if((checkShipmentSpelling(description, sender_city, sender_street, sender_street_number, recipient_id, recipient_city, recipient_street, recipient_street_number))) {
 			if(checkDataConsistency(sender_id, sender_city, recipient_id, recipient_city)) {
 				String sql = "INSERT INTO shipment(status, description, sender_id, sender_city, sender_street, sender_street_number,"
-						+ "recipient_id, recipient_city, recipient_street, recipient_street_number) values ('0','" + description + "','"
+						+ "recipient_id, recipient_city, recipient_street, recipient_street_number) values ('1','" + description + "','"
 						+ sender_id + "','" + sender_city + "','" + sender_street + "','" + sender_street_number + "','" + recipient_id + "','"
 						+ recipient_city + "','" + recipient_street + "','" + recipient_street_number + "')";
 				getConnection();
@@ -104,13 +115,28 @@ public class Shipment extends DatabaseConnection {
 		return true;
 	}
 
-	public int waitingForShipment() {
-		return 0;
+	public ResultSet shipmentRequests(String id) {
+		String sql = "SELECT * FROM shipment WHERE(recipient_id='" + id + "' AND status='1') OR(sender_id='" + id + "' And status='3');";
+		getConnection();
+		return createStatementAndRSForQuery(sql);
+	}
+
+	private ResultSet waitingShipments(String id) {
+		String sql = "SELECT * FROM shipment WHERE sender_id='" + id + "' AND status='0';";
+		DatabaseOperation dbop = new DatabaseOperation();
+		getConnection();
+		rs = createStatementAndRSForQuery(sql);
+		if(dbop.resultSetRows(rs)==0)
+			System.err.println("Non ci sono richieste di spedizione!");
+		else return rs;
+
+		return rs;
+
 	}
 
 	// 2- METODO CHE PERMETTE AL DESTINATARIO DI VISUALIZZARE UNA RICHIESTA DI
 	// SPEDIZIONE IN ARRIVO
-	public ResultSet seeShippingRequest(Users utente) {
+	public ResultSet seeShippingRequests(Users utente) {
 		String sql = "SELECT * FROM shipping WHERE id_user='" + utente.getId() + "' AND status_shipping=" + 0 + ";";
 		DatabaseOperation dbop = new DatabaseOperation();
 		getConnection();

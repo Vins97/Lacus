@@ -1,28 +1,34 @@
 package it.unicam.ids.lacus.controller;
+import com.mysql.cj.xdevapi.SqlDataResult;
 import it.unicam.ids.lacus.Main;
+import it.unicam.ids.lacus.database.DatabaseOperation;
 import it.unicam.ids.lacus.model.Shipment;
 import it.unicam.ids.lacus.model.Hash;
 import it.unicam.ids.lacus.view.Alerts;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import it.unicam.ids.lacus.model.Login;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.concurrent.locks.ReadWriteLock;
 
 import it.unicam.ids.lacus.model.Users;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
-public class HomeController implements Initializable {
+public class HomeController {
 
 	//Schermate principali del programma
     @FXML
@@ -58,11 +64,11 @@ public class HomeController implements Initializable {
 
     //Pannelli della dashboard
 	@FXML
-	private Pane pnlHome, pnlProfile, pnlShipping;
+	private Pane pnlHome, pnlProfile, pnlShipping, pnlRequests;
 
 	//Pulsanti della dashboard
     @FXML
-    private Button btnHome, btnProfile, btnShipping, btnLogout;
+    private Button btnHome, btnProfile, btnShipping, btnRequests, btnLogout;
 
     //Contatori della shermata home
 	@FXML
@@ -96,13 +102,17 @@ public class HomeController implements Initializable {
 	@FXML
 	private Button btnModificaDatiProf;
 
+	//Vbox contenenti le info sulle spedizioni
     @FXML
-    private VBox ordersHistory;
+    private VBox ordersHistory, requestsHistory;
 
-    private void initializeShippingPanel(){
-        lblTitle.setText("Lista spedizioni");
-        pnlShipping.toFront();
-    }
+    //Pulsanti della schermata delle richieste
+	@FXML
+	public Button[] requestsbuttons;
+
+	//ID delle richieste di spedizione
+	private static String[] requestsids;
+
     private void initializeHomePanel(){
         lblTitle.setText("Riepilogo");
         pnlHome.toFront();
@@ -111,8 +121,97 @@ public class HomeController implements Initializable {
         lblTitle.setText("Modifica Profilo");
         pnlProfile.toFront();
     }
+	private void initializeShippingPanel(){
+		lblTitle.setText("Lista spedizioni");
+		Node[] nodes = new Node[5];
+		for (int i = 0; i < nodes.length; i++) {
+			try {
+				final int j = i;
+				nodes[i] = FXMLLoader.load(getClass().getResource("../view/Shipment.fxml"));
+				//give the items some effect
+				nodes[i].setOnMouseEntered(event -> {
+					nodes[j].setStyle("-fx-background-color : #0A0E3F");
+				});
+				nodes[i].setOnMouseExited(event -> {
+					nodes[j].setStyle("-fx-background-color : #02030A");
+				});
+				ordersHistory.getChildren().add(nodes[i]);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		pnlShipping.toFront();
+	}
 
-   private void dashboardPanel() {
+	private void initializeRequestsPanel() {
+		lblTitle.setText("Richieste");
+		//Pulisce le richieste precedenti
+		requestsHistory.getChildren().clear();
+		//Ottiene il resultset con le richieste di spedizione attive
+		Shipment sr = new Shipment();
+		Users user = new Users();
+		ResultSet richieste = sr.shipmentRequests(Integer.toString(user.getCod(user.getId(), user.getPsw())));
+		//Salvo il numero dei risultati per decidere il numero di cicli for
+		DatabaseOperation dbop = new DatabaseOperation();
+		int risultati = dbop.resultSetRows(richieste);
+		//Crea tanti loader quante sono le righe di spedizione da andare a creare
+		FXMLLoader[] loaders = new FXMLLoader[risultati];
+		try {
+			//Punta alla prima delle richieste
+			richieste.first();
+			//L'array serve a contenere l'id della spedizione, la descrizione, il tipo di richiesta e il mittente
+			String[] richiesta = new String[4];
+			for(int i = 0; i < risultati; i++) {
+				final int j = i;
+				//Per ogni richiesta crea una HBox a partire dall'FXML e gli assegna un nuovo oggetto controller ogni volta
+				RequestController rc = new RequestController();
+				loaders[i] = new FXMLLoader(getClass().getResource("../view/Requests.fxml"));
+				loaders[i].setController(rc);
+				//Carica l'HBox ed il suo contenuto
+				HBox box;
+				try {
+					box = (HBox) loaders[i].load();
+				}
+				catch(IOException e) {
+					Alerts alert = new Alerts();
+					alert.printMissingFileMessage();
+					return;
+				}
+				//Ottiene i dati della richiesta dal resultset
+				richiesta[0] = richieste.getString("shipment_id");
+				richiesta[1] = richieste.getString("description");
+				if(Integer.parseInt(richieste.getString("status")) == 1) {
+					richiesta[2] = "Accettazione";
+					richiesta[3] = richieste.getString("sender_id");
+				}
+				else {
+					richiesta[2] = "Pagamento";
+					richiesta[3] = richieste.getString("carrier_id");
+				}
+				//Scrive i dati della richiesta nel controller
+				rc.initData(richiesta);
+				rc.btnAccept.setId("btnAccept" + i);
+				rc.btnRefuse.setId("btnAccept" + i);
+				//Dà alle HBox qualche effetto
+				box.setOnMouseEntered(event -> {
+					box.setStyle("-fx-background-color : #0A0E3F");
+				});
+				box.setOnMouseExited(event -> {
+					box.setStyle("-fx-background-color : #02030A");
+				});
+				//Aggiunge la HBox alla finestra delle richieste
+				requestsHistory.getChildren().add(box);
+				richieste.next();
+			}
+		}
+		catch (SQLException e) {
+			Alerts alert = new Alerts();
+			alert.printDatabaseConnectionError();
+		}
+		pnlRequests.toFront();
+	}
+
+	private void dashboardPanel() {
     	Login login = new Login();
     	if(login.userLogin(txtUsername.getText(), txtPassword.getText())){
     		Users user = new Users();
@@ -127,12 +226,15 @@ public class HomeController implements Initializable {
 	private void loginPanel(){
 		ancPnLogin.toFront();
 	}
+
 	private void registerPanel() {
 		ancPnRegister.toFront();
 	}
+
 	private void dashPanel() {
 		ancPnDash.toFront();
 	}
+
 	private void newShipmentPanel() {
     	ancPnNewShipment.toFront();
 	}
@@ -149,7 +251,7 @@ public class HomeController implements Initializable {
 	}
 
     @FXML
-    void handleClicks(ActionEvent event) {
+    void handleClicks(ActionEvent event) throws IOException {
     	Users user = new Users();
         if(event.getSource() == btnLogin){
             dashboardPanel();
@@ -195,6 +297,9 @@ public class HomeController implements Initializable {
 		}
 		if(event.getSource() == btnShipping) {
 			initializeShippingPanel();
+		}
+		if(event.getSource() == btnRequests) {
+			initializeRequestsPanel();
 		}
         if(event.getSource() == btnLogout){
         	user.setActiveUser(null, null);
@@ -343,27 +448,4 @@ public class HomeController implements Initializable {
 		clearProfFields();
 		alert.printProfileEditedMessage();
 	}
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        Node[] nodes = new Node[10];
-        for (int i = 0; i < nodes.length; i++) {
-            try {
-
-                final int j = i;
-                nodes[i] = FXMLLoader.load(getClass().getResource("../view/Shipment.fxml"));
-
-                //give the items some effect
-                nodes[i].setOnMouseEntered(event -> {
-                    nodes[j].setStyle("-fx-background-color : #0A0E3F");
-                });
-                nodes[i].setOnMouseExited(event -> {
-                    nodes[j].setStyle("-fx-background-color : #02030A");
-                });
-                ordersHistory.getChildren().add(nodes[i]);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

@@ -3,7 +3,7 @@ package it.unicam.ids.lacus.view;
 import javafx.scene.control.Alert;
 
 public class Alerts {
-	public void databaseConnectionError() {
+	public void printDatabaseConnectionError() {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle("Errore di connessione al Database");
 		alert.setHeaderText(null);
@@ -136,6 +136,14 @@ public class Alerts {
 		alert.setTitle("Città non disponibile");
 		alert.setHeaderText(null);
 		alert.setContentText("La città che hai inserito non esiste oppure non è disponibile per la spedizione!");
+		alert.showAndWait();
+	}
+
+	public void printMissingFileMessage() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("File Mancante");
+		alert.setHeaderText(null);
+		alert.setContentText("Nella directory del programma manca uno o più file!");
 		alert.showAndWait();
 	}
 }
