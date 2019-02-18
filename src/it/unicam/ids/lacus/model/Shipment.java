@@ -1,7 +1,6 @@
 package it.unicam.ids.lacus.model;
 
 import it.unicam.ids.lacus.database.DatabaseConnection;
-import it.unicam.ids.lacus.database.DatabaseOperation;
 import it.unicam.ids.lacus.view.Alerts;
 
 import java.sql.ResultSet;
@@ -100,6 +99,7 @@ public class Shipment extends DatabaseConnection {
 
 	private boolean checkDataConsistency(String sender_id, String sender_city, String recipient_id, String recipient_city) {
 		StringChecker citycheck = new StringChecker();
+		Alerts alert = new Alerts();
 		if(sender_id.compareTo(recipient_id) == 0) {
 			alert.printIdenticalIdsMessage();
 			return false;
@@ -108,33 +108,46 @@ public class Shipment extends DatabaseConnection {
 			alert.printUnknownIdMessage();
 			return false;
 		}
-		if(!citycheck.cityChecker(sender_city) || !citycheck.cityChecker(recipient_city)) {
+		if(citycheck.cityChecker(sender_city) && citycheck.cityChecker(recipient_city)) {
+			return true;
+		}
+		else {
 			alert.printUnknownCityMessage();
 			return false;
 		}
-		return true;
 	}
 
-	public ResultSet shipmentRequests(String id) {
+	public ResultSet shipmentRequests(int id) {
 		String sql = "SELECT * FROM shipment WHERE(recipient_id='" + id + "' AND status='1') OR(sender_id='" + id + "' And status='3');";
 		getConnection();
 		return createStatementAndRSForQuery(sql);
 	}
 
-	private ResultSet waitingShipments(String id) {
-		String sql = "SELECT * FROM shipment WHERE sender_id='" + id + "' AND status='0';";
-		DatabaseOperation dbop = new DatabaseOperation();
+	public void confirmShipment(String shipmentid) {
+		String sql = "UPDATE shipment SET status='2' WHERE shipment_id='" + shipmentid + "';";
 		getConnection();
-		rs = createStatementAndRSForQuery(sql);
-		if(dbop.resultSetRows(rs)==0)
-			System.err.println("Non ci sono richieste di spedizione!");
-		else return rs;
-
-		return rs;
-
+		createStatementForUpdate(sql);
 	}
 
-	// 2- METODO CHE PERMETTE AL DESTINATARIO DI VISUALIZZARE UNA RICHIESTA DI
+	public void refuseShipment(String shipmentid) {
+		String sql = "UPDATE shipment SET status='0' WHERE shipment_id='" + shipmentid + "';";
+		getConnection();
+		createStatementForUpdate(sql);
+	}
+
+	public ResultSet deliveriesList(int id) {
+		String sql = "SELECT * FROM shipment WHERE NOT(sender_id='" + id + "' OR recipient_id='" + id + "') AND status='2'";
+		getConnection();
+		return createStatementAndRSForQuery(sql);
+	}
+
+	public void confirmDelivery(String shipmentid, int carrier, double payment) {
+		String sql = "UPDATE shipment SET status='3', carrier_id='" + carrier + "', payment='" + payment + "' WHERE shipment_id='" + shipmentid + "';";
+		getConnection();
+		createStatementForUpdate(sql);
+	}
+
+	/*// 2- METODO CHE PERMETTE AL DESTINATARIO DI VISUALIZZARE UNA RICHIESTA DI
 	// SPEDIZIONE IN ARRIVO
 	public ResultSet seeShippingRequests(Users utente) {
 		String sql = "SELECT * FROM shipping WHERE id_user='" + utente.getId() + "' AND status_shipping=" + 0 + ";";
@@ -148,7 +161,7 @@ public class Shipment extends DatabaseConnection {
 		return rs;
 
 	}
-	/* 3- METODO PER ACCETTARE UNA RICHIESTA DI SPEDIZIONE */
+	*//* 3- METODO PER ACCETTARE UNA RICHIESTA DI SPEDIZIONE *//*
 	public void recipientAcceptShipping(int codShipping) {
 		String sql = "UPDATE shipping SET status_shipping="+
 				1+" WHERE cod_shipping="+codShipping+";";
@@ -158,8 +171,8 @@ public class Shipment extends DatabaseConnection {
 	}
 
 	// 4- METODO PER VISUALIZZARE LE SPEDIZIONI DISPONIBILI IN UNA CITTA'
-	/*Il metodo dovrebbe visualizzare L'indirizzo mittente , l'indirizzo destinatario
-	e l'importo del pagamaneto. QUINDI C'E BISOGNO DI UN INNER JOIN*/
+	*//*Il metodo dovrebbe visualizzare L'indirizzo mittente , l'indirizzo destinatario
+	e l'importo del pagamaneto. QUINDI C'E BISOGNO DI UN INNER JOIN*//*
 	public ResultSet seeShippingsAvaibleForCourier(String city) {
 		String sql = "SELECT road_sender,road_recipient FROM shipping WHERE city='"+city+";";
 		DatabaseOperation dbop = new DatabaseOperation();
@@ -190,9 +203,8 @@ public class Shipment extends DatabaseConnection {
 		if(dbop.resultSetRows(rs)==0) rs=null;
 		return rs;
 	}
-	/*7- METODO CHE PERMETTO DI CANCELLARE LE SPEDIZIONI NON ACCETTATE DOPO UN
+	*//*7- METODO CHE PERMETTO DI CANCELLARE LE SPEDIZIONI NON ACCETTATE DOPO UN
 	 * CERTO ARCO DI TEMPO
 	 */
-
 }
 

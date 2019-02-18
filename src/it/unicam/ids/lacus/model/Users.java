@@ -12,42 +12,29 @@ public class Users extends DatabaseConnection {
 
 	private static String id = null;
 	private static String psw = null;
-	private static String name, surname;
 
 	public String getId() {
-		return this.id;
+		return Users.id;
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		Users.id = id;
 	}
 
 	public String getPsw() {
-		return this.psw;
+		return Users.psw;
 	}
 
 	public void setPsw(String psw) {
-		this.psw = psw;
+		Users.psw = psw;
 	}
 
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getSurname() {
-		return this.surname;
-	}
-
-	public boolean addUser(String firstname, String surname, String id, String psw, String email, String cf, String city, String street, String street_number) {
+	private boolean addUser(String firstname, String surname, String id, String psw, String email, String cf, String city, String street, String street_number) {
 		String sql = "INSERT INTO users (firstname, surname, id, psw, email, cf, city, street, street_number) VALUES " + "('"
 				+ Hash.getMd5(firstname) + "','" + Hash.getMd5(surname) + "','" + Hash.getMd5(id) + "','" + Hash.getMd5(psw)
 				+ "','" + Hash.getMd5(email) + "','" + cf + "','" + city + "','" + street + "','" + street_number + "');";
 		//Controllo che il codice fiscale e la coppia id/password non siano già registrati
-		if (!verifyCFExistency(cf) && !searchUser(Hash.getMd5(id), Hash.getMd5(psw))) {
+		if (verifyNewCF(cf) && !searchUser(Hash.getMd5(id), Hash.getMd5(psw))) {
 			try {
 				getConnection();
 				stmt = conn.createStatement();
@@ -56,6 +43,8 @@ public class Users extends DatabaseConnection {
 				closeConnection();
 
 			} catch (SQLException e) {
+				e.printStackTrace();
+				Alerts alert = new Alerts();
 				alert.printDatabaseConnectionError();
 			}
 			return true;
@@ -177,16 +166,14 @@ public class Users extends DatabaseConnection {
 			getConnection();
 			rs = createStatementAndRSForQuery(sql);
 			rs.first();
-			if(dbop.resultSetRows(rs)==1)
-				responce = true;
-			else responce =  false;
+			responce = dbop.resultSetRows(rs) == 1;
 			closeResultSet();
 			closeStatement();
 			closeConnection();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-
+			Alerts alert = new Alerts();
+			alert.printDatabaseConnectionError();
 		}
 		return responce;
 	}
@@ -202,9 +189,10 @@ public class Users extends DatabaseConnection {
 		}
 	}
 
-	public boolean verifyCFExistency(String cf) {
+	//Controlla che il codice fiscale non sia mai stato inserito: restituisce true se è nuovo o false se è già in uso
+	public boolean verifyNewCF(String cf) {
 		String sql = "SELECT cf FROM users WHERE cf = '" + cf + "';";
-		boolean response = false;
+		boolean response = true;
 		try {
 			getConnection();
 			rs = createStatementAndRSForQuery(sql);
@@ -212,40 +200,32 @@ public class Users extends DatabaseConnection {
 			int firstPosition = rs.getRow();
 			rs.last();
 			int lastPosition = rs.getRow();
-			if (firstPosition == 0 && lastPosition == 0)
+			if(firstPosition == 1 && lastPosition == 1) {
 				response = false;
-			else if (firstPosition == 1 && lastPosition == 1)
-				response = true;
+			}
 			// Mi devo posizionare sulla prima riga e devo analizzare l'ID del primo record
 			closeResultSet();
 			closeStatement();
 			closeConnection();
 		}
 		catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Alerts alert = new Alerts();
+			alert.printDatabaseConnectionError();
 		}
-
 		return response;
 
 	}
 
+	//Verifica che due password siano uguali (ai fini della registrazione o del cambio password)
 	public boolean verifyPasswordMatch(String psw, String conf_psw) {
-		if(psw.compareTo(conf_psw) == 0) {
-			return true;
-		}
-		return false;
+		return psw.compareTo(conf_psw) == 0;
 	}
 
-	/*
-	 * METODO PER LA RESTIDUZIONE DELL'ATTRIBUTO cod_user NEL DATABASE UTILE PER
-	 * L'AGGIUNTA DI UNA SPEDIZIONE IN QUANTO HA COME ATTRIBUTI LE CHIAVI PRIMARIE
-	 * DEGLI UTENTI
-	 */
-
+	//Restituisce il codice dell'utente a partire dall'id e dalla password hashati
 	public int getCod(String hashedid, String hashedpsw) {
 		String sql = "SELECT userid FROM users WHERE(id='" + hashedid + "'AND psw='" + hashedpsw + "');";
-		int codUtente = 0;
+		int codUtente;
 		try {
 			getConnection();
 			rs = createStatementAndRSForQuery(sql);
@@ -255,42 +235,9 @@ public class Users extends DatabaseConnection {
 			closeStatement();
 			closeConnection();
 		} catch (SQLException e) {
-			// indica che non esiste
+			//Indica che il codice utente non esiste
 			codUtente = -1;
 		}
 		return codUtente;
 	}
-
-    /*public void listUsers() {
-        String sql = "SELECT * FROM Users";
-        try {
-            getConnection();
-            rs = createStatementAndRSForQuery(sql);
-            while (rs.next()) {
-                String idUtente = rs.getString("id_user");
-                String pswUtente = rs.getString("psw_user");
-                String nomeUtente = rs.getString("nome");
-                String cognomeUtente = rs.getString("surname");
-                String emailUtente = rs.getString("email");
-                String cityUtente = rs.getString("user_city");
-                String roadUtente = rs.getString("user_road");
-                int road_numberUtente = rs.getInt("user_road_number");
-                // INSERIMENTO DEL SYSTEMOUT A FINI DI TESTING
-                System.out.println("L'utente con cod. " + rs.getString("cod_user") + " è: " + idUtente + " " + pswUtente
-                        + " " + nomeUtente + " " + cognomeUtente + " " + emailUtente + " " + cityUtente + " "
-                        + roadUtente + " " + road_numberUtente);
-            }
-            closeResultSet();
-            closeStatement();
-            closeConnection();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            // return false;
-        }
-
-    }*/
-
-
-
 }

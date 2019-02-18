@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class Main extends Application {
-	private double x,y;
+	private double x, y;
 	private static Stage primaryStage;
 
 	@Override
@@ -17,7 +17,7 @@ public class Main extends Application {
 		primaryStage.setScene(new Scene(root));
 		primaryStage.initStyle(StageStyle.UNDECORATED);
 		primaryStage.setTitle("Lacus");
-		this.primaryStage = primaryStage;
+		Main.primaryStage = primaryStage;
 
 		//fa traslare la finestra senza ridimensionarla
 		root.setOnMousePressed(event -> {

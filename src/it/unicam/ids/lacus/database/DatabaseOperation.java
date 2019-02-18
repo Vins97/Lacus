@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DatabaseOperation extends DatabaseConnection {
+
 	public boolean searchElement(String sql) {
 		boolean responce = false;
 		int resultSetRows;
@@ -20,9 +21,6 @@ public class DatabaseOperation extends DatabaseConnection {
 		}
 		if(resultSetRows == 1) {
 			responce = true;
-		}
-		else if(resultSetRows == 0 || resultSetRows == -1) {
-			responce = false;
 		}
 		return responce;
 	}
@@ -51,7 +49,7 @@ public class DatabaseOperation extends DatabaseConnection {
 		return rsRows;
 	}
 
-	// metodo che restituisce tutte le città corrispondenti ad un CAP
+	/*// metodo che restituisce tutte le città corrispondenti ad un CAP
 	private ResultSet getCitiesResultSet(String CAP) {
 		ResultSet citiesList;
 		String sql = "SELECT city FROM cities where CAP='" + CAP + "%';";
@@ -60,7 +58,7 @@ public class DatabaseOperation extends DatabaseConnection {
 		return citiesList;
 	}
 
-	/*public String[] getCitiesFromCAP(String CAP) throws SQLException {
+	public String[] getCitiesFromCAP(String CAP) throws SQLException {
 		String[] citiesListArray = new String[50];
 
 		// controllo che il CAP sia di 5 cifre e che contenga solo numeri
@@ -85,6 +83,5 @@ public class DatabaseOperation extends DatabaseConnection {
 			System.out.println("IL FORMATO NON E' CORRETTO");
 		return citiesListArray;
 	}*/
-
 }
 

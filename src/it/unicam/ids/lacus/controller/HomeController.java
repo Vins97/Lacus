@@ -1,11 +1,9 @@
 package it.unicam.ids.lacus.controller;
-import com.mysql.cj.xdevapi.SqlDataResult;
 import it.unicam.ids.lacus.Main;
 import it.unicam.ids.lacus.database.DatabaseOperation;
 import it.unicam.ids.lacus.model.Shipment;
 import it.unicam.ids.lacus.model.Hash;
 import it.unicam.ids.lacus.view.Alerts;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import javafx.application.Platform;
@@ -22,11 +20,8 @@ import it.unicam.ids.lacus.model.Login;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import it.unicam.ids.lacus.model.Users;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class HomeController {
 
@@ -64,11 +59,11 @@ public class HomeController {
 
     //Pannelli della dashboard
 	@FXML
-	private Pane pnlHome, pnlProfile, pnlShipping, pnlRequests;
+	private Pane pnlHome, pnlProfile, pnlDeliveries, pnlShipment, pnlRequests;
 
 	//Pulsanti della dashboard
     @FXML
-    private Button btnHome, btnProfile, btnShipping, btnRequests, btnLogout;
+    private Button btnHome, btnProfile, btnDeliveries, btnShipment, btnRequests, btnLogout;
 
     //Contatori della shermata home
 	@FXML
@@ -104,53 +99,104 @@ public class HomeController {
 
 	//Vbox contenenti le info sulle spedizioni
     @FXML
-    private VBox ordersHistory, requestsHistory;
+    private VBox deliveriesList, shipmentsList, requestsList;
 
     //Pulsanti della schermata delle richieste
 	@FXML
-	public Button[] requestsbuttons;
-
-	//ID delle richieste di spedizione
-	private static String[] requestsids;
+	public Button btnRefreshReq;
 
     private void initializeHomePanel(){
         lblTitle.setText("Riepilogo");
         pnlHome.toFront();
     }
+
     private void initializeProfilePanel(){
         lblTitle.setText("Modifica Profilo");
         pnlProfile.toFront();
     }
-	private void initializeShippingPanel(){
-		lblTitle.setText("Lista spedizioni");
+
+	private void initializeDeliveriesPanel() {
+		lblTitle.setText("Lista Consegne");
+		//Pulisce le consegne precedenti
+		deliveriesList.getChildren().clear();
+		//Ottiene il resultset con le consegne attive
+		Shipment sr = new Shipment();
+		Users user = new Users();
+		ResultSet consegne = sr.deliveriesList(user.getCod(user.getId(), user.getPsw()));
+		//Salvo il numero dei risultati per decidere il numero di cicli for
+		DatabaseOperation dbop = new DatabaseOperation();
+		int risultati = dbop.resultSetRows(consegne);
+		//Crea tanti loader quante sono le righe di consegne da andare a creare
+		FXMLLoader[] loaders = new FXMLLoader[risultati];
+		try {
+			//Punta alla prima delle consegne
+			consegne.first();
+			//L'array serve a contenere l'id della spedizione, l'indirizzo e la città di mittente e destinatario
+			String[] consegna = new String[5];
+			for(int i = 0; i < risultati; i++) {
+				//Per ogni consegna crea una HBox a partire dall'FXML e gli assegna un nuovo oggetto controller ogni volta
+				DeliveryController dc = new DeliveryController();
+				loaders[i] = new FXMLLoader(getClass().getResource("../view/Delivery.fxml"));
+				loaders[i].setController(dc);
+				//Carica l'HBox ed il suo contenuto
+				HBox box;
+				try {
+					box = loaders[i].load();
+				}
+				catch(IOException e) {
+					Alerts alert = new Alerts();
+					alert.printMissingFileMessage();
+					return;
+				}
+				//Ottiene i dati della consegna dal resultset
+				consegna[0] = consegne.getString("shipment_id");
+				consegna[1] = consegne.getString("sender_city");
+				consegna[2] = consegne.getString("sender_street") + " " + consegne.getString("sender_street_number");
+				consegna[3] = consegne.getString("recipient_city");
+				consegna[4] = consegne.getString("recipient_street") + " " + consegne.getString("recipient_street_number");
+				//Scrive i dati della consegna nel controller
+				dc.initData(consegna, i);
+				//Dà alle HBox qualche effetto
+				box.setOnMouseEntered(event -> box.setStyle("-fx-background-color : #0A0E3F"));
+				box.setOnMouseExited(event -> box.setStyle("-fx-background-color : #02030A"));
+				//Aggiunge la HBox alla finestra delle consegne
+				deliveriesList.getChildren().add(box);
+				consegne.next();
+			}
+		}
+		catch (SQLException e) {
+			Alerts alert = new Alerts();
+			alert.printDatabaseConnectionError();
+		}
+		pnlDeliveries.toFront();
+	}
+
+	private void initializeShipmentPanel() {
+		lblTitle.setText("Lista Spedizioni");
 		Node[] nodes = new Node[5];
 		for (int i = 0; i < nodes.length; i++) {
 			try {
 				final int j = i;
 				nodes[i] = FXMLLoader.load(getClass().getResource("../view/Shipment.fxml"));
 				//give the items some effect
-				nodes[i].setOnMouseEntered(event -> {
-					nodes[j].setStyle("-fx-background-color : #0A0E3F");
-				});
-				nodes[i].setOnMouseExited(event -> {
-					nodes[j].setStyle("-fx-background-color : #02030A");
-				});
-				ordersHistory.getChildren().add(nodes[i]);
+				nodes[i].setOnMouseEntered(event -> nodes[j].setStyle("-fx-background-color : #0A0E3F"));
+				nodes[i].setOnMouseExited(event -> nodes[j].setStyle("-fx-background-color : #02030A"));
+				shipmentsList.getChildren().add(nodes[i]);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		pnlShipping.toFront();
+		pnlShipment.toFront();
 	}
 
 	private void initializeRequestsPanel() {
-		lblTitle.setText("Richieste");
+		lblTitle.setText("Lista Richieste");
 		//Pulisce le richieste precedenti
-		requestsHistory.getChildren().clear();
+		requestsList.getChildren().clear();
 		//Ottiene il resultset con le richieste di spedizione attive
 		Shipment sr = new Shipment();
 		Users user = new Users();
-		ResultSet richieste = sr.shipmentRequests(Integer.toString(user.getCod(user.getId(), user.getPsw())));
+		ResultSet richieste = sr.shipmentRequests(user.getCod(user.getId(), user.getPsw()));
 		//Salvo il numero dei risultati per decidere il numero di cicli for
 		DatabaseOperation dbop = new DatabaseOperation();
 		int risultati = dbop.resultSetRows(richieste);
@@ -162,15 +208,14 @@ public class HomeController {
 			//L'array serve a contenere l'id della spedizione, la descrizione, il tipo di richiesta e il mittente
 			String[] richiesta = new String[4];
 			for(int i = 0; i < risultati; i++) {
-				final int j = i;
 				//Per ogni richiesta crea una HBox a partire dall'FXML e gli assegna un nuovo oggetto controller ogni volta
 				RequestController rc = new RequestController();
-				loaders[i] = new FXMLLoader(getClass().getResource("../view/Requests.fxml"));
+				loaders[i] = new FXMLLoader(getClass().getResource("../view/Request.fxml"));
 				loaders[i].setController(rc);
 				//Carica l'HBox ed il suo contenuto
 				HBox box;
 				try {
-					box = (HBox) loaders[i].load();
+					box = loaders[i].load();
 				}
 				catch(IOException e) {
 					Alerts alert = new Alerts();
@@ -189,18 +234,12 @@ public class HomeController {
 					richiesta[3] = richieste.getString("carrier_id");
 				}
 				//Scrive i dati della richiesta nel controller
-				rc.initData(richiesta);
-				rc.btnAccept.setId("btnAccept" + i);
-				rc.btnRefuse.setId("btnAccept" + i);
+				rc.initData(richiesta, i);
 				//Dà alle HBox qualche effetto
-				box.setOnMouseEntered(event -> {
-					box.setStyle("-fx-background-color : #0A0E3F");
-				});
-				box.setOnMouseExited(event -> {
-					box.setStyle("-fx-background-color : #02030A");
-				});
+				box.setOnMouseEntered(event -> box.setStyle("-fx-background-color : #0A0E3F"));
+				box.setOnMouseExited(event -> box.setStyle("-fx-background-color : #02030A"));
 				//Aggiunge la HBox alla finestra delle richieste
-				requestsHistory.getChildren().add(box);
+				requestsList.getChildren().add(box);
 				richieste.next();
 			}
 		}
@@ -212,6 +251,7 @@ public class HomeController {
 	}
 
 	private void dashboardPanel() {
+		lblTitle.setText("Riepilogo");
     	Login login = new Login();
     	if(login.userLogin(txtUsername.getText(), txtPassword.getText())){
     		Users user = new Users();
@@ -228,7 +268,7 @@ public class HomeController {
 	}
 
 	private void registerPanel() {
-		ancPnRegister.toFront();
+    	ancPnRegister.toFront();
 	}
 
 	private void dashPanel() {
@@ -241,7 +281,7 @@ public class HomeController {
 
     @FXML
     void btnCloseAction() {
-        Platform.exit();
+    	Platform.exit();
     }
 
 	@FXML
@@ -251,7 +291,7 @@ public class HomeController {
 	}
 
     @FXML
-    void handleClicks(ActionEvent event) throws IOException {
+    void handleClicks(ActionEvent event) {
     	Users user = new Users();
         if(event.getSource() == btnLogin){
             dashboardPanel();
@@ -295,15 +335,21 @@ public class HomeController {
 		if(event.getSource() == btnModificaDatiProf) {
 			editProfile();
 		}
-		if(event.getSource() == btnShipping) {
-			initializeShippingPanel();
+		if(event.getSource() == btnDeliveries) {
+			initializeDeliveriesPanel();
 		}
-		if(event.getSource() == btnRequests) {
+		if(event.getSource() == btnShipment) {
+			initializeShipmentPanel();
+		}
+		if(event.getSource() == btnRequests || event.getSource() == btnRefreshReq) {
 			initializeRequestsPanel();
 		}
         if(event.getSource() == btnLogout){
-        	user.setActiveUser(null, null);
-            loginPanel();
+        	Alerts alert = new Alerts();
+        	if(alert.printLogoutPrompt()) {
+				user.setActiveUser(null, null);
+				loginPanel();
+			}
         }
     }
 
@@ -350,11 +396,6 @@ public class HomeController {
 		txtNumeroProf.clear();
 	}
 
-	private String getUserCod(String id, String psw) {
-    	Users user = new Users();
-		return Integer.toString(user.getCod(Hash.getMd5(id), Hash.getMd5(psw)));
-	}
-
 	private void editProfile() {
 		Users user = new Users();
 		Alerts alert = new Alerts();
@@ -395,7 +436,7 @@ public class HomeController {
 			}
 		}
 		if(!txtCodiceFiscaleProf.getText().trim().isEmpty()) {
-			if(!user.verifyCFExistency(txtCodiceFiscaleProf.getText())) {
+			if(user.verifyNewCF(txtCodiceFiscaleProf.getText())) {
 				String sql = "UPDATE users SET cf='" + txtCodiceFiscaleProf.getText() + "' WHERE id='" + user.getId() + "' AND psw='" + user.getPsw() + "'";
 				if(!user.updateUser(sql)) {
 					return;

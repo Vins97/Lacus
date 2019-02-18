@@ -5,14 +5,14 @@ import it.unicam.ids.lacus.database.DatabaseOperation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StringChecker {
-	public int characterAndNumberChecker(String s) {
+class StringChecker {
+	int characterAndNumberChecker(String s) {
 		if (s == null || s.trim().isEmpty())
 			return 0; //La stringa è vuota
 		Pattern p = Pattern.compile("[^A-Za-z0-9]");
 		Matcher m = p.matcher(s);
 		boolean b = m.find();
-		if (b == true)
+		if (b)
 			return -1; //La stringa non è valida
 		else
 			return 1; //La stringa è valida
@@ -22,25 +22,25 @@ public class StringChecker {
 	 * SOLO LETTERE String s deve essere passata in toLowerCase()
 	 */
 
-	public int characterNumberAndSpacesChecker(String s) {
+	int characterNumberAndSpacesChecker(String s) {
 		if (s == null || s.trim().isEmpty())
 			return 0; //La stringa è vuota
 		Pattern p = Pattern.compile("[^A-Za-z0-9]+$");
 		Matcher m = p.matcher(s);
 		boolean b = m.find();
-		if (b == true)
+		if (b)
 			return -1; //La stringa non è valida
 		else
 			return 1; //La stringa è valida
 	}
 
-	public int characterAndSpacesChecker(String s) {
+	int characterAndSpacesChecker(String s) {
 		if (s == null || s.trim().isEmpty())
 			return 0; //La stringa è vuota
 		Pattern p = Pattern.compile("[^A-Za-z]+$");
 		Matcher m = p.matcher(s);
 		boolean b = m.find();
-		if (b == true)
+		if (b)
 			return -1; //La stringa non è valida
 
 		else
@@ -51,14 +51,14 @@ public class StringChecker {
 	// nato per il controllo dei numeri civici ma utilizzato anche per
 	// il CAP in quanto viene effettuato il controllo preliminare sulla
 	// lunghezza della scringa che deve essere di 5 caratteri
-	public int numberOnlyChecker(String cr) {
+	int numberOnlyChecker(String cr) {
 		if (cr == null || cr.trim().isEmpty()) {
 			return 0; //La stringa è vuota
 		}
 		Pattern p = Pattern.compile("[1-9]");
 		Matcher m = p.matcher(cr);
 		boolean b = m.find();
-		if (b == false)
+		if (!b)
 			return -1; //La stringa non è valida
 		else
 			return 1; //La stringa è valida
@@ -70,15 +70,15 @@ public class StringChecker {
 	 * -2 se il formato è giusto ma il dominio non va bene +1 se il dominio e
 	 * formato email sono giusti
 	 */
-	public int emailChecker(String email) {
+	int emailChecker(String email) {
 		if (email == null || email.trim().isEmpty()) {
 			return 0; //La stringa è vuota
 		}
 		Pattern p = Pattern.compile("[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}");
 		Matcher m = p.matcher(email);
 		boolean b = m.find();
-		if (b == true) {
-			String emailDomain = email.substring((email.indexOf("@") + 1), email.length());
+		if (b) {
+			String emailDomain = email.substring((email.indexOf("@") + 1));
 			// ESEGUO LA QUERY SUL DATABASE
 			String sql = "SELECT * FROM email WHERE email='" + emailDomain + "';";
 			DatabaseOperation emailOperation = new DatabaseOperation();
@@ -90,14 +90,14 @@ public class StringChecker {
 			return -1; //La stringa non è valida
 	}
 
-	public boolean cityChecker(String city) {
+	boolean cityChecker(String city) {
 		// ESEGUO LA QUERY SUL DATABASE
 		String sql = "SELECT * FROM cities WHERE city='" + city + "';";
 		DatabaseOperation cityOperation = new DatabaseOperation();
 		return cityOperation.searchElement(sql);
 	}
 
-	public boolean idChecker(String id) {
+	boolean idChecker(String id) {
 		// ESEGUO LA QUERY SUL DATABASE
 		String sql = "SELECT * FROM users WHERE userid='" + id + "';";
 		DatabaseOperation userOperation = new DatabaseOperation();
