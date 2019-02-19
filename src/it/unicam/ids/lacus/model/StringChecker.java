@@ -2,10 +2,15 @@ package it.unicam.ids.lacus.model;
 
 import it.unicam.ids.lacus.database.DatabaseOperation;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class StringChecker {
+public class StringChecker {
 	int characterAndNumberChecker(String s) {
 		if (s == null || s.trim().isEmpty())
 			return 0; //La stringa è vuota
@@ -102,5 +107,23 @@ class StringChecker {
 		String sql = "SELECT * FROM users WHERE userid='" + id + "';";
 		DatabaseOperation userOperation = new DatabaseOperation();
 		return userOperation.searchElement(sql);
+	}
+
+	public boolean revenueChecker(String stringa) {
+		try {
+			double revenue = Double.parseDouble(stringa);
+			return revenue >= 0.00;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
+	public boolean dateChecker(LocalDate data) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return !Date.from(Instant.from(data.atStartOfDay(ZoneId.systemDefault()))).before(calendar.getTime());
 	}
 }

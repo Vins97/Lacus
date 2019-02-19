@@ -367,23 +367,85 @@
                     </font>
                 </Button>
             </Pane>
-            <Pane id="pnlHome" fx:id="pnlRequests" prefHeight="642.0" prefWidth="960.0" style="-fx-background-color: #3B3E43;">
-                <Label layoutX="142.0" layoutY="17.0" prefHeight="31.0" prefWidth="102.0" text="Spedizione" textAlignment="CENTER" textFill="WHITE">
-                    <font>
-                        <Font name="NexaLight" size="21.0" />
-                    </font>
-                </Label>
-                <Label layoutX="437.0" layoutY="17.0" text="Richiesta" textFill="WHITE">
-                    <font>
-                        <Font name="NexaLight" size="21.0" />
-                    </font>
-                </Label>
-                <Label layoutX="582.0" layoutY="17.0" text="Richiedente" textFill="WHITE">
-                    <font>
-                        <Font name="NexaLight" size="21.0" />
-                    </font>
-                </Label>
+            <Pane id="pnlHome" fx:id="pnlShipment" prefHeight="642.0" prefWidth="960.0" style="-fx-background-color: #3B3E43;">
+                <HBox alignment="CENTER" prefHeight="50.0" prefWidth="960.0" spacing="60.0">
+                    <padding>
+                        <Insets left="40.0" right="280.0" />
+                    </padding>
+                    <Label text="Ruolo" textAlignment="CENTER" textFill="WHITE">
+                        <font>
+                            <Font name="NexaLight" size="21.0" />
+                        </font>
+                    </Label>
+                    <Label text="Destinatario" textFill="WHITE">
+                        <font>
+                            <Font name="NexaLight" size="21.0" />
+                        </font>
+                    </Label>
+                    <Label text="Data Partenza" textFill="WHITE">
+                        <font>
+                            <Font name="NexaLight" size="21.0" />
+                        </font>
+                    </Label>
+                    <Label text="Stato" textFill="WHITE">
+                        <font>
+                            <Font name="NexaLight" size="21.0" />
+                        </font>
+                    </Label>
+                </HBox>
                 <ScrollPane layoutX="23.0" layoutY="64.0" prefHeight="514.0" prefWidth="895.0">
+                    <VBox fx:id="shipmentsList" prefHeight="514.0" prefWidth="880.0" style="-fx-background-color: #3B3E43;" />
+                </ScrollPane>
+            </Pane>
+            <Pane id="pnlHome" fx:id="pnlDeliveries" prefHeight="642.0" prefWidth="960.0" style="-fx-background-color: #3B3E43;">
+                <Pane id="pnlHome" fx:id="pnlEmptyDeliveries" layoutX="23.0" layoutY="64.0" prefHeight="514.0" prefWidth="895.0" style="-fx-background-color: #313335;">
+                    <Label layoutX="169.0" layoutY="300.0" text="Nessuna consegna disponibile al momento, riprova più tardi" textAlignment="CENTER" textFill="WHITE">
+                        <font>
+                            <Font name="NexaLight" size="21.0"/>
+                        </font>
+                    </Label>
+                    <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="373.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@icons/icons8-sad-100.png"/>
+                    </ImageView>
+                </Pane>
+                 <Label fx:id="lblMittenteDel" layoutX="100.0" layoutY="17.0" text="Indirizzo Mittente" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                         <Font name="NexaLight" size="21.0" />
+                     </font>
+                 </Label>
+                 <Label fx:id="lblDestinatarioDel" layoutX="500.0" layoutY="17.0" text="Indirizzo Destinatario" textFill="WHITE">
+                     <font>
+                         <Font name="NexaLight" size="21.0" />
+                     </font>
+                 </Label>
+                <ScrollPane fx:id="pnlExistingDeliveries" layoutX="23.0" layoutY="64.0" prefHeight="514.0" prefWidth="895.0">
+                    <VBox fx:id="deliveriesList" prefHeight="514.0" prefWidth="880.0" style="-fx-background-color: #3B3E43;" />
+                </ScrollPane>
+            <Button fx:id="btnRefreshDel" layoutX="818.0" layoutY="7.0" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #313335;">
+               <graphic>
+                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                       <Image url="@icons/icons8-synchronize-boxed-100.png"/>
+                   </ImageView>
+               </graphic>
+            </Button>
+            </Pane>
+            <Pane id="pnlHome" fx:id="pnlRequests" prefHeight="642.0" prefWidth="960.0" style="-fx-background-color: #3B3E43;">
+                <Label fx:id="lblSpedizioneReq" layoutX="142.0" layoutY="17.0" prefHeight="31.0" prefWidth="102.0" text="Spedizione" textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                        <Font name="NexaLight" size="21.0" />
+                    </font>
+                </Label>
+                <Label fx:id="lblRichiestaReq" layoutX="437.0" layoutY="17.0" text="Richiesta" textFill="WHITE">
+                    <font>
+                        <Font name="NexaLight" size="21.0" />
+                    </font>
+                </Label>
+                <Label fx:id="lblRichiedenteReq" layoutX="582.0" layoutY="17.0" text="Richiedente" textFill="WHITE">
+                    <font>
+                        <Font name="NexaLight" size="21.0" />
+                    </font>
+                </Label>
+                <ScrollPane fx:id="pnlExistingRequests" layoutX="23.0" layoutY="64.0" prefHeight="514.0" prefWidth="895.0">
                     <VBox fx:id="requestsList" prefHeight="514.0" prefWidth="880.0" style="-fx-background-color: #3B3E43;" />
                 </ScrollPane>
                 <Button fx:id="btnRefreshReq" layoutX="818.0" layoutY="7.0" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" onAction="#handleClicks" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #313335;">
@@ -393,52 +455,17 @@
                         </ImageView>
                     </graphic>
                 </Button>
-            </Pane>
-            <Pane id="pnlHome" fx:id="pnlShipment" prefHeight="642.0" prefWidth="960.0" style="-fx-background-color: #3B3E43;">
-                <HBox alignment="CENTER" prefHeight="50.0" prefWidth="960.0" spacing="60.0">
-                    <padding>
-                        <Insets left="40.0" right="280.0"/>
-                    </padding>
-                    <Label text="Ruolo" textAlignment="CENTER" textFill="WHITE">
+                <Pane id="pnlHome" fx:id="pnlEmptyRequests" layoutX="23.0" layoutY="64.0" prefHeight="514.0" prefWidth="895.0" style="-fx-background-color: #313335;">
+                    <Label layoutX="169.0" layoutY="300.0" text="Nessuna richiesta disponibile al momento, riprova più tardi" textAlignment="CENTER" textFill="WHITE">
                         <font>
                             <Font name="NexaLight" size="21.0"/>
                         </font>
                     </Label>
-                    <Label text="Destinatario" textFill="WHITE">
-                        <font>
-                            <Font name="NexaLight" size="21.0"/>
-                        </font>
-                    </Label>
-                    <Label text="Data Partenza" textFill="WHITE">
-                        <font>
-                            <Font name="NexaLight" size="21.0"/>
-                        </font>
-                    </Label>
-                    <Label text="Stato" textFill="WHITE">
-                        <font>
-                            <Font name="NexaLight" size="21.0"/>
-                        </font>
-                    </Label>
-                </HBox>
-                <ScrollPane layoutX="23.0" layoutY="64.0" prefHeight="514.0" prefWidth="895.0">
-                    <VBox fx:id="shipmentsList" prefHeight="514.0" prefWidth="880.0"
-                          style="-fx-background-color: #3B3E43;"/>
-                </ScrollPane>
-            </Pane>
-            <Pane id="pnlHome" fx:id="pnlDeliveries" prefHeight="642.0" prefWidth="960.0" style="-fx-background-color: #3B3E43;">
-                 <Label layoutX="100.0" layoutY="17.0" text="Indirizzo Mittente" textAlignment="CENTER" textFill="WHITE">
-                     <font>
-                         <Font name="NexaLight" size="21.0" />
-                     </font>
-                 </Label>
-                 <Label layoutX="500.0" layoutY="17.0" text="Indirizzo Destinatario" textFill="WHITE">
-                     <font>
-                         <Font name="NexaLight" size="21.0" />
-                     </font>
-                 </Label>
-                <ScrollPane layoutX="23.0" layoutY="64.0" prefHeight="514.0" prefWidth="895.0">
-                    <VBox fx:id="deliveriesList" prefHeight="514.0" prefWidth="880.0" style="-fx-background-color: #3B3E43;" />
-                </ScrollPane>
+                    <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="373.0" layoutY="125.0" pickOnBounds="true"
+                               preserveRatio="true">
+                        <Image url="@icons/icons8-sad-100.png"/>
+                    </ImageView>
+                </Pane>
             </Pane>
             <Pane id="pnlHome" fx:id="pnlHome" prefHeight="588.0" prefWidth="960.0" style="-fx-background-color: #3B3E43;">
                 <Label layoutX="56.0" layoutY="41.0" prefHeight="31.0" prefWidth="208.0" text="In attesa di spedizione" textFill="WHITE">

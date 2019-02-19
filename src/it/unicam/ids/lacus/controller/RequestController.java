@@ -2,9 +2,17 @@ package it.unicam.ids.lacus.controller;
 
 import it.unicam.ids.lacus.model.Shipment;
 import it.unicam.ids.lacus.view.Alerts;
+
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import java.io.IOException;
 
 public class RequestController {
 
@@ -23,6 +31,9 @@ public class RequestController {
 	private boolean accepted = false;
 	private boolean refused = false;
 
+	private double x, y;
+
+	@FXML
 	public void accept() {
 		Alerts alert = new Alerts();
 		if(accepted) {
@@ -41,14 +52,17 @@ public class RequestController {
 				}
 			}
 			else {
-				/*if(alert.printPaymentPrompt()) {
-					accepted = true;
-					alert.printPaymentAcceptedMessage();
-				}*/
+				double payment = shipment.getPayment(shipmentid);
+				if(alert.printPaymentPrompt(payment)) {
+					if(createPaymentStage()) {
+						PaymentController.shipmentid = shipmentid;
+					}
+				}
 			}
 		}
 	}
 
+	@FXML
 	public void refuse() {
 		Alerts alert = new Alerts();
 		if(accepted) {
@@ -59,12 +73,47 @@ public class RequestController {
 		}
 		else {
 			Shipment shipment = new Shipment();
-			if(alert.printRefusePrompt()) {
-				shipment.refuseShipment(shipmentid);
-				refused = true;
-				alert.printShipmentRefusedMessage();
+			if(lblRichiesta.getText().compareTo("Accettazione") == 0) {
+				if(alert.printRefuseShipmentPrompt()) {
+					shipment.refuseShipment(shipmentid);
+					refused = true;
+					alert.printShipmentRefusedMessage();
+				}
+			}
+			else {
+				if(alert.printRefusePaymentPrompt()) {
+					shipment.refusePayment(shipmentid);
+					alert.printPaymentRefusedMessage();
+				}
 			}
 		}
+	}
+
+	private boolean createPaymentStage() {
+		Parent payment;
+		try {
+			payment = FXMLLoader.load(getClass().getResource("../view/Payment.fxml"));
+			Stage stage = new Stage();
+			stage.initStyle(StageStyle.UNDECORATED);
+			stage.setTitle("Pagamento");
+			stage.setScene(new Scene(payment));
+			stage.show();
+			//fa traslare la finestra senza ridimensionarla
+			payment.setOnMousePressed(event -> {
+				x = event.getSceneX();
+				y = event.getSceneY();
+			});
+			payment.setOnMouseDragged(event -> {
+				stage.setX(event.getScreenX()-x);
+				stage.setY(event.getScreenY()-y);
+			});
+		}
+		catch(IOException e) {
+			Alerts alert = new Alerts();
+			alert.printMissingFileMessage();
+			return false;
+		}
+		return true;
 	}
 
 	void initData(String[] richiesta, int i) {

@@ -1,9 +1,12 @@
 package it.unicam.ids.lacus.model;
 
 import it.unicam.ids.lacus.database.DatabaseConnection;
+import it.unicam.ids.lacus.database.DatabaseOperation;
 import it.unicam.ids.lacus.view.Alerts;
 
+import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Shipment extends DatabaseConnection {
 	/*
@@ -117,8 +120,32 @@ public class Shipment extends DatabaseConnection {
 		}
 	}
 
+	public int waitingShipments(String id) {
+		String sql = "SELECT * FROM shipment WHERE(sender_id='" + id + "' OR recipient_id='" + id + "') AND NOT(status='0' OR status='5' OR status='6');";
+		getConnection();
+		createStatementAndRSForQuery(sql);
+		DatabaseOperation dbop = new DatabaseOperation();
+		return dbop.resultSetRows(rs);
+	}
+
+	public int deliveringShipments(String id) {
+		String sql = "SELECT * FROM shipment WHERE(sender_id='" + id + "' OR recipient_id='" + id + "') AND(status='5');";
+		getConnection();
+		createStatementAndRSForQuery(sql);
+		DatabaseOperation dbop = new DatabaseOperation();
+		return dbop.resultSetRows(rs);
+	}
+
+	public int deliveredShipments(String id) {
+		String sql = "SELECT * FROM shipment WHERE(sender_id='" + id + "' OR recipient_id='" + id + "') AND(status='6');";
+		getConnection();
+		createStatementAndRSForQuery(sql);
+		DatabaseOperation dbop = new DatabaseOperation();
+		return dbop.resultSetRows(rs);
+	}
+
 	public ResultSet shipmentRequests(int id) {
-		String sql = "SELECT * FROM shipment WHERE(recipient_id='" + id + "' AND status='1') OR(sender_id='" + id + "' And status='3');";
+		String sql = "SELECT * FROM shipment WHERE(recipient_id='" + id + "' AND status='1') OR(sender_id='" + id + "' AND status='3');";
 		getConnection();
 		return createStatementAndRSForQuery(sql);
 	}
@@ -135,14 +162,40 @@ public class Shipment extends DatabaseConnection {
 		createStatementForUpdate(sql);
 	}
 
+	public double getPayment(String shipmentid) {
+		String sql = "SELECT * FROM shipment WHERE shipment_id='" + shipmentid + "';";
+		getConnection();
+		ResultSet rs = createStatementAndRSForQuery(sql);
+		double result = 0;
+		try {
+			rs.first();
+			result = Double.parseDouble(rs.getString("payment"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	public void confirmPayment(String shipmentid) {
+		String sql = "UPDATE shipment SET status='4' WHERE shipment_id='" + shipmentid + "';";
+		getConnection();
+		createStatementForUpdate(sql);
+	}
+
+	public void refusePayment(String shipmentid) {
+		String sql = "UPDATE shipment SET status='2', carrier_id=null, payment=null WHERE shipment_id='" + shipmentid + "';";
+		getConnection();
+		createStatementForUpdate(sql);
+	}
+
 	public ResultSet deliveriesList(int id) {
 		String sql = "SELECT * FROM shipment WHERE NOT(sender_id='" + id + "' OR recipient_id='" + id + "') AND status='2'";
 		getConnection();
 		return createStatementAndRSForQuery(sql);
 	}
 
-	public void confirmDelivery(String shipmentid, int carrier, double payment) {
-		String sql = "UPDATE shipment SET status='3', carrier_id='" + carrier + "', payment='" + payment + "' WHERE shipment_id='" + shipmentid + "';";
+	public void confirmDelivery(String shipmentid, int carrier, double payment, Date shipping, Date arrival) {
+		String sql = "UPDATE shipment SET status='3', carrier_id='" + carrier + "', payment='" + payment + "', date_shipping='" + shipping + "', date_arrival='" + arrival + "' WHERE shipment_id='" + shipmentid + "';";
 		getConnection();
 		createStatementForUpdate(sql);
 	}

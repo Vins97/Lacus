@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="ancPnPayment" prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #3B3E43;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unicam.ids.lacus.controller.PaymentController">
+   <Pane prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #383B40; -fx-border-color: WHITE;">
+      <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="131.0" layoutY="18.0" pickOnBounds="true" preserveRatio="true">
+         <Image url="@icons/icons8-paypal-50.png"/>
+      </ImageView>
+      <Label alignment="CENTER" contentDisplay="TOP" layoutX="182.0" layoutY="16.0" text="Pagamento" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="36.0"/>
+         </font>
+      </Label>
+      <Label layoutX="50.0" layoutY="100.0" text="Nome Titolare" textFill="WHITE">
+         <font>
+            <Font name="NexaLight" size="21.0"/>
+         </font>
+      </Label>
+      <TextField alignment="CENTER" layoutX="200.0" layoutY="95.0" prefHeight="40.0" prefWidth="235.0"/>
+      <Label layoutX="50.0" layoutY="180.0" text="Numero Carta" textFill="WHITE">
+         <font>
+            <Font name="NexaLight" size="21.0"/>
+         </font>
+      </Label>
+      <TextField alignment="CENTER" layoutX="200.0" layoutY="175.0" prefHeight="40.0" prefWidth="235.0"/>
+      <Label layoutX="94.0" layoutY="260.0" text="Data" textFill="WHITE">
+         <font>
+            <Font name="NexaLight" size="21.0"/>
+         </font>
+      </Label>
+      <TextField alignment="CENTER" layoutX="200.0" layoutY="255.0" prefHeight="40.0" prefWidth="235.0"/>
+      <Label layoutX="95.0" layoutY="340.0" text="CVV" textFill="WHITE">
+         <font>
+            <Font name="NexaLight" size="21.0"/>
+         </font>
+      </Label>
+      <TextField alignment="CENTER" layoutX="200.0" layoutY="335.0" prefHeight="40.0" prefWidth="235.0"/>
+      <Button fx:id="btnPaymentPay" layoutX="29.0" layoutY="419.0" mnemonicParsing="false" onAction="#pay"
+              prefHeight="45.0" prefWidth="175.0" style="-fx-background-color: #313335;" text="Conferma"
+              textFill="WHITE">
+         <font>
+            <Font name="NexaLight" size="21.0"/>
+         </font>
+      </Button>
+      <Button fx:id="btnCancelPayment" layoutX="260.0" layoutY="419.0" mnemonicParsing="false" onAction="#close" prefHeight="45.0" prefWidth="175.0" style="-fx-background-color: #313335;" text="Annulla" textFill="WHITE">
+         <font>
+            <Font name="NexaLight" size="21.0"/>
+         </font>
+      </Button>
+   </Pane>
+</AnchorPane>

@@ -1,11 +1,16 @@
 package it.unicam.ids.lacus.controller;
 
-import it.unicam.ids.lacus.model.Shipment;
-import it.unicam.ids.lacus.model.Users;
 import it.unicam.ids.lacus.view.Alerts;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import java.io.IOException;
 
 public class DeliveryController {
 
@@ -21,29 +26,44 @@ public class DeliveryController {
 	private String shipmentid;
 
 	//Boolean che tiene conto se la consegna è già stata assegnata o meno
-	private boolean taken = false;
 
+	private double x, y;
+
+	@FXML
 	public void accept() {
 		Alerts alert = new Alerts();
-		if(taken) {
-			alert.printDeliveryAlreadyTakenMessage();
-		}
-		else {
-			if(alert.printDeliveryPrompt()) {
-				double payment;
-				do {
-					payment = alert.printPaymentDeliveryDialog();
-				}
-				while(payment == -1.0);
-				if(payment > 0.00) {
-					Shipment shipment = new Shipment();
-					Users user = new Users();
-					shipment.confirmDelivery(shipmentid, user.getCod(user.getId(), user.getPsw()), payment);
-					taken = true;
-					alert.printDeliveryAcceptedMessage();
-				}
+		if(alert.printDeliveryPrompt()) {
+			if(createCarrierStage()) {
+				CarrierController.shipmentid = shipmentid;
 			}
 		}
+	}
+
+	private boolean createCarrierStage() {
+		Parent carrier;
+		try {
+			carrier = FXMLLoader.load(getClass().getResource("../view/Carrier.fxml"));
+			Stage stage = new Stage();
+			stage.initStyle(StageStyle.UNDECORATED);
+			stage.setTitle("Consegna");
+			stage.setScene(new Scene(carrier));
+			stage.show();
+			//fa traslare la finestra senza ridimensionarla
+			carrier.setOnMousePressed(event -> {
+				x = event.getSceneX();
+				y = event.getSceneY();
+			});
+			carrier.setOnMouseDragged(event -> {
+				stage.setX(event.getScreenX()-x);
+				stage.setY(event.getScreenY()-y);
+			});
+		}
+		catch(IOException e) {
+			Alerts alert = new Alerts();
+			alert.printMissingFileMessage();
+			return false;
+		}
+		return true;
 	}
 
 	void initData(String[] consegna, int i) {

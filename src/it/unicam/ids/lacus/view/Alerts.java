@@ -1,9 +1,6 @@
 package it.unicam.ids.lacus.view;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.stage.StageStyle;
 
 import java.util.Optional;
@@ -154,18 +151,34 @@ public class Alerts {
 		return result.filter(buttonType -> buttonType == ButtonType.OK).isPresent();
 	}
 
-	public boolean printPaymentPrompt() {
+	public boolean printPaymentPrompt(double payment) {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		initAlertsStyle(alert);
-		alert.setContentText("Sei sicuro di voler procedere al pagamento della spedizione?");
+		alert.setContentText("Il costo della spedizione è di " + payment + "€. Sei sicuro di voler procedere al pagamento?");
 		Optional<ButtonType> result = alert.showAndWait();
 		return result.filter(buttonType -> buttonType == ButtonType.OK).isPresent();
 	}
 
-	public boolean printRefusePrompt() {
+	public boolean printPaymentConfirmationPrompt() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		initAlertsStyle(alert);
+		alert.setContentText("Desideri confermare il pagamento?");
+		Optional<ButtonType> result = alert.showAndWait();
+		return result.filter(buttonType -> buttonType == ButtonType.OK).isPresent();
+	}
+
+	public boolean printRefuseShipmentPrompt() {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		initAlertsStyle(alert);
 		alert.setContentText("Sei sicuro di voler rifiutare la spedizione?");
+		Optional<ButtonType> result = alert.showAndWait();
+		return result.filter(buttonType -> buttonType == ButtonType.OK).isPresent();
+	}
+
+	public boolean printRefusePaymentPrompt() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		initAlertsStyle(alert);
+		alert.setContentText("Sei sicuro di voler rifiutare l'offerta di pagamento?\nLa tua spedizione verrà aggiunta nuovamente alla lista delle consegne.");
 		Optional<ButtonType> result = alert.showAndWait();
 		return result.filter(buttonType -> buttonType == ButtonType.OK).isPresent();
 	}
@@ -181,6 +194,13 @@ public class Alerts {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		initAlertsStyle(alert);
 		alert.setContentText("Il pagamento della spedizione è stato accettato con successo!");
+		alert.showAndWait();
+	}
+
+	public void printPaymentRefusedMessage() {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		initAlertsStyle(alert);
+		alert.setContentText("Il pagamento della spedizione è stato rifiutato! Riprova più tardi.");
 		alert.showAndWait();
 	}
 
@@ -213,29 +233,24 @@ public class Alerts {
 		return result.filter(buttonType -> buttonType == ButtonType.OK).isPresent();
 	}
 
+	public void printInvalidRevenueMessage() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		initAlertsStyle(alert);
+		alert.setContentText("Il compenso inserito non è valido!");
+		alert.showAndWait();
+	}
+
+	public void printInvalidDateMessage() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		initAlertsStyle(alert);
+		alert.setContentText("La data inserita non è valida!");
+		alert.showAndWait();
+	}
+
 	public void printDeliveryAcceptedMessage() {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		initAlertsStyle(alert);
 		alert.setContentText("La consegna è stata assegnata con successo!");
-		alert.showAndWait();
-	}
-
-	public double printPaymentDeliveryDialog() {
-		TextInputDialog dialog = new TextInputDialog("5.00");
-		dialog.setContentText("Inserisci il compenso che desideri per la consegna (almeno 0.01): €");
-		Optional<String> result = dialog.showAndWait();
-		try {
-			return result.map(Double::parseDouble).orElse(0.0);
-		}
-		catch(NumberFormatException e) {
-			return -1.0;
-		}
-	}
-
-	public void printDeliveryAlreadyTakenMessage() {
-		Alert alert = new Alert(Alert.AlertType.ERROR);
-		initAlertsStyle(alert);
-		alert.setContentText("La consegna è già stata assegnata ad un altro utente!");
 		alert.showAndWait();
 	}
 

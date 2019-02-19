@@ -97,16 +97,34 @@ public class HomeController {
 	@FXML
 	private Button btnModificaDatiProf;
 
+	//Label contenenti i titoli delle spedizioni
+	@FXML
+	private Label lblMittenteDel, lblDestinatarioDel, lblSpedizioneReq, lblRichiestaReq, lblRichiedenteReq;
+
+	//ScrollPanel contenenti le spedizioni
+	@FXML
+	public ScrollPane pnlExistingDeliveries, pnlExistingRequests;
+
 	//Vbox contenenti le info sulle spedizioni
     @FXML
     private VBox deliveriesList, shipmentsList, requestsList;
 
-    //Pulsanti della schermata delle richieste
+    //Pannelli contenenti i messaggi "Nessuna spedizione disponibile"
+	public Pane pnlEmptyDeliveries, pnlEmptyRequests;
+
+    //Pulsanti di refresh delle spedizioni
 	@FXML
-	public Button btnRefreshReq;
+	public Button btnRefreshDel, btnRefreshReq;
 
     private void initializeHomePanel(){
         lblTitle.setText("Riepilogo");
+		Users user = new Users();
+		String id = Integer.toString(user.getCod(user.getId(), user.getPsw()));
+		Shipment shipment = new Shipment();
+		lblWaitingHome.setText(Integer.toString(shipment.waitingShipments(id)));
+		lblDeliveringHome.setText(Integer.toString(shipment.deliveringShipments(id)));
+		lblDeliveredHome.setText(Integer.toString(shipment.deliveredShipments(id)));
+		txtCodBoxHome.setText(id);
         pnlHome.toFront();
     }
 
@@ -126,47 +144,57 @@ public class HomeController {
 		//Salvo il numero dei risultati per decidere il numero di cicli for
 		DatabaseOperation dbop = new DatabaseOperation();
 		int risultati = dbop.resultSetRows(consegne);
-		//Crea tanti loader quante sono le righe di consegne da andare a creare
-		FXMLLoader[] loaders = new FXMLLoader[risultati];
-		try {
-			//Punta alla prima delle consegne
-			consegne.first();
-			//L'array serve a contenere l'id della spedizione, l'indirizzo e la città di mittente e destinatario
-			String[] consegna = new String[5];
-			for(int i = 0; i < risultati; i++) {
-				//Per ogni consegna crea una HBox a partire dall'FXML e gli assegna un nuovo oggetto controller ogni volta
-				DeliveryController dc = new DeliveryController();
-				loaders[i] = new FXMLLoader(getClass().getResource("../view/Delivery.fxml"));
-				loaders[i].setController(dc);
-				//Carica l'HBox ed il suo contenuto
-				HBox box;
-				try {
-					box = loaders[i].load();
+		if(risultati > 0) {
+			//Crea tanti loader quante sono le righe di consegne da andare a creare
+			FXMLLoader[] loaders = new FXMLLoader[risultati];
+			try {
+				//Punta alla prima delle consegne
+				consegne.first();
+				//L'array serve a contenere l'id della spedizione, l'indirizzo e la città di mittente e destinatario
+				String[] consegna = new String[5];
+				for(int i = 0; i < risultati; i++) {
+					//Per ogni consegna crea una HBox a partire dall'FXML e gli assegna un nuovo oggetto controller ogni volta
+					DeliveryController dc = new DeliveryController();
+					loaders[i] = new FXMLLoader(getClass().getResource("../view/Delivery.fxml"));
+					loaders[i].setController(dc);
+					//Carica l'HBox ed il suo contenuto
+					HBox box;
+					try {
+						box = loaders[i].load();
+					}
+					catch(IOException e) {
+						Alerts alert = new Alerts();
+						alert.printMissingFileMessage();
+						return;
+					}
+					//Ottiene i dati della consegna dal resultset
+					consegna[0] = consegne.getString("shipment_id");
+					consegna[1] = consegne.getString("sender_city");
+					consegna[2] = consegne.getString("sender_street") + " " + consegne.getString("sender_street_number");
+					consegna[3] = consegne.getString("recipient_city");
+					consegna[4] = consegne.getString("recipient_street") + " " + consegne.getString("recipient_street_number");
+					//Scrive i dati della consegna nel controller
+					dc.initData(consegna, i);
+					//Dà alle HBox qualche effetto
+					box.setOnMouseEntered(event -> box.setStyle("-fx-background-color : #0A0E3F"));
+					box.setOnMouseExited(event -> box.setStyle("-fx-background-color : #02030A"));
+					//Aggiunge la HBox alla finestra delle consegne
+					deliveriesList.getChildren().add(box);
+					consegne.next();
 				}
-				catch(IOException e) {
-					Alerts alert = new Alerts();
-					alert.printMissingFileMessage();
-					return;
-				}
-				//Ottiene i dati della consegna dal resultset
-				consegna[0] = consegne.getString("shipment_id");
-				consegna[1] = consegne.getString("sender_city");
-				consegna[2] = consegne.getString("sender_street") + " " + consegne.getString("sender_street_number");
-				consegna[3] = consegne.getString("recipient_city");
-				consegna[4] = consegne.getString("recipient_street") + " " + consegne.getString("recipient_street_number");
-				//Scrive i dati della consegna nel controller
-				dc.initData(consegna, i);
-				//Dà alle HBox qualche effetto
-				box.setOnMouseEntered(event -> box.setStyle("-fx-background-color : #0A0E3F"));
-				box.setOnMouseExited(event -> box.setStyle("-fx-background-color : #02030A"));
-				//Aggiunge la HBox alla finestra delle consegne
-				deliveriesList.getChildren().add(box);
-				consegne.next();
 			}
+			catch (SQLException e) {
+				Alerts alert = new Alerts();
+				alert.printDatabaseConnectionError();
+			}
+			lblMittenteDel.setText("Indirizzo Mittente");
+			lblDestinatarioDel.setText("Indirizzo Destinatario");
+			pnlExistingDeliveries.toFront();
 		}
-		catch (SQLException e) {
-			Alerts alert = new Alerts();
-			alert.printDatabaseConnectionError();
+		else {
+			lblMittenteDel.setText("");
+			lblDestinatarioDel.setText("");
+			pnlEmptyDeliveries.toFront();
 		}
 		pnlDeliveries.toFront();
 	}
@@ -200,52 +228,64 @@ public class HomeController {
 		//Salvo il numero dei risultati per decidere il numero di cicli for
 		DatabaseOperation dbop = new DatabaseOperation();
 		int risultati = dbop.resultSetRows(richieste);
-		//Crea tanti loader quante sono le righe di spedizione da andare a creare
-		FXMLLoader[] loaders = new FXMLLoader[risultati];
-		try {
-			//Punta alla prima delle richieste
-			richieste.first();
-			//L'array serve a contenere l'id della spedizione, la descrizione, il tipo di richiesta e il mittente
-			String[] richiesta = new String[4];
-			for(int i = 0; i < risultati; i++) {
-				//Per ogni richiesta crea una HBox a partire dall'FXML e gli assegna un nuovo oggetto controller ogni volta
-				RequestController rc = new RequestController();
-				loaders[i] = new FXMLLoader(getClass().getResource("../view/Request.fxml"));
-				loaders[i].setController(rc);
-				//Carica l'HBox ed il suo contenuto
-				HBox box;
-				try {
-					box = loaders[i].load();
+		if(risultati > 0) {
+			//Crea tanti loader quante sono le righe di spedizione da andare a creare
+			FXMLLoader[] loaders = new FXMLLoader[risultati];
+			try {
+				//Punta alla prima delle richieste
+				richieste.first();
+				//L'array serve a contenere l'id della spedizione, la descrizione, il tipo di richiesta e il mittente
+				String[] richiesta = new String[4];
+				for(int i = 0; i < risultati; i++) {
+					//Per ogni richiesta crea una HBox a partire dall'FXML e gli assegna un nuovo oggetto controller ogni volta
+					RequestController rc = new RequestController();
+					loaders[i] = new FXMLLoader(getClass().getResource("../view/Request.fxml"));
+					loaders[i].setController(rc);
+					//Carica l'HBox ed il suo contenuto
+					HBox box;
+					try {
+						box = loaders[i].load();
+					}
+					catch(IOException e) {
+						Alerts alert = new Alerts();
+						alert.printMissingFileMessage();
+						return;
+					}
+					//Ottiene i dati della richiesta dal resultset
+					richiesta[0] = richieste.getString("shipment_id");
+					richiesta[1] = richieste.getString("description");
+					if(Integer.parseInt(richieste.getString("status")) == 1) {
+						richiesta[2] = "Accettazione";
+						richiesta[3] = richieste.getString("sender_id");
+					}
+					else {
+						richiesta[2] = "Pagamento";
+						richiesta[3] = richieste.getString("carrier_id");
+					}
+					//Scrive i dati della richiesta nel controller
+					rc.initData(richiesta, i);
+					//Dà alle HBox qualche effetto
+					box.setOnMouseEntered(event -> box.setStyle("-fx-background-color : #0A0E3F"));
+					box.setOnMouseExited(event -> box.setStyle("-fx-background-color : #02030A"));
+					//Aggiunge la HBox alla finestra delle richieste
+					requestsList.getChildren().add(box);
+					richieste.next();
 				}
-				catch(IOException e) {
-					Alerts alert = new Alerts();
-					alert.printMissingFileMessage();
-					return;
-				}
-				//Ottiene i dati della richiesta dal resultset
-				richiesta[0] = richieste.getString("shipment_id");
-				richiesta[1] = richieste.getString("description");
-				if(Integer.parseInt(richieste.getString("status")) == 1) {
-					richiesta[2] = "Accettazione";
-					richiesta[3] = richieste.getString("sender_id");
-				}
-				else {
-					richiesta[2] = "Pagamento";
-					richiesta[3] = richieste.getString("carrier_id");
-				}
-				//Scrive i dati della richiesta nel controller
-				rc.initData(richiesta, i);
-				//Dà alle HBox qualche effetto
-				box.setOnMouseEntered(event -> box.setStyle("-fx-background-color : #0A0E3F"));
-				box.setOnMouseExited(event -> box.setStyle("-fx-background-color : #02030A"));
-				//Aggiunge la HBox alla finestra delle richieste
-				requestsList.getChildren().add(box);
-				richieste.next();
 			}
+			catch (SQLException e) {
+				Alerts alert = new Alerts();
+				alert.printDatabaseConnectionError();
+			}
+			lblSpedizioneReq.setText("Spedizione");
+			lblRichiestaReq.setText("Richiesta");
+			lblRichiedenteReq.setText("Richiedente");
+			pnlExistingRequests.toFront();
 		}
-		catch (SQLException e) {
-			Alerts alert = new Alerts();
-			alert.printDatabaseConnectionError();
+		else {
+			lblSpedizioneReq.setText("");
+			lblRichiestaReq.setText("");
+			lblRichiedenteReq.setText("");
+			pnlEmptyRequests.toFront();
 		}
 		pnlRequests.toFront();
 	}
@@ -254,11 +294,7 @@ public class HomeController {
 		lblTitle.setText("Riepilogo");
     	Login login = new Login();
     	if(login.userLogin(txtUsername.getText(), txtPassword.getText())){
-    		Users user = new Users();
-    		lblWaitingHome.setText("1");
-			lblDeliveringHome.setText("2");
-			lblDeliveredHome.setText("3");
-			txtCodBoxHome.setText(Integer.toString(user.getCod(Hash.getMd5(txtUsername.getText()), Hash.getMd5(txtPassword.getText()))));
+    		initializeHomePanel();
 			dashPanel();
     	}
     }
@@ -335,7 +371,7 @@ public class HomeController {
 		if(event.getSource() == btnModificaDatiProf) {
 			editProfile();
 		}
-		if(event.getSource() == btnDeliveries) {
+		if(event.getSource() == btnDeliveries || event.getSource() == btnRefreshDel) {
 			initializeDeliveriesPanel();
 		}
 		if(event.getSource() == btnShipment) {

@@ -25,6 +25,8 @@ CREATE TABLE `lacus`.`shipment` (
   `recipient_city` VARCHAR(32) NOT NULL,
   `recipient_street` VARCHAR(64) NOT NULL,
   `recipient_street_number` INT(5) NOT NULL,
+  `date_shipping` DATE,
+  `date_arrival` DATE,
   PRIMARY KEY (`shipment_id`));
 
 CREATE TABLE `lacus`.`cities` (
