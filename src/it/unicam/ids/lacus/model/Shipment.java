@@ -194,6 +194,12 @@ public class Shipment extends DatabaseConnection {
 		return createStatementAndRSForQuery(sql);
 	}
 
+	public ResultSet myShipments(int id) {
+		String sql = "SELECT * FROM shipment WHERE (carrier_id='" + id + "' OR sender_id='" + id + "' OR recipient_id='" + id + "')";
+		getConnection();
+		return createStatementAndRSForQuery(sql);
+	}
+
 	public void confirmDelivery(String shipmentid, int carrier, double payment, Date shipping, Date arrival) {
 		String sql = "UPDATE shipment SET status='3', carrier_id='" + carrier + "', payment='" + payment + "', date_shipping='" + shipping + "', date_arrival='" + arrival + "' WHERE shipment_id='" + shipmentid + "';";
 		getConnection();

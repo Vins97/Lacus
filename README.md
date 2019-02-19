@@ -6,4 +6,9 @@ Font da installare: Nexa Light
 
 TODO LIST
 
-Pagina spedizioni personali (tutto il funzionamento e buona parte della grafica)
+Pagina spedizioni personali:
+
+Ruolo della spedizione (HomeController)\
+Bottoni della spedizione (ShipmentController)\
+Significato dei bottoni\
+Funzionamento dei bottoni

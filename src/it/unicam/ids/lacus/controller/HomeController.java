@@ -101,16 +101,20 @@ public class HomeController {
 	@FXML
 	private Label lblMittenteDel, lblDestinatarioDel, lblSpedizioneReq, lblRichiestaReq, lblRichiedenteReq;
 
+	//Label contenenti i titoli delle mie spedizioni
+	@FXML
+	private Label lblShipmentDescription, lblShipmentRole, lblShipmentStatus, lblShipmentCarry, lblShipmentArrival;
+
 	//ScrollPanel contenenti le spedizioni
 	@FXML
-	public ScrollPane pnlExistingDeliveries, pnlExistingRequests;
+	public ScrollPane pnlExistingDeliveries, pnlExistingShipments, pnlExistingRequests;
 
 	//Vbox contenenti le info sulle spedizioni
     @FXML
     private VBox deliveriesList, shipmentsList, requestsList;
 
     //Pannelli contenenti i messaggi "Nessuna spedizione disponibile"
-	public Pane pnlEmptyDeliveries, pnlEmptyRequests;
+	public Pane pnlEmptyDeliveries, pnlEmptyShipments, pnlEmptyRequests;
 
     //Pulsanti di refresh delle spedizioni
 	@FXML
@@ -201,6 +205,78 @@ public class HomeController {
 
 	private void initializeShipmentPanel() {
 		lblTitle.setText("Lista Spedizioni");
+		//Pulisce le spedizioni precedenti
+		shipmentsList.getChildren().clear();
+		//Ottiene il resultset con le spedizioni attive
+		Shipment sr = new Shipment();
+		Users user = new Users();
+		ResultSet spedizioni = sr.myShipments(user.getCod(user.getId(), user.getPsw()));
+		//Salvo il numero dei risultati per decidere il numero di cicli for
+		DatabaseOperation dbop = new DatabaseOperation();
+		int risultati = dbop.resultSetRows(spedizioni);
+		if(risultati > 0) {
+			//Crea tanti loader quante sono le righe di consegne da andare a creare
+			FXMLLoader[] loaders = new FXMLLoader[risultati];
+			try {
+				//Punta alla prima delle consegne
+				spedizioni.first();
+				//L'array serve a contenere l'id, la descrizione e lo status della spedizione, il ruolo dell'utente, le date di partenza e di arrivo
+				String[] spedizione = new String[6];
+				for(int i = 0; i < risultati; i++) {
+					//Per ogni spedizione crea una HBox a partire dall'FXML e gli assegna un nuovo oggetto controller ogni volta
+					ShipmentController sc = new ShipmentController();
+					loaders[i] = new FXMLLoader(getClass().getResource("../view/Shipment.fxml"));
+					loaders[i].setController(sc);
+					//Carica l'HBox ed il suo contenuto
+					HBox box;
+					try {
+						box = loaders[i].load();
+					}
+					catch(IOException e) {
+						Alerts alert = new Alerts();
+						alert.printMissingFileMessage();
+						return;
+					}
+					//Ottiene i dati della spedizione dal resultset
+					spedizione[0] = spedizioni.getString("shipment_id");
+					spedizione[1] = spedizioni.getString("description");
+					//spedizione[2] = spedizioni.getString("sender_street") + " " + consegne.getString("sender_street_number");
+					spedizione[3] = spedizioni.getString("status");
+					spedizione[4] = spedizioni.getString("date_shipping");
+					spedizione[5] = spedizioni.getString("date_arrival");
+					//Scrive i dati della spedizione nel controller
+					sc.initData(spedizione, i);
+					//Dà alle HBox qualche effetto
+					box.setOnMouseEntered(event -> box.setStyle("-fx-background-color : #0A0E3F"));
+					box.setOnMouseExited(event -> box.setStyle("-fx-background-color : #02030A"));
+					//Aggiunge la HBox alla finestra delle spedizioni
+					shipmentsList.getChildren().add(box);
+					spedizioni.next();
+				}
+			}
+			catch (SQLException e) {
+				Alerts alert = new Alerts();
+				alert.printDatabaseConnectionError();
+			}
+			lblShipmentDescription.setText("Descrizione");
+			lblShipmentRole.setText("Ruolo");
+			lblShipmentStatus.setText("Status");
+			lblShipmentCarry.setText("Data Ritiro");
+			lblShipmentArrival.setText("Data Consegna");
+			pnlExistingShipments.toFront();
+		}
+		else {
+			lblShipmentDescription.setText("");
+			lblShipmentRole.setText("");
+			lblShipmentStatus.setText("");
+			lblShipmentCarry.setText("");
+			lblShipmentArrival.setText("");
+			pnlEmptyShipments.toFront();
+		}
+		pnlShipment.toFront();
+
+
+
 		Node[] nodes = new Node[5];
 		for (int i = 0; i < nodes.length; i++) {
 			try {
@@ -214,7 +290,6 @@ public class HomeController {
 				e.printStackTrace();
 			}
 		}
-		pnlShipment.toFront();
 	}
 
 	private void initializeRequestsPanel() {

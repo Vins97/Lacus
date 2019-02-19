@@ -8,25 +8,30 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="shipment" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="62.5" prefWidth="880.0" spacing="80.0" style="-fx-background-color: #313335;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="shipment" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="62.5" prefWidth="880.0" spacing="80.0" style="-fx-background-color: #313335;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="sender" text="Label" textFill="WHITE">
+      <Label fx:id="lblDescription" text="Label" textFill="WHITE">
          <font>
             <Font name="NexaLight" size="25.0" />
          </font>
          <HBox.margin>
             <Insets />
          </HBox.margin></Label>
-      <Label fx:id="receiver" text="Label" textFill="WHITE">
+      <Label fx:id="lblRole" text="Label" textFill="WHITE">
          <font>
             <Font name="NexaLight" size="25.0" />
          </font></Label>
-      <Label fx:id="status" text="Label" textFill="WHITE">
+      <Label fx:id="lblStatus" text="Label" textFill="WHITE">
          <font>
             <Font name="NexaLight" size="25.0" />
          </font>
       </Label>
-      <Label fx:id="date" text="Label" textFill="WHITE">
+      <Label fx:id="lblShippingDate" text="Label" textFill="WHITE">
+         <font>
+            <Font name="NexaLight" size="25.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblArrivalDate" layoutX="469.0" layoutY="23.0" text="Label" textFill="WHITE">
          <font>
             <Font name="NexaLight" size="25.0" />
          </font>
