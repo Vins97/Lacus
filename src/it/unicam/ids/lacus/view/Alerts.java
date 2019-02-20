@@ -31,6 +31,13 @@ public class Alerts {
 		alert.showAndWait();
 	}
 
+	public void printDateErrorMessage() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		initAlertsStyle(alert);
+		alert.setContentText("C'è un errore nella data di ritiro o di consegna di questa spedizione!");
+		alert.showAndWait();
+	}
+
 	public void printEmptyFieldsMessage() {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		initAlertsStyle(alert);

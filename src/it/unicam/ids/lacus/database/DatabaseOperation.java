@@ -48,40 +48,5 @@ public class DatabaseOperation extends DatabaseConnection {
 		}
 		return rsRows;
 	}
-
-	/*// metodo che restituisce tutte le città corrispondenti ad un CAP
-	private ResultSet getCitiesResultSet(String CAP) {
-		ResultSet citiesList;
-		String sql = "SELECT city FROM cities where CAP='" + CAP + "%';";
-		getConnection();
-		citiesList = createStatementAndRSForQuery(sql);
-		return citiesList;
-	}
-
-	public String[] getCitiesFromCAP(String CAP) throws SQLException {
-		String[] citiesListArray = new String[50];
-
-		// controllo che il CAP sia di 5 cifre e che contenga solo numeri
-		if (CAP.length() == 5 && StringChecker.numberStringChecker(CAP) == true) {
-
-			DatabaseOperation operationForCAP = new DatabaseOperation();
-
-			// controllo che ci sia almeno una città con quel CAP
-			if (operationForCAP.resultSetRows(operationForCAP.getCitiesResultSet(CAP)) >= 1) {
-
-				ResultSet resultSetOfCitiesList = operationForCAP.getCitiesResultSet(CAP);
-				for (int arrayIndex = 0; resultSetOfCitiesList.next(); arrayIndex++) {
-					citiesListArray[arrayIndex] = resultSetOfCitiesList.getString("city");
-					System.out.println(citiesListArray[arrayIndex]);
-
-				}
-
-			} else
-				System.out.println("IL CAP NON ESISTE");
-
-		} else
-			System.out.println("IL FORMATO NON E' CORRETTO");
-		return citiesListArray;
-	}*/
 }
 

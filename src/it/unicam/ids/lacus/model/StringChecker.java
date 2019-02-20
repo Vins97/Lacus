@@ -1,6 +1,7 @@
 package it.unicam.ids.lacus.model;
 
 import it.unicam.ids.lacus.database.DatabaseOperation;
+import it.unicam.ids.lacus.view.Alerts;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,10 +25,6 @@ public class StringChecker {
 		else
 			return 1; //La stringa è valida
 	}
-	/*
-	 * METODO CHE CONTROLLA: 1) SE LA STRINGA HA CARATTERI SPECIALI 2) SE CONTIENE
-	 * SOLO LETTERE String s deve essere passata in toLowerCase()
-	 */
 
 	int characterNumberAndSpacesChecker(String s) {
 		if (s == null || s.trim().isEmpty())
@@ -54,10 +51,6 @@ public class StringChecker {
 			return 1; //La stringa è valida
 	}
 
-	// metodo che controlla il formato del CAP e dei numeri civici
-	// nato per il controllo dei numeri civici ma utilizzato anche per
-	// il CAP in quanto viene effettuato il controllo preliminare sulla
-	// lunghezza della scringa che deve essere di 5 caratteri
 	int numberOnlyChecker(String cr) {
 		if (cr == null || cr.trim().isEmpty()) {
 			return 0; //La stringa è vuota
@@ -72,11 +65,6 @@ public class StringChecker {
 
 	}
 
-	/*
-	 * Ritorna: 0 se l'email inserita è vuota -1 se l'email è di un formato errato
-	 * -2 se il formato è giusto ma il dominio non va bene +1 se il dominio e
-	 * formato email sono giusti
-	 */
 	int emailChecker(String email) {
 		if (email == null || email.trim().isEmpty()) {
 			return 0; //La stringa è vuota
@@ -137,7 +125,8 @@ public class StringChecker {
 			return sdf.format(d);
 		}
 		catch(ParseException e) {
-			e.printStackTrace();
+			Alerts alert = new Alerts();
+			alert.printDateErrorMessage();
 		}
 		return "";
 	}

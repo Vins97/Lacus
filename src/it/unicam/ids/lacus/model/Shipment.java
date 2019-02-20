@@ -20,23 +20,6 @@ public class Shipment extends DatabaseConnection {
 	6 - Spedizione consegnata
 	*/
 
-	/*
-	 * LA CLASSE IMPLEMENTA I SEGUENTI METODI: 1- METODO X EFFETTUARE UNA RICHIESTA
-	 * DI SPEDIZIONE 2- METODO CHE PERMETTE AL DESTINATARIO DI VISUALIZZARE UNA
-	 * RICHIESTA DI SPEDIZIONE IN ARRIVO 3- METODO PER ACCETTARE UNA RICHIESTA DI
-	 * SPEDIZIONE 4- METODO PER VISUALIZZARE LE SPEDIZIONI DISPONIBILI IN UNA CITTA'
-	 * 5- METODO PER ACCETTARE UNA SPEDIZIONE DISPONIBILE 6- METODO PER VEDERE IL
-	 * RIEPILOGO DELLE SPEDIZIONI EFFETTUATE
-	 */
-
-	/*
-	 * SOSTITUIRE IL COD_RECIPIENT CON IL RISULTATO DEL METODO SEARCH USER IN QUANTO
-	 * IL CODICE DELL'UTENTE E' LA CHIAVE DELL'UTENTE metodo che crea una spedizione
-	 * con codice 0 e con stato pagamento impostato a falso, significa che viene
-	 * impostata come una richiesta di spedizione, la coppia valore 0/false può
-	 * essere usata in futuro
-	 */
-	// 1- METODO X EFFETTUARE UNA RICHIESTA DI SPEDIZIONE
 	public boolean addShipment(String description, String sender_id, String sender_city, String sender_street, String sender_street_number, String recipient_id, String recipient_city, String recipient_street, String recipient_street_number) {
 		Alerts alert = new Alerts();
 		if((checkShipmentSpelling(description, sender_city, sender_street, sender_street_number, recipient_id, recipient_city, recipient_street, recipient_street_number))) {
@@ -165,7 +148,8 @@ public class Shipment extends DatabaseConnection {
 			rs.first();
 			result = Double.parseDouble(rs.getString("payment"));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Alerts alert = new Alerts();
+			alert.printDatabaseConnectionError();
 		}
 		return result;
 	}
@@ -210,7 +194,8 @@ public class Shipment extends DatabaseConnection {
 			details[11] = rs.getString("recipient_city");
 			details[12] = rs.getString("recipient_street") + " " + rs.getString("recipient_street_number");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Alerts alert = new Alerts();
+			alert.printDatabaseConnectionError();
 		}
 		return details;
 	}
@@ -281,65 +266,5 @@ public class Shipment extends DatabaseConnection {
 		}
 		return "Sconosciuto";
 	}
-
-	/*// 2- METODO CHE PERMETTE AL DESTINATARIO DI VISUALIZZARE UNA RICHIESTA DI
-	// SPEDIZIONE IN ARRIVO
-	public ResultSet seeShippingRequests(Users utente) {
-		String sql = "SELECT * FROM shipping WHERE id_user='" + utente.getId() + "' AND status_shipping=" + 0 + ";";
-		DatabaseOperation dbop = new DatabaseOperation();
-		getConnection();
-		rs = createStatementAndRSForQuery(sql);
-		if(dbop.resultSetRows(rs)==0)
-			System.err.println("Non ci sono richieste di spedizione!");
-		else return rs;
-
-		return rs;
-
-	}
-	*//* 3- METODO PER ACCETTARE UNA RICHIESTA DI SPEDIZIONE *//*
-	public void recipientAcceptShipping(int codShipping) {
-		String sql = "UPDATE shipping SET status_shipping="+
-				1+" WHERE cod_shipping="+codShipping+";";
-		getConnection();
-		createStatementForUpdate(sql);
-
-	}
-
-	// 4- METODO PER VISUALIZZARE LE SPEDIZIONI DISPONIBILI IN UNA CITTA'
-	*//*Il metodo dovrebbe visualizzare L'indirizzo mittente , l'indirizzo destinatario
-	e l'importo del pagamaneto. QUINDI C'E BISOGNO DI UN INNER JOIN*//*
-	public ResultSet seeShippingsAvaibleForCourier(String city) {
-		String sql = "SELECT road_sender,road_recipient FROM shipping WHERE city='"+city+";";
-		DatabaseOperation dbop = new DatabaseOperation();
-		ResultSet rs;
-		getConnection();
-		rs = createStatementAndRSForQuery(sql);
-		if(dbop.resultSetRows(rs)==0) rs=null;
-		return rs;
-	}
-
-	// 5- METODO PER ACCETTARE UNA SPEDIZIONE DISPONIBILE
-	public void acceptToExecAShipping(Users utente , int codShipping) {
-		String sql = "UPDATE shipping SET cod_courier='"+utente.getCod(
-				utente.getName(),utente.getSurname())+"' AND status_shipping="+
-				2+" WHERE cod_shipping="+codShipping+";";
-		getConnection();
-		createStatementForUpdate(sql);
-	}
-
-	// 6- METODO PER VEDERE IL RIEPILOGO DELLE SPEDIZIONI EFFETTUATE
-	public ResultSet deliveryList(Users utente) {
-		String sql = "SELECT * FROM shipping WHERE cod_sender='"+utente.getCod(utente.getName(),utente.getSurname())+
-				"'OR cod_recipient='"+utente.getCod(utente.getName(),utente.getSurname())+"';";
-		DatabaseOperation dbop = new DatabaseOperation();
-		ResultSet rs;
-		getConnection();
-		rs = createStatementAndRSForQuery(sql);
-		if(dbop.resultSetRows(rs)==0) rs=null;
-		return rs;
-	}
-	*//*7- METODO CHE PERMETTO DI CANCELLARE LE SPEDIZIONI NON ACCETTATE DOPO UN
-	 * CERTO ARCO DI TEMPO
-	 */
 }
 

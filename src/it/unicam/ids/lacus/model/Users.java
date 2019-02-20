@@ -43,7 +43,6 @@ public class Users extends DatabaseConnection {
 				closeConnection();
 
 			} catch (SQLException e) {
-				e.printStackTrace();
 				Alerts alert = new Alerts();
 				alert.printDatabaseConnectionError();
 			}
@@ -171,7 +170,6 @@ public class Users extends DatabaseConnection {
 			closeStatement();
 			closeConnection();
 		} catch (SQLException e) {
-			e.printStackTrace();
 			Alerts alert = new Alerts();
 			alert.printDatabaseConnectionError();
 		}
@@ -209,7 +207,6 @@ public class Users extends DatabaseConnection {
 			closeConnection();
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
 			Alerts alert = new Alerts();
 			alert.printDatabaseConnectionError();
 		}
