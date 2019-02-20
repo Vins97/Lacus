@@ -30,13 +30,13 @@
             <Font name="NexaLight" size="21.0" />
          </font>
       </Label>
-      <TextField fx:id="txtRevenueCarrier" alignment="CENTER" layoutX="200.0" layoutY="161.0" prefHeight="40.0" prefWidth="235.0" />
+      <TextField fx:id="txtRevenueCarrier" alignment="CENTER" layoutX="200.0" layoutY="161.0" prefHeight="40.0" prefWidth="235.0" promptText="5.00" />
       <Label layoutX="450.0" layoutY="165.0" text="€" textFill="WHITE">
          <font>
             <Font name="NexaLight" size="21.0" />
          </font>
       </Label>
-      <Label layoutX="56.0" layoutY="225.0" text="Inserisci le date sicure di ritiro e consegna" textFill="WHITE">
+      <Label layoutX="42.0" layoutY="225.0" text="Inserisci le date garantite di ritiro e consegna" textFill="WHITE">
          <font>
             <Font name="NexaLight" size="21.0" />
          </font>

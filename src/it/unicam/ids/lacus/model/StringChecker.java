@@ -2,6 +2,8 @@ package it.unicam.ids.lacus.model;
 
 import it.unicam.ids.lacus.database.DatabaseOperation;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -125,5 +127,18 @@ public class StringChecker {
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
 		return !Date.from(Instant.from(data.atStartOfDay(ZoneId.systemDefault()))).before(calendar.getTime());
+	}
+
+	String dateConverter(String date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date d = sdf.parse(date);
+			sdf.applyPattern("dd/MM/yyyy");
+			return sdf.format(d);
+		}
+		catch(ParseException e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 }

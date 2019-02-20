@@ -8,7 +8,4 @@ TODO LIST
 
 Pagina spedizioni personali:
 
-Ruolo della spedizione (HomeController)\
-Bottoni della spedizione (ShipmentController)\
-Significato dei bottoni\
-Funzionamento dei bottoni
+Bottone visualizza dettagli spedizione

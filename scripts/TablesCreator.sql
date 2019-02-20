@@ -19,7 +19,7 @@ CREATE TABLE `lacus`.`shipment` (
   `sender_city` VARCHAR(32) NOT NULL,
   `sender_street` VARCHAR(64) NOT NULL,
   `sender_street_number` INT(5) NOT NULL,
-  `carrier_id` INT(5),
+  `carrier_id` INT(5) NOT NULL,
   `payment` DOUBLE,
   `recipient_id` INT(5) NOT NULL,
   `recipient_city` VARCHAR(32) NOT NULL,

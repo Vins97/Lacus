@@ -42,8 +42,8 @@ public class Shipment extends DatabaseConnection {
 		if((checkShipmentSpelling(description, sender_city, sender_street, sender_street_number, recipient_id, recipient_city, recipient_street, recipient_street_number))) {
 			if(checkDataConsistency(sender_id, sender_city, recipient_id, recipient_city)) {
 				String sql = "INSERT INTO shipment(status, description, sender_id, sender_city, sender_street, sender_street_number,"
-						+ "recipient_id, recipient_city, recipient_street, recipient_street_number) values ('1','" + description + "','"
-						+ sender_id + "','" + sender_city + "','" + sender_street + "','" + sender_street_number + "','" + recipient_id + "','"
+						+ "carrier_id, recipient_id, recipient_city, recipient_street, recipient_street_number) values ('1','" + description + "','"
+						+ sender_id + "','" + sender_city + "','" + sender_street + "','" + sender_street_number + "', '-2', '" + recipient_id + "','"
 						+ recipient_city + "','" + recipient_street + "','" + recipient_street_number + "')";
 				getConnection();
 				createStatementForUpdate(sql);
@@ -156,12 +156,6 @@ public class Shipment extends DatabaseConnection {
 		createStatementForUpdate(sql);
 	}
 
-	public void refuseShipment(String shipmentid) {
-		String sql = "UPDATE shipment SET status='0' WHERE shipment_id='" + shipmentid + "';";
-		getConnection();
-		createStatementForUpdate(sql);
-	}
-
 	public double getPayment(String shipmentid) {
 		String sql = "SELECT * FROM shipment WHERE shipment_id='" + shipmentid + "';";
 		getConnection();
@@ -176,6 +170,51 @@ public class Shipment extends DatabaseConnection {
 		return result;
 	}
 
+	public String[] getAllDetails(String shipmentid) {
+		String sql = "SELECT * FROM shipment WHERE shipment_id='" + shipmentid + "';";
+		getConnection();
+		ResultSet rs = createStatementAndRSForQuery(sql);
+		String[] details = new String[13];
+		try {
+			rs.first();
+			details[0] = shipmentid;
+			details[1] = rs.getString("description");
+			details[2] = rs.getString("status");
+			details[3] = rs.getString("sender_id");
+			details[4] = rs.getString("sender_city");
+			details[5] = rs.getString("sender_street") + " " + rs.getString("sender_street_number");
+			if((details[6] = rs.getString("carrier_id")).compareTo("-2") == 0) {
+				details[6] = "Da definire";
+			}
+			if((details[7] = rs.getString("payment")) == null) {
+				details[7] = "Da definire";
+			}
+			else {
+				details[7] = details[7] + " €";
+			}
+			if((details[8] = rs.getString("date_shipping")) == null) {
+				details[8] = "Da definire";
+			}
+			else {
+				StringChecker sc = new StringChecker();
+				details[8] = sc.dateConverter(details[8]);
+			}
+			if((details[9] = rs.getString("date_arrival")) == null) {
+				details[9] = "Da definire";
+			}
+			else {
+				StringChecker sc = new StringChecker();
+				details[9] = sc.dateConverter(details[9]);
+			}
+			details[10] = rs.getString("recipient_id");
+			details[11] = rs.getString("recipient_city");
+			details[12] = rs.getString("recipient_street") + " " + rs.getString("recipient_street_number");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return details;
+	}
+
 	public void confirmPayment(String shipmentid) {
 		String sql = "UPDATE shipment SET status='4' WHERE shipment_id='" + shipmentid + "';";
 		getConnection();
@@ -183,7 +222,31 @@ public class Shipment extends DatabaseConnection {
 	}
 
 	public void refusePayment(String shipmentid) {
-		String sql = "UPDATE shipment SET status='2', carrier_id=null, payment=null WHERE shipment_id='" + shipmentid + "';";
+		String sql = "UPDATE shipment SET status='2', carrier_id='-2', payment=null WHERE shipment_id='" + shipmentid + "';";
+		getConnection();
+		createStatementForUpdate(sql);
+	}
+
+	public void inTransit(String shipmentid) {
+		String sql = "UPDATE shipment SET status='5' WHERE shipment_id='" + shipmentid + "';";
+		getConnection();
+		createStatementForUpdate(sql);
+	}
+
+	public void delivered(String shipmentid) {
+		String sql = "UPDATE shipment SET status='6' WHERE shipment_id='" + shipmentid + "';";
+		getConnection();
+		createStatementForUpdate(sql);
+	}
+
+	public void cancelShipment(String shipmentid) {
+		String sql = "UPDATE shipment SET status='0' WHERE shipment_id='" + shipmentid + "';";
+		getConnection();
+		createStatementForUpdate(sql);
+	}
+
+	public void deleteShipment(String shipmentid) {
+		String sql = "DELETE FROM shipment WHERE shipment_id = '" + shipmentid + "';";
 		getConnection();
 		createStatementForUpdate(sql);
 	}
@@ -204,6 +267,19 @@ public class Shipment extends DatabaseConnection {
 		String sql = "UPDATE shipment SET status='3', carrier_id='" + carrier + "', payment='" + payment + "', date_shipping='" + shipping + "', date_arrival='" + arrival + "' WHERE shipment_id='" + shipmentid + "';";
 		getConnection();
 		createStatementForUpdate(sql);
+	}
+
+	public String setStatus(String status) {
+		switch(Integer.parseInt(status)) {
+			case 0: return "Annullata";
+			case 1: return "In attesa del destinatario";
+			case 2: return "In attesa del corriere";
+			case 3: return "In attesa di pagamento";
+			case 4: return "In attesa di ritiro";
+			case 5: return "In transito";
+			case 6: return "Consegnata";
+		}
+		return "Sconosciuto";
 	}
 
 	/*// 2- METODO CHE PERMETTE AL DESTINATARIO DI VISUALIZZARE UNA RICHIESTA DI

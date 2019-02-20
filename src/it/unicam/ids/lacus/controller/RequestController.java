@@ -14,13 +14,13 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
-public class RequestController {
+class RequestController {
 
-	//Label contenenti le info sulle spedizioni
+	//Label contenenti le info sulle richieste
 	@FXML
 	private Label lblSpedizione, lblRichiesta, lblRichiedente;
 
-	//Pulsanti della singola spedizione
+	//Pulsanti della singola richiesta
 	@FXML
 	private Button btnAccept, btnRefuse;
 
@@ -75,7 +75,7 @@ public class RequestController {
 			Shipment shipment = new Shipment();
 			if(lblRichiesta.getText().compareTo("Accettazione") == 0) {
 				if(alert.printRefuseShipmentPrompt()) {
-					shipment.refuseShipment(shipmentid);
+					shipment.cancelShipment(shipmentid);
 					refused = true;
 					alert.printShipmentRefusedMessage();
 				}
@@ -116,12 +116,12 @@ public class RequestController {
 		return true;
 	}
 
-	void initData(String[] richiesta, int i) {
+	void initData(String[] richiesta) {
 		shipmentid = richiesta[0];
 		lblSpedizione.setText(richiesta[1]);
 		lblRichiesta.setText(richiesta[2]);
 		lblRichiedente.setText(richiesta[3]);
-		btnAccept.setId("btnAccept" + i);
-		btnRefuse.setId("btnRefuse" + i);
+		btnAccept.setOnAction((event) -> accept());
+		btnRefuse.setOnAction((event) -> refuse());
 	}
 }

@@ -254,6 +254,87 @@ public class Alerts {
 		alert.showAndWait();
 	}
 
+	public boolean printShipmentStartedPrompt() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		initAlertsStyle(alert);
+		alert.setContentText("Sei sicuro di voler segnalare la spedizione come \"In transito\"?");
+		Optional<ButtonType> result = alert.showAndWait();
+		return result.filter(buttonType -> buttonType == ButtonType.OK).isPresent();
+	}
+
+	public void printShipmentStartedMessage() {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		initAlertsStyle(alert);
+		alert.setContentText("La spedizione è stata segnalata come \"In transito\"!");
+		alert.showAndWait();
+	}
+
+	public boolean printShipmentDeliveredPrompt() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		initAlertsStyle(alert);
+		alert.setContentText("Sei sicuro di voler segnalare la spedizione come \"Consegnata\"?");
+		Optional<ButtonType> result = alert.showAndWait();
+		return result.filter(buttonType -> buttonType == ButtonType.OK).isPresent();
+	}
+
+	public void printShipmentDeliveredMessage() {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		initAlertsStyle(alert);
+		alert.setContentText("La spedizione è stata segnalata come \"Consegnata\"!");
+		alert.showAndWait();
+	}
+
+	public boolean printDeleteShipmentPrompt() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		initAlertsStyle(alert);
+		alert.setContentText("Sei sicuro di voler eliminare la spedizione?");
+		Optional<ButtonType> result = alert.showAndWait();
+		return result.filter(buttonType -> buttonType == ButtonType.OK).isPresent();
+	}
+
+	public void printShipmentDeletedMessage() {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		initAlertsStyle(alert);
+		alert.setContentText("La spedizione è stata eliminata!");
+		alert.showAndWait();
+	}
+
+	public boolean printCancelShipmentPrompt() {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		initAlertsStyle(alert);
+		alert.setContentText("Sei sicuro di voler annullare la spedizione?");
+		Optional<ButtonType> result = alert.showAndWait();
+		return result.filter(buttonType -> buttonType == ButtonType.OK).isPresent();
+	}
+
+	public void printShipmentCancelledMessage() {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		initAlertsStyle(alert);
+		alert.setContentText("La spedizione è stata annullata!");
+		alert.showAndWait();
+	}
+
+	public void printCarrierAccessDeniedMessage() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		initAlertsStyle(alert);
+		alert.setContentText("Il corriere non può annullare la spedizione!");
+		alert.showAndWait();
+	}
+
+	public void printAccessDeniedMessage() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		initAlertsStyle(alert);
+		alert.setContentText("La spedizione non può più essere annullata dopo il pagamento!");
+		alert.showAndWait();
+	}
+
+	public void printInactiveButtonMessage() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		initAlertsStyle(alert);
+		alert.setContentText("Non puoi eseguire questa operazione adesso!");
+		alert.showAndWait();
+	}
+
 	public boolean printLogoutPrompt() {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		initAlertsStyle(alert);

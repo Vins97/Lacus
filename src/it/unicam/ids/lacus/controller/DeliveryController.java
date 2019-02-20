@@ -66,12 +66,12 @@ public class DeliveryController {
 		return true;
 	}
 
-	void initData(String[] consegna, int i) {
+	void initData(String[] consegna) {
 		shipmentid = consegna[0];
 		lblCittaMittente.setText(consegna[1]);
 		lblIndirizzoMittente.setText(consegna[2]);
 		lblCittaDestinatario.setText(consegna[3]);
 		lblIndirizzoDestinatario.setText(consegna[4]);
-		btnAccept.setId("btnAccept" + i);
+		btnAccept.setOnAction((event) -> accept());
 	}
 }

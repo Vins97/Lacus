@@ -10,7 +10,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -103,7 +102,7 @@ public class HomeController {
 
 	//Label contenenti i titoli delle mie spedizioni
 	@FXML
-	private Label lblShipmentDescription, lblShipmentRole, lblShipmentStatus, lblShipmentCarry, lblShipmentArrival;
+	private Label lblShipmentDescription, lblShipmentRole, lblShipmentStatus;
 
 	//ScrollPanel contenenti le spedizioni
 	@FXML
@@ -118,7 +117,7 @@ public class HomeController {
 
     //Pulsanti di refresh delle spedizioni
 	@FXML
-	public Button btnRefreshDel, btnRefreshReq;
+	public Button btnRefreshDel, btnRefreshShip, btnRefreshReq;
 
     private void initializeHomePanel(){
         lblTitle.setText("Riepilogo");
@@ -178,7 +177,7 @@ public class HomeController {
 					consegna[3] = consegne.getString("recipient_city");
 					consegna[4] = consegne.getString("recipient_street") + " " + consegne.getString("recipient_street_number");
 					//Scrive i dati della consegna nel controller
-					dc.initData(consegna, i);
+					dc.initData(consegna);
 					//Dà alle HBox qualche effetto
 					box.setOnMouseEntered(event -> box.setStyle("-fx-background-color : #0A0E3F"));
 					box.setOnMouseExited(event -> box.setStyle("-fx-background-color : #02030A"));
@@ -220,8 +219,8 @@ public class HomeController {
 			try {
 				//Punta alla prima delle consegne
 				spedizioni.first();
-				//L'array serve a contenere l'id, la descrizione e lo status della spedizione, il ruolo dell'utente, le date di partenza e di arrivo
-				String[] spedizione = new String[6];
+				//L'array serve a contenere l'id, la descrizione, lo status della spedizione e il ruolo dell'utente
+				String[] spedizione = new String[4];
 				for(int i = 0; i < risultati; i++) {
 					//Per ogni spedizione crea una HBox a partire dall'FXML e gli assegna un nuovo oggetto controller ogni volta
 					ShipmentController sc = new ShipmentController();
@@ -240,12 +239,18 @@ public class HomeController {
 					//Ottiene i dati della spedizione dal resultset
 					spedizione[0] = spedizioni.getString("shipment_id");
 					spedizione[1] = spedizioni.getString("description");
-					//spedizione[2] = spedizioni.getString("sender_street") + " " + consegne.getString("sender_street_number");
+					if(Integer.parseInt(spedizioni.getString("carrier_id")) == user.getCod(user.getId(), user.getPsw())) {
+						spedizione[2] = "Corriere";
+					}
+					else if(Integer.parseInt(spedizioni.getString("sender_id")) == user.getCod(user.getId(), user.getPsw())) {
+						spedizione[2] = "Mittente";
+					}
+					else {
+						spedizione[2] = "Destinatario";
+					}
 					spedizione[3] = spedizioni.getString("status");
-					spedizione[4] = spedizioni.getString("date_shipping");
-					spedizione[5] = spedizioni.getString("date_arrival");
 					//Scrive i dati della spedizione nel controller
-					sc.initData(spedizione, i);
+					sc.initData(spedizione);
 					//Dà alle HBox qualche effetto
 					box.setOnMouseEntered(event -> box.setStyle("-fx-background-color : #0A0E3F"));
 					box.setOnMouseExited(event -> box.setStyle("-fx-background-color : #02030A"));
@@ -261,35 +266,15 @@ public class HomeController {
 			lblShipmentDescription.setText("Descrizione");
 			lblShipmentRole.setText("Ruolo");
 			lblShipmentStatus.setText("Status");
-			lblShipmentCarry.setText("Data Ritiro");
-			lblShipmentArrival.setText("Data Consegna");
 			pnlExistingShipments.toFront();
 		}
 		else {
 			lblShipmentDescription.setText("");
 			lblShipmentRole.setText("");
 			lblShipmentStatus.setText("");
-			lblShipmentCarry.setText("");
-			lblShipmentArrival.setText("");
 			pnlEmptyShipments.toFront();
 		}
 		pnlShipment.toFront();
-
-
-
-		Node[] nodes = new Node[5];
-		for (int i = 0; i < nodes.length; i++) {
-			try {
-				final int j = i;
-				nodes[i] = FXMLLoader.load(getClass().getResource("../view/Shipment.fxml"));
-				//give the items some effect
-				nodes[i].setOnMouseEntered(event -> nodes[j].setStyle("-fx-background-color : #0A0E3F"));
-				nodes[i].setOnMouseExited(event -> nodes[j].setStyle("-fx-background-color : #02030A"));
-				shipmentsList.getChildren().add(nodes[i]);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	private void initializeRequestsPanel() {
@@ -338,7 +323,7 @@ public class HomeController {
 						richiesta[3] = richieste.getString("carrier_id");
 					}
 					//Scrive i dati della richiesta nel controller
-					rc.initData(richiesta, i);
+					rc.initData(richiesta);
 					//Dà alle HBox qualche effetto
 					box.setOnMouseEntered(event -> box.setStyle("-fx-background-color : #0A0E3F"));
 					box.setOnMouseExited(event -> box.setStyle("-fx-background-color : #02030A"));
@@ -449,7 +434,7 @@ public class HomeController {
 		if(event.getSource() == btnDeliveries || event.getSource() == btnRefreshDel) {
 			initializeDeliveriesPanel();
 		}
-		if(event.getSource() == btnShipment) {
+		if(event.getSource() == btnShipment || event.getSource() == btnRefreshShip) {
 			initializeShipmentPanel();
 		}
 		if(event.getSource() == btnRequests || event.getSource() == btnRefreshReq) {
