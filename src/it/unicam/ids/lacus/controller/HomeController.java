@@ -122,7 +122,7 @@ public class HomeController {
     private void initializeHomePanel(){
         lblTitle.setText("Riepilogo");
 		Users user = new Users();
-		String id = Integer.toString(user.getCod(user.getId(), user.getPsw()));
+		String id = Integer.toString(user.getUserid());
 		Shipment shipment = new Shipment();
 		lblWaitingHome.setText(Integer.toString(shipment.waitingShipments(id)));
 		lblDeliveringHome.setText(Integer.toString(shipment.deliveringShipments(id)));
@@ -143,7 +143,7 @@ public class HomeController {
 		//Ottiene il resultset con le consegne attive
 		Shipment sr = new Shipment();
 		Users user = new Users();
-		ResultSet consegne = sr.deliveriesList(user.getCod(user.getId(), user.getPsw()));
+		ResultSet consegne = sr.deliveriesList(user.getUserid());
 		//Salvo il numero dei risultati per decidere il numero di cicli for
 		DatabaseOperation dbop = new DatabaseOperation();
 		int risultati = dbop.resultSetRows(consegne);
@@ -209,7 +209,7 @@ public class HomeController {
 		//Ottiene il resultset con le spedizioni attive
 		Shipment sr = new Shipment();
 		Users user = new Users();
-		ResultSet spedizioni = sr.myShipments(user.getCod(user.getId(), user.getPsw()));
+		ResultSet spedizioni = sr.myShipments(user.getUserid());
 		//Salvo il numero dei risultati per decidere il numero di cicli for
 		DatabaseOperation dbop = new DatabaseOperation();
 		int risultati = dbop.resultSetRows(spedizioni);
@@ -239,10 +239,10 @@ public class HomeController {
 					//Ottiene i dati della spedizione dal resultset
 					spedizione[0] = spedizioni.getString("shipment_id");
 					spedizione[1] = spedizioni.getString("description");
-					if(Integer.parseInt(spedizioni.getString("carrier_id")) == user.getCod(user.getId(), user.getPsw())) {
+					if(Integer.parseInt(spedizioni.getString("carrier_id")) == user.getUserid()) {
 						spedizione[2] = "Corriere";
 					}
-					else if(Integer.parseInt(spedizioni.getString("sender_id")) == user.getCod(user.getId(), user.getPsw())) {
+					else if(Integer.parseInt(spedizioni.getString("sender_id")) == user.getUserid()) {
 						spedizione[2] = "Mittente";
 					}
 					else {
@@ -284,7 +284,7 @@ public class HomeController {
 		//Ottiene il resultset con le richieste di spedizione attive
 		Shipment sr = new Shipment();
 		Users user = new Users();
-		ResultSet richieste = sr.shipmentRequests(user.getCod(user.getId(), user.getPsw()));
+		ResultSet richieste = sr.shipmentRequests(user.getUserid());
 		//Salvo il numero dei risultati per decidere il numero di cicli for
 		DatabaseOperation dbop = new DatabaseOperation();
 		int risultati = dbop.resultSetRows(richieste);
@@ -411,7 +411,7 @@ public class HomeController {
 			initializeHomePanel();
 		}
 		if(event.getSource() == btnCreaSpedizione) {
-			txtCodiceMittenteSped.setText(Integer.toString(user.getCod(user.getId(), user.getPsw())));
+			txtCodiceMittenteSped.setText(Integer.toString(user.getUserid()));
 			newShipmentPanel();
 		}
 		if(event.getSource() == btnCreaSpedizioneSped){
@@ -443,7 +443,7 @@ public class HomeController {
         if(event.getSource() == btnLogout){
         	Alerts alert = new Alerts();
         	if(alert.printLogoutPrompt()) {
-				user.setActiveUser(null, null);
+				user.setUserid(-1);
 				loginPanel();
 			}
         }
@@ -499,32 +499,22 @@ public class HomeController {
 			return;
 		}
 		if(!txtNomeProf.getText().trim().isEmpty()) {
-			String sql = "UPDATE users SET firstname='" + Hash.getMd5(txtNomeProf.getText()) + "' WHERE id='" + user.getId() + "' AND psw='" + user.getPsw() + "'";
-			if(!user.updateUser(sql)) {
-				return;
-			}
+			String sql = "UPDATE users SET firstname='" + Hash.getMd5(txtNomeProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
+			user.updateUser(sql);
 		}
 		if(!txtCognomeProf.getText().trim().isEmpty()) {
-			String sql = "UPDATE users SET surname='" + Hash.getMd5(txtCognomeProf.getText()) + "' WHERE id='" + user.getId() + "' AND psw='" + user.getPsw() + "'";
-			if(!user.updateUser(sql)) {
-				return;
-			}
+			String sql = "UPDATE users SET surname='" + Hash.getMd5(txtCognomeProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
+			user.updateUser(sql);
 		}
 		if(!txtEmailProf.getText().trim().isEmpty()) {
-			String sql = "UPDATE users SET email='" + Hash.getMd5(txtEmailProf.getText()) + "' WHERE id='" + user.getId() + "' AND psw='" + user.getPsw() + "'";
-			if(!user.updateUser(sql)) {
-				return;
-			}
+			String sql = "UPDATE users SET email='" + Hash.getMd5(txtEmailProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
+			user.updateUser(sql);
 		}
 		if(!txtUsernameProf.getText().trim().isEmpty()) {
-			if(!user.searchUser(Hash.getMd5(txtUsernameProf.getText()), user.getPsw())) {
-				String sql = "UPDATE users SET id='" + Hash.getMd5(txtUsernameProf.getText()) + "' WHERE id='" + user.getId() + "' AND psw='" + user.getPsw() + "'";
-				if(user.updateUser(sql)) {
-					user.setId(Hash.getMd5(txtUsernameProf.getText()));
-				}
-				else {
-					return;
-				}
+
+			if(!user.searchUser(Hash.getMd5(txtUsernameProf.getText()), user.getPswFromDatabase(user.getUserid()))) {
+				String sql = "UPDATE users SET id='" + Hash.getMd5(txtUsernameProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
+				user.updateUser(sql);
 			}
 			else {
 				alert.printUsernameTakenMessage();
@@ -533,10 +523,8 @@ public class HomeController {
 		}
 		if(!txtCodiceFiscaleProf.getText().trim().isEmpty()) {
 			if(user.verifyNewCF(txtCodiceFiscaleProf.getText())) {
-				String sql = "UPDATE users SET cf='" + txtCodiceFiscaleProf.getText() + "' WHERE id='" + user.getId() + "' AND psw='" + user.getPsw() + "'";
-				if(!user.updateUser(sql)) {
-					return;
-				}
+				String sql = "UPDATE users SET cf='" + txtCodiceFiscaleProf.getText() + "' WHERE userid='" + user.getUserid() + "'";
+				user.updateUser(sql);
 			}
 			else {
 				alert.printCFTakenMessage();
@@ -544,33 +532,22 @@ public class HomeController {
 			}
 		}
 		if(!txtCittaProf.getText().trim().isEmpty()) {
-			String sql = "UPDATE users SET city='" + txtCittaProf.getText() + "' WHERE id='" + user.getId() + "' AND psw='" + user.getPsw() + "'";
-			if(!user.updateUser(sql)) {
-				return;
-			}
+			String sql = "UPDATE users SET city='" + txtCittaProf.getText() + "' WHERE userid='" + user.getUserid() + "'";
+			user.updateUser(sql);
 		}
 		if(!txtIndirizzoProf.getText().trim().isEmpty()) {
-			String sql = "UPDATE users SET street='" + txtIndirizzoProf.getText() + "' WHERE id='" + user.getId() + "' AND psw='" + user.getPsw() + "'";
-			if(!user.updateUser(sql)) {
-				return;
-			}
+			String sql = "UPDATE users SET street='" + txtIndirizzoProf.getText() + "' WHERE userid='" + user.getUserid() + "'";
+			user.updateUser(sql);
 		}
 		if(!txtNumeroProf.getText().trim().isEmpty()) {
-			String sql = "UPDATE users SET street_number='" + txtNumeroProf.getText() + "' WHERE id='" + user.getId() + "' AND psw='" + user.getPsw() + "'";
-			if(!user.updateUser(sql)) {
-				return;
-			}
+			String sql = "UPDATE users SET street_number='" + txtNumeroProf.getText() + "' WHERE userid='" + user.getUserid() + "'";
+			user.updateUser(sql);
 		}
 		if(!txtPasswordProf.getText().trim().isEmpty()) {
 			if(user.verifyPasswordMatch(txtPasswordProf.getText(), txtConfermaPasswordProf.getText())) {
-				if(!user.searchUser(user.getId(), txtPasswordProf.getText())) {
-					String sql = "UPDATE users SET psw='" + Hash.getMd5(txtPasswordProf.getText()) + "' WHERE id='" + user.getId() + "' AND psw='" + user.getPsw() + "'";
-					if(user.updateUser(sql)) {
-						user.setPsw(Hash.getMd5(txtPasswordProf.getText()));
-					}
-					else {
-						return;
-					}
+				if(!user.searchUser(user.getIdFromDatabase(user.getUserid()), txtPasswordProf.getText())) {
+					String sql = "UPDATE users SET psw='" + Hash.getMd5(txtPasswordProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
+					user.updateUser(sql);
 				}
 				else {
 					alert.printInvalidPasswordMessage();

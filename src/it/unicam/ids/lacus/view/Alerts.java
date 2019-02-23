@@ -204,6 +204,13 @@ public class Alerts {
 		alert.showAndWait();
 	}
 
+	public void printPaymentOfferRefusedMessage() {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		initAlertsStyle(alert);
+		alert.setContentText("L'offerta di pagamento è stata rifiutata con successo!");
+		alert.showAndWait();
+	}
+
 	public void printPaymentRefusedMessage() {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		initAlertsStyle(alert);
@@ -258,6 +265,27 @@ public class Alerts {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		initAlertsStyle(alert);
 		alert.setContentText("La consegna è stata assegnata con successo!");
+		alert.showAndWait();
+	}
+
+	public void printDeliveryAlreadyAcceptedMessage() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		initAlertsStyle(alert);
+		alert.setContentText("La consegna è stata già assegnata a qualcun altro!");
+		alert.showAndWait();
+	}
+
+	public void printPaymentOfferAlreadyAcceptedMessage() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		initAlertsStyle(alert);
+		alert.setContentText("La richiesta è già stata accettata!");
+		alert.showAndWait();
+	}
+
+	public void printPaymentOfferAlreadyRefusedMessage() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		initAlertsStyle(alert);
+		alert.setContentText("La richiesta è già stata rifiutata!");
 		alert.showAndWait();
 	}
 

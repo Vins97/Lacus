@@ -10,49 +10,18 @@ import java.sql.SQLException;
 
 public class Users extends DatabaseConnection {
 
-	private static String id = null;
-	private static String psw = null;
+	private static int userid = -1;
 
-	public String getId() {
-		return Users.id;
+	public int getUserid() {
+		return Users.userid;
 	}
 
-	public void setId(String id) {
-		Users.id = id;
+	public void setUserid(int userid) {
+		Users.userid = userid;
 	}
 
-	public String getPsw() {
-		return Users.psw;
-	}
-
-	public void setPsw(String psw) {
-		Users.psw = psw;
-	}
-
-	private boolean addUser(String firstname, String surname, String id, String psw, String email, String cf, String city, String street, String street_number) {
-		String sql = "INSERT INTO users (firstname, surname, id, psw, email, cf, city, street, street_number) VALUES " + "('"
-				+ Hash.getMd5(firstname) + "','" + Hash.getMd5(surname) + "','" + Hash.getMd5(id) + "','" + Hash.getMd5(psw)
-				+ "','" + Hash.getMd5(email) + "','" + cf + "','" + city + "','" + street + "','" + street_number + "');";
-		//Controllo che il codice fiscale e la coppia id/password non siano già registrati
-		if (verifyNewCF(cf) && !searchUser(Hash.getMd5(id), Hash.getMd5(psw))) {
-			try {
-				getConnection();
-				stmt = conn.createStatement();
-				stmt.executeUpdate(sql);
-				closeStatement();
-				closeConnection();
-
-			} catch (SQLException e) {
-				Alerts alert = new Alerts();
-				alert.printDatabaseConnectionError();
-			}
-			return true;
-		}
-		return false;
-	}
-
-	//Metodi che modificano i dati degli utenti quando essi li inseriscono dalla schermata del profilo
-	public boolean updateUser(String sql) {
+	//Metodo che modifica i dati dell'utente quando li inserisce dalla schermata di modifica del profilo
+	public void updateUser(String sql) {
 		try {
 			getConnection();
 			stmt = conn.createStatement();
@@ -61,9 +30,9 @@ public class Users extends DatabaseConnection {
 			closeConnection();
 
 		} catch (SQLException e) {
-			return false;
+			Alerts alert = new Alerts();
+			alert.printDatabaseConnectionError();
 		}
-		return true;
 	}
 
 	public boolean checkText(String firstname, String surname, String id, String psw, String email, String cf, String city, String street, String street_number, boolean empty_allowed) {
@@ -103,6 +72,11 @@ public class Users extends DatabaseConnection {
 					return false;
 				}
 			}
+		}
+		//Controlla che la città sia corretta
+		if(!check.cityChecker(city)) {
+			alert.printUnknownCityMessage();
+			return false;
 		}
 		//Controlla la correttezza dell'email
 		switch(check.emailChecker(email)) {
@@ -156,6 +130,29 @@ public class Users extends DatabaseConnection {
 		return false;
 	}
 
+	private boolean addUser(String firstname, String surname, String id, String psw, String email, String cf, String city, String street, String street_number) {
+		//BUILDER PATTERN TO IMPLEMENT
+		String sql = "INSERT INTO users (firstname, surname, id, psw, email, cf, city, street, street_number) VALUES " + "('"
+				+ Hash.getMd5(firstname) + "','" + Hash.getMd5(surname) + "','" + Hash.getMd5(id) + "','" + Hash.getMd5(psw)
+				+ "','" + Hash.getMd5(email) + "','" + cf + "','" + city + "','" + street + "','" + street_number + "');";
+		//Controllo che il codice fiscale e la coppia id/password non siano già registrati
+		if (verifyNewCF(cf) && !searchUser(Hash.getMd5(id), Hash.getMd5(psw))) {
+			try {
+				getConnection();
+				stmt = conn.createStatement();
+				stmt.executeUpdate(sql);
+				closeStatement();
+				closeConnection();
+
+			} catch (SQLException e) {
+				Alerts alert = new Alerts();
+				alert.printDatabaseConnectionError();
+			}
+			return true;
+		}
+		return false;
+	}
+
 	public boolean searchUser(String hashedid, String hashedpsw) {
 		String sql = "SELECT id, psw FROM users WHERE id = '" + hashedid + "' AND psw = '" + hashedpsw + "';";
 		boolean responce = false;
@@ -174,17 +171,6 @@ public class Users extends DatabaseConnection {
 			alert.printDatabaseConnectionError();
 		}
 		return responce;
-	}
-
-	public void setActiveUser(String id, String psw) {
-		if(id == null || psw == null) {
-			setId(null);
-			setPsw(null);
-		}
-		else {
-			setId(Hash.getMd5(id));
-			setPsw(Hash.getMd5(psw));
-		}
 	}
 
 	//Controlla che il codice fiscale non sia mai stato inserito: restituisce true se è nuovo o false se è già in uso
@@ -220,7 +206,7 @@ public class Users extends DatabaseConnection {
 	}
 
 	//Restituisce il codice dell'utente a partire dall'id e dalla password hashati
-	public int getCod(String hashedid, String hashedpsw) {
+	int getUseridFromDatabase(String hashedid, String hashedpsw) {
 		String sql = "SELECT userid FROM users WHERE(id='" + hashedid + "'AND psw='" + hashedpsw + "');";
 		int codUtente;
 		try {
@@ -236,5 +222,41 @@ public class Users extends DatabaseConnection {
 			codUtente = -1;
 		}
 		return codUtente;
+	}
+
+	public String getIdFromDatabase(int userid) {
+		String sql = "SELECT id FROM users WHERE userid='" + userid + "';";
+		String id;
+		try {
+			getConnection();
+			rs = createStatementAndRSForQuery(sql);
+			rs.first();
+			id = rs.getString("id");
+			closeResultSet();
+			closeStatement();
+			closeConnection();
+		} catch (SQLException e) {
+			//Indica che il codice utente non esiste
+			id = null;
+		}
+		return id;
+	}
+
+	public String getPswFromDatabase(int userid) {
+		String sql = "SELECT psw FROM users WHERE userid='" + userid + "';";
+		String psw;
+		try {
+			getConnection();
+			rs = createStatementAndRSForQuery(sql);
+			rs.first();
+			psw = rs.getString("psw");
+			closeResultSet();
+			closeStatement();
+			closeConnection();
+		} catch (SQLException e) {
+			//Indica che il codice utente non esiste
+			psw = null;
+		}
+		return psw;
 	}
 }

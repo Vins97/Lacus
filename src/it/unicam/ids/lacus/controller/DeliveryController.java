@@ -31,11 +31,8 @@ public class DeliveryController {
 
 	@FXML
 	public void accept() {
-		Alerts alert = new Alerts();
-		if(alert.printDeliveryPrompt()) {
-			if(createCarrierStage()) {
-				CarrierController.shipmentid = shipmentid;
-			}
+		if(createCarrierStage()) {
+			CarrierController.shipmentid = shipmentid;
 		}
 	}
 

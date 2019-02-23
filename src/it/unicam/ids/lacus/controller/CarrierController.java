@@ -34,13 +34,20 @@ public class CarrierController {
 		Alerts alert = new Alerts();
 		if(sc.revenueChecker(txtRevenueCarrier.getText())) {
 			if(sc.dateChecker(dateCarryCarrier.getValue()) && sc.dateChecker(dateArrivalCarrier.getValue())) {
-				Date datecarry = Date.valueOf(dateCarryCarrier.getValue());
-				Date dateship = Date.valueOf(dateArrivalCarrier.getValue());
-				Shipment shipment = new Shipment();
-				Users user = new Users();
-				shipment.confirmDelivery(shipmentid, user.getCod(user.getId(), user.getPsw()), Double.parseDouble(txtRevenueCarrier.getText()), datecarry, dateship);
-				alert.printDeliveryAcceptedMessage();
-				close();
+				if(alert.printDeliveryPrompt()) {
+					Date datecarry = Date.valueOf(dateCarryCarrier.getValue());
+					Date dateship = Date.valueOf(dateArrivalCarrier.getValue());
+					Shipment shipment = new Shipment();
+					Users user = new Users();
+					if(shipment.deliveryAvailable(shipmentid)) {
+						shipment.confirmDelivery(shipmentid, user.getUserid(), Double.parseDouble(txtRevenueCarrier.getText()), datecarry, dateship);
+						alert.printDeliveryAcceptedMessage();
+						close();
+					}
+					else {
+						alert.printDeliveryAlreadyAcceptedMessage();
+					}
+				}
 			}
 			else {
 				alert.printInvalidDateMessage();

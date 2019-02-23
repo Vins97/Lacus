@@ -52,10 +52,18 @@ class RequestController {
 				}
 			}
 			else {
-				double payment = shipment.getPayment(shipmentid);
-				if(alert.printPaymentPrompt(payment)) {
-					if(createPaymentStage()) {
-						PaymentController.shipmentid = shipmentid;
+				if(shipment.paymentRequestPaid(shipmentid)) {
+					alert.printPaymentOfferAlreadyAcceptedMessage();
+				}
+				else if(shipment.deliveryAvailable(shipmentid)) {
+					alert.printPaymentOfferAlreadyRefusedMessage();
+				}
+				else {
+					double payment = shipment.getPayment(shipmentid);
+					if(alert.printPaymentPrompt(payment)) {
+						if(createPaymentStage()) {
+							PaymentController.shipmentid = shipmentid;
+						}
 					}
 				}
 			}
@@ -81,9 +89,17 @@ class RequestController {
 				}
 			}
 			else {
-				if(alert.printRefusePaymentPrompt()) {
-					shipment.refusePayment(shipmentid);
-					alert.printPaymentRefusedMessage();
+				if(shipment.paymentRequestPaid(shipmentid)) {
+					alert.printPaymentOfferAlreadyAcceptedMessage();
+				}
+				else if(shipment.deliveryAvailable(shipmentid)) {
+					alert.printPaymentOfferAlreadyRefusedMessage();
+				}
+				else {
+					if(alert.printRefusePaymentPrompt()) {
+						shipment.refusePayment(shipmentid);
+						alert.printPaymentOfferRefusedMessage();
+					}
 				}
 			}
 		}

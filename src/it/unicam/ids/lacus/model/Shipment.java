@@ -237,15 +237,47 @@ public class Shipment extends DatabaseConnection {
 	}
 
 	public ResultSet deliveriesList(int id) {
-		String sql = "SELECT * FROM shipment WHERE NOT(sender_id='" + id + "' OR recipient_id='" + id + "') AND status='2'";
+		String sql = "SELECT * FROM shipment WHERE NOT(sender_id='" + id + "' OR recipient_id='" + id + "') AND status='2';";
 		getConnection();
 		return createStatementAndRSForQuery(sql);
 	}
 
 	public ResultSet myShipments(int id) {
-		String sql = "SELECT * FROM shipment WHERE (carrier_id='" + id + "' OR sender_id='" + id + "' OR recipient_id='" + id + "')";
+		String sql = "SELECT * FROM shipment WHERE (carrier_id='" + id + "' OR sender_id='" + id + "' OR recipient_id='" + id + "');";
 		getConnection();
 		return createStatementAndRSForQuery(sql);
+	}
+
+	public boolean paymentRequestPaid(String shipmentid) {
+		String sql = "SELECT * FROM shipment WHERE shipment_id='" + shipmentid + "';";
+		getConnection();
+		ResultSet rs = createStatementAndRSForQuery(sql);
+		boolean result = false;
+		try {
+			rs.first();
+			result = rs.getString("status").compareTo("4") == 0;
+		}
+		catch(SQLException e) {
+			Alerts alert = new Alerts();
+			alert.printDatabaseConnectionError();
+		}
+		return result;
+	}
+
+	public boolean deliveryAvailable(String shipmentid) {
+		String sql = "SELECT * FROM shipment WHERE shipment_id='" + shipmentid + "';";
+		getConnection();
+		ResultSet rs = createStatementAndRSForQuery(sql);
+		boolean result = false;
+		try {
+			rs.first();
+			result = rs.getString("status").compareTo("2") == 0;
+		}
+		catch(SQLException e) {
+			Alerts alert = new Alerts();
+			alert.printDatabaseConnectionError();
+		}
+		return result;
 	}
 
 	public void confirmDelivery(String shipmentid, int carrier, double payment, Date shipping, Date arrival) {
@@ -256,12 +288,19 @@ public class Shipment extends DatabaseConnection {
 
 	public String setStatus(String status) {
 		switch(Integer.parseInt(status)) {
+			//Non accettata dal destinatario o annullata da mittente o destinatario prima del pagamento
 			case 0: return "Annullata";
+			//Creata dal mittente e in attesa che il destinatario la confermi tramite la sezione "Richieste"
 			case 1: return "In attesa del destinatario";
+			//Aggiunta alla lista delle consegne, cioè in attesa che un corriere la scelga
 			case 2: return "In attesa del corriere";
+			//Scelta da un corriere, ovvero in attesa che il mittente la paghi tramite la sezione "Richieste"
 			case 3: return "In attesa di pagamento";
+			//Pagata, in attesa che il corriere si presenti dal mittente per recuperare il pacco
 			case 4: return "In attesa di ritiro";
+			//Recuperato il pacco, in viaggio tramite corriere
 			case 5: return "In transito";
+			//Consegnata al destinatario
 			case 6: return "Consegnata";
 		}
 		return "Sconosciuto";

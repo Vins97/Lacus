@@ -109,12 +109,15 @@ public class StringChecker {
 	}
 
 	public boolean dateChecker(LocalDate data) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.HOUR_OF_DAY, 0);
-		calendar.set(Calendar.MINUTE, 0);
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MILLISECOND, 0);
-		return !Date.from(Instant.from(data.atStartOfDay(ZoneId.systemDefault()))).before(calendar.getTime());
+		if(data != null) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.set(Calendar.MILLISECOND, 0);
+			return !Date.from(Instant.from(data.atStartOfDay(ZoneId.systemDefault()))).before(calendar.getTime());
+		}
+		return false;
 	}
 
 	String dateConverter(String date) {
