@@ -280,8 +280,8 @@ public class Shipment extends DatabaseConnection {
 		return result;
 	}
 
-	public void confirmDelivery(String shipmentid, int carrier, double payment, Date shipping, Date arrival) {
-		String sql = "UPDATE shipment SET status='3', carrier_id='" + carrier + "', payment='" + payment + "', date_shipping='" + shipping + "', date_arrival='" + arrival + "' WHERE shipment_id='" + shipmentid + "';";
+	public void confirmDelivery(String shipmentid, int carrier, String iban, double payment, Date shipping, Date arrival) {
+		String sql = "UPDATE shipment SET status='3', carrier_id='" + carrier + "', carrier_iban='" + iban + "', payment='" + payment + "', date_shipping='" + shipping + "', date_arrival='" + arrival + "' WHERE shipment_id='" + shipmentid + "';";
 		getConnection();
 		createStatementForUpdate(sql);
 	}

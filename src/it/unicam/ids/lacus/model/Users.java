@@ -200,6 +200,27 @@ public class Users extends DatabaseConnection {
 
 	}
 
+	//Ottiene le info del profilo dell'utente e le usa per impostare una spedizione
+	public String[] getDefaultProfileInfo(int userid) {
+		String sql = "SELECT * FROM users WHERE userid='" + userid + "';";
+		String[] info = new String[3];
+		try {
+			getConnection();
+			rs = createStatementAndRSForQuery(sql);
+			rs.first();
+			info[0] = rs.getString("city");
+			info[1] = rs.getString("street");
+			info[2] = rs.getString("street_number");
+			closeResultSet();
+			closeStatement();
+			closeConnection();
+		} catch (SQLException e) {
+			Alerts alert = new Alerts();
+			alert.printDatabaseConnectionError();
+		}
+		return info;
+	}
+
 	//Verifica che due password siano uguali (ai fini della registrazione o del cambio password)
 	public boolean verifyPasswordMatch(String psw, String conf_psw) {
 		return psw.compareTo(conf_psw) == 0;

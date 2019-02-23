@@ -20,45 +20,51 @@
             <Font size="36.0" />
          </font>
       </Label>
-      <Label layoutX="19.0" layoutY="100.0" text="Inserisci il compenso che desideri per la consegna" textFill="WHITE">
+      <Label layoutX="19.0" layoutY="80.0" text="Inserisci il compenso che desideri per la consegna" textFill="WHITE">
          <font>
             <Font name="NexaLight" size="21.0" />
          </font>
       </Label>
-      <Label layoutX="67.0" layoutY="165.0" text="Compenso" textFill="WHITE">
+      <Label layoutX="67.0" layoutY="135.0" text="Compenso" textFill="WHITE">
          <font>
             <Font name="NexaLight" size="21.0" />
          </font>
       </Label>
-      <TextField fx:id="txtRevenueCarrier" alignment="CENTER" layoutX="200.0" layoutY="161.0" prefHeight="40.0" prefWidth="235.0" promptText="5.00" />
-      <Label layoutX="450.0" layoutY="165.0" text="€" textFill="WHITE">
+      <TextField fx:id="txtRevenueCarrier" alignment="CENTER" layoutX="200.0" layoutY="130.0" prefHeight="40.0" prefWidth="235.0" promptText="5.00" />
+      <Label layoutX="450.0" layoutY="135.0" text="€" textFill="WHITE">
          <font>
             <Font name="NexaLight" size="21.0" />
          </font>
       </Label>
-      <Label layoutX="42.0" layoutY="225.0" text="Inserisci le date garantite di ritiro e consegna" textFill="WHITE">
+      <Label layoutX="93.0" layoutY="195.0" text="IBAN" textFill="WHITE">
          <font>
             <Font name="NexaLight" size="21.0" />
          </font>
       </Label>
-      <Label layoutX="92.0" layoutY="285.0" text="Ritiro" textFill="WHITE">
+      <TextField fx:id="txtIBANCarrier" alignment="CENTER" layoutX="200.0" layoutY="190.0" prefHeight="40.0" prefWidth="235.0" />
+      <Label layoutX="42.0" layoutY="250.0" text="Inserisci le date garantite di ritiro e consegna" textFill="WHITE">
          <font>
             <Font name="NexaLight" size="21.0" />
          </font>
       </Label>
-      <DatePicker fx:id="dateCarryCarrier" layoutX="200.0" layoutY="280.0" prefHeight="40.0" prefWidth="235.0" />
-      <Label layoutX="70.0" layoutY="355.0" text="Consegna" textFill="WHITE">
+      <Label layoutX="92.0" layoutY="305.0" text="Ritiro" textFill="WHITE">
          <font>
             <Font name="NexaLight" size="21.0" />
          </font>
       </Label>
-      <DatePicker fx:id="dateArrivalCarrier" layoutX="200.0" layoutY="350.0" prefHeight="40.0" prefWidth="235.0" />
-      <Button fx:id="btnCarrierConfirm" layoutX="29.0" layoutY="419.0" mnemonicParsing="false" onAction="#confirm" prefHeight="45.0" prefWidth="175.0" style="-fx-background-color: #313335;" text="Conferma" textFill="WHITE">
+      <DatePicker fx:id="dateCarryCarrier" layoutX="200.0" layoutY="300.0" prefHeight="40.0" prefWidth="235.0" />
+      <Label layoutX="70.0" layoutY="365.0" text="Consegna" textFill="WHITE">
+         <font>
+            <Font name="NexaLight" size="21.0" />
+         </font>
+      </Label>
+      <DatePicker fx:id="dateArrivalCarrier" layoutX="200.0" layoutY="360.0" prefHeight="40.0" prefWidth="235.0" />
+      <Button fx:id="btnCarrierConfirm" layoutX="50.0" layoutY="425.0" mnemonicParsing="false" onAction="#confirm" prefHeight="45.0" prefWidth="175.0" style="-fx-background-color: #313335;" text="Conferma" textFill="WHITE">
          <font>
             <Font name="NexaLight" size="21.0" />
          </font>
       </Button>
-      <Button fx:id="btnCancelCarrier" layoutX="260.0" layoutY="419.0" mnemonicParsing="false" onAction="#close" prefHeight="45.0" prefWidth="175.0" style="-fx-background-color: #313335;" text="Annulla" textFill="WHITE">
+      <Button fx:id="btnCancelCarrier" layoutX="275.0" layoutY="425.0" mnemonicParsing="false" onAction="#close" prefHeight="45.0" prefWidth="175.0" style="-fx-background-color: #313335;" text="Annulla" textFill="WHITE">
          <font>
             <Font name="NexaLight" size="21.0" />
          </font>

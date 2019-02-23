@@ -119,6 +119,10 @@ public class HomeController {
 	@FXML
 	public Button btnRefreshDel, btnRefreshShip, btnRefreshReq;
 
+	//Checkbox nuova spedizione
+	@FXML
+	private CheckBox checkUsaDatiProfilo;
+
     private void initializeHomePanel(){
         lblTitle.setText("Riepilogo");
 		Users user = new Users();
@@ -490,6 +494,28 @@ public class HomeController {
 		txtCittaProf.clear();
 		txtIndirizzoProf.clear();
 		txtNumeroProf.clear();
+	}
+
+	@FXML
+	private void checkBoxSelected() {
+    	if(checkUsaDatiProfilo.isSelected()) {
+			Users user = new Users();
+			String[] info = user.getDefaultProfileInfo(user.getUserid());
+    		txtCittaMittenteSped.setEditable(false);
+    		txtCittaMittenteSped.setText(info[0]);
+			txtIndirizzoMittenteSped.setEditable(false);
+			txtIndirizzoMittenteSped.setText(info[1]);
+			txtNumeroMittenteSped.setEditable(false);
+			txtNumeroMittenteSped.setText(info[2]);
+		}
+    	else {
+			txtCittaMittenteSped.setEditable(true);
+			txtCittaMittenteSped.setText("");
+			txtIndirizzoMittenteSped.setEditable(true);
+			txtIndirizzoMittenteSped.setText("");
+			txtNumeroMittenteSped.setEditable(true);
+			txtNumeroMittenteSped.setText("");
+		}
 	}
 
 	private void editProfile() {

@@ -21,7 +21,7 @@ public class CarrierController {
 	private Button btnCarrierConfirm, btnCancelCarrier;
 
 	@FXML
-	private TextField txtRevenueCarrier;
+	private TextField txtRevenueCarrier, txtIBANCarrier;
 
 	@FXML
 	private DatePicker dateCarryCarrier, dateArrivalCarrier;
@@ -33,24 +33,36 @@ public class CarrierController {
 		StringChecker sc = new StringChecker();
 		Alerts alert = new Alerts();
 		if(sc.revenueChecker(txtRevenueCarrier.getText())) {
-			if(sc.dateChecker(dateCarryCarrier.getValue()) && sc.dateChecker(dateArrivalCarrier.getValue())) {
-				if(alert.printDeliveryPrompt()) {
-					Date datecarry = Date.valueOf(dateCarryCarrier.getValue());
-					Date dateship = Date.valueOf(dateArrivalCarrier.getValue());
-					Shipment shipment = new Shipment();
-					Users user = new Users();
-					if(shipment.deliveryAvailable(shipmentid)) {
-						shipment.confirmDelivery(shipmentid, user.getUserid(), Double.parseDouble(txtRevenueCarrier.getText()), datecarry, dateship);
-						alert.printDeliveryAcceptedMessage();
-						close();
+			switch(sc.characterAndNumberChecker(txtIBANCarrier.getText())) {
+				case 0: {
+					alert.printEmptyFieldsMessage();
+					return;
+				}
+				case -1: {
+					alert.printInvalidCharactersMessage();
+					return;
+				}
+				case 1: {
+					if(sc.dateChecker(dateCarryCarrier.getValue()) && sc.dateChecker(dateArrivalCarrier.getValue())) {
+						if(alert.printDeliveryPrompt()) {
+							Date datecarry = Date.valueOf(dateCarryCarrier.getValue());
+							Date dateship = Date.valueOf(dateArrivalCarrier.getValue());
+							Shipment shipment = new Shipment();
+							Users user = new Users();
+							if(shipment.deliveryAvailable(shipmentid)) {
+								shipment.confirmDelivery(shipmentid, user.getUserid(), txtIBANCarrier.getText(), Double.parseDouble(txtRevenueCarrier.getText()), datecarry, dateship);
+								alert.printDeliveryAcceptedMessage();
+								close();
+							}
+							else {
+								alert.printDeliveryAlreadyAcceptedMessage();
+							}
+						}
 					}
 					else {
-						alert.printDeliveryAlreadyAcceptedMessage();
+						alert.printInvalidDateMessage();
 					}
 				}
-			}
-			else {
-				alert.printInvalidDateMessage();
 			}
 		}
 		else {

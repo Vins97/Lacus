@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringChecker {
-	int characterAndNumberChecker(String s) {
+	public int characterAndNumberChecker(String s) {
 		if (s == null || s.trim().isEmpty())
 			return 0; //La stringa è vuota
 		Pattern p = Pattern.compile("[^A-Za-z0-9]");
