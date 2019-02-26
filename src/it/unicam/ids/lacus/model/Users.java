@@ -35,10 +35,10 @@ public class Users extends DatabaseConnection {
 		}
 	}
 
-	public boolean checkText(String firstname, String surname, String id, String psw, String email, String cf, String city, String street, String street_number, boolean empty_allowed) {
+	public boolean checkText(String[] user, boolean empty_allowed) {
 		//Raggruppa le stringhe per tipo (quelle che devono contenere solo lettere e quelle che possono contenere lettere e numeri)
-		String[] characters = {firstname, surname, city, street};
-		String[] charandnumb = {id, psw, cf};
+		String[] characters = {user[0], user[1], user[6], user[7]};
+		String[] charandnumb = {user[2], user[3], user[5]};
 		StringChecker check = new StringChecker();
 		Alerts alert = new Alerts();
 		//Controlla le stringhe che devono contenere solo lettere o spazi
@@ -74,12 +74,21 @@ public class Users extends DatabaseConnection {
 			}
 		}
 		//Controlla che la città sia corretta
-		if(!check.cityChecker(city)) {
-			alert.printUnknownCityMessage();
-			return false;
+		switch (check.cityChecker(user[6])) {
+			case 0: {
+				if(!empty_allowed) {
+					alert.printEmptyFieldsMessage();
+					return false;
+				}
+				break;
+			}
+			case -1: {
+				alert.printUnknownCityMessage();
+				return false;
+			}
 		}
 		//Controlla la correttezza dell'email
-		switch(check.emailChecker(email)) {
+		switch(check.emailChecker(user[4])) {
 			case 0: {
 				if(!empty_allowed) {
 					alert.printEmptyFieldsMessage();
@@ -97,7 +106,7 @@ public class Users extends DatabaseConnection {
 			}
 		}
 		//Controlla la correttezza del numero della via
-		switch(check.numberOnlyChecker(street_number)) {
+		switch(check.numberOnlyChecker(user[8])) {
 			case 0: {
 				if(!empty_allowed) {
 					alert.printEmptyFieldsMessage();
@@ -113,13 +122,13 @@ public class Users extends DatabaseConnection {
 		return true;
 	}
 
-	public boolean registerUser(String firstname, String surname, String id, String psw, String conf_psw, String email, String cf, String city, String street, String street_number) {
+	public boolean registerUser(String[] user, String conf_psw) {
 		Alerts alert = new Alerts();
-		if(checkText(firstname, surname, id, psw, email, cf, city , street, street_number, false)) {
-			if(!verifyPasswordMatch(psw, conf_psw)) {
+		if(checkText(user, false)) {
+			if(!verifyPasswordMatch(user[3], conf_psw)) {
 				alert.printNoPasswordMatchMessage();
 			}
-			else if(addUser(firstname, surname, id, psw, email, cf, city, street, street_number)) {
+			else if(addUser(user)) {
 				alert.printRegisteredUserMessage();
 				return true;
 			}
@@ -130,13 +139,13 @@ public class Users extends DatabaseConnection {
 		return false;
 	}
 
-	private boolean addUser(String firstname, String surname, String id, String psw, String email, String cf, String city, String street, String street_number) {
+	private boolean addUser(String[] user) {
 		//BUILDER PATTERN TO IMPLEMENT
 		String sql = "INSERT INTO users (firstname, surname, id, psw, email, cf, city, street, street_number) VALUES " + "('"
-				+ Hash.getMd5(firstname) + "','" + Hash.getMd5(surname) + "','" + Hash.getMd5(id) + "','" + Hash.getMd5(psw)
-				+ "','" + Hash.getMd5(email) + "','" + cf + "','" + city + "','" + street + "','" + street_number + "');";
+				+ Hash.getMd5(user[0]) + "','" + Hash.getMd5(user[1]) + "','" + Hash.getMd5(user[2]) + "','" + Hash.getMd5(user[3])
+				+ "','" + Hash.getMd5(user[4]) + "','" + user[5] + "','" + user[6] + "','" + user[7] + "','" + user[8] + "');";
 		//Controllo che il codice fiscale e la coppia id/password non siano già registrati
-		if (verifyNewCF(cf) && !searchUser(Hash.getMd5(id), Hash.getMd5(psw))) {
+		if (verifyNewCF(user[5]) && !searchUser(Hash.getMd5(user[2]), Hash.getMd5(user[3]))) {
 			try {
 				getConnection();
 				stmt = conn.createStatement();

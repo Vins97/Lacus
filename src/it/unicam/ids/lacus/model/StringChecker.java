@@ -85,11 +85,19 @@ public class StringChecker {
 			return -1; //La stringa non è valida
 	}
 
-	boolean cityChecker(String city) {
+	int cityChecker(String city) {
+		if (city == null || city.trim().isEmpty()) {
+			return 0; //La stringa è vuota
+		}
 		// ESEGUO LA QUERY SUL DATABASE
 		String sql = "SELECT * FROM cities WHERE city='" + city + "';";
 		DatabaseOperation cityOperation = new DatabaseOperation();
-		return cityOperation.searchElement(sql);
+		if(cityOperation.searchElement(sql)) {
+			return 1; //La stringa è valida
+		}
+		else {
+			return -1; //La stringa non è valida
+		}
 	}
 
 	boolean idChecker(String id) {

@@ -1,8 +1,7 @@
 package it.unicam.ids.lacus.controller;
 import it.unicam.ids.lacus.Main;
 import it.unicam.ids.lacus.database.DatabaseOperation;
-import it.unicam.ids.lacus.model.Shipment;
-import it.unicam.ids.lacus.model.Hash;
+import it.unicam.ids.lacus.model.*;
 import it.unicam.ids.lacus.view.Alerts;
 import javafx.scene.control.*;
 
@@ -14,13 +13,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import it.unicam.ids.lacus.model.Login;
 
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import it.unicam.ids.lacus.model.Users;
 
 public class HomeController {
 
@@ -402,7 +398,8 @@ public class HomeController {
             registerPanel();
         }
         if(event.getSource() == btnRegisterReg){
-            if(user.registerUser(txtNomeReg.getText(), txtCognomeReg.getText(), txtUsernameReg.getText(), txtPasswordReg.getText(), txtConfermaPasswordReg.getText(), txtEmailReg.getText(), txtCodiceFiscaleReg.getText(), txtCittaReg.getText(), txtIndirizzoReg.getText(), txtNumeroReg.getText())) {
+			String[] utente = {txtNomeReg.getText(), txtCognomeReg.getText(), txtUsernameReg.getText(), txtPasswordReg.getText(), txtEmailReg.getText(), txtCodiceFiscaleReg.getText(), txtCittaReg.getText(), txtIndirizzoReg.getText(), txtNumeroReg.getText()};
+            if(user.registerUser(utente, txtConfermaPasswordReg.getText())) {
 				clearRegFields();
             	loginPanel();
 			}
@@ -420,7 +417,8 @@ public class HomeController {
 		}
 		if(event.getSource() == btnCreaSpedizioneSped){
 			Shipment shipment = new Shipment();
-			if(shipment.addShipment(txtDescrizioneShip.getText(), txtCodiceMittenteSped.getText(), txtCittaMittenteSped.getText(), txtIndirizzoMittenteSped.getText(), txtNumeroMittenteSped.getText(), txtCodiceDestinatarioSped.getText(), txtCittaDestinatarioSped.getText(), txtIndirizzoDestinatarioSped.getText(), txtNumeroDestinatarioSped.getText())) {
+			String[] ship = {txtDescrizioneShip.getText(), txtCodiceMittenteSped.getText(), txtCittaMittenteSped.getText(), txtIndirizzoMittenteSped.getText(), txtNumeroMittenteSped.getText(), txtCodiceDestinatarioSped.getText(), txtCittaDestinatarioSped.getText(), txtIndirizzoDestinatarioSped.getText(), txtNumeroDestinatarioSped.getText()};
+			if(shipment.addShipment(ship)) {
 				dashPanel();
 				clearNewShipmentFields();
 			}
@@ -521,7 +519,8 @@ public class HomeController {
 	private void editProfile() {
 		Users user = new Users();
 		Alerts alert = new Alerts();
-		if(!user.checkText(txtNomeProf.getText(), txtCognomeProf.getText(), txtUsernameProf.getText(), txtPasswordProf.getText(), txtEmailProf.getText(), txtCodiceFiscaleProf.getText(), txtCittaProf.getText(), txtIndirizzoProf.getText(), txtNumeroProf.getText(), true)) {
+		String[] utente = {txtNomeProf.getText(), txtCognomeProf.getText(), txtUsernameProf.getText(), txtPasswordProf.getText(), txtEmailProf.getText(), txtCodiceFiscaleProf.getText(), txtCittaProf.getText(), txtIndirizzoProf.getText(), txtNumeroProf.getText()};
+		if(!user.checkText(utente, true)) {
 			return;
 		}
 		if(!txtNomeProf.getText().trim().isEmpty()) {

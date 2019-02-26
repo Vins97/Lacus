@@ -20,14 +20,14 @@ public class Shipment extends DatabaseConnection {
 	6 - Spedizione consegnata
 	*/
 
-	public boolean addShipment(String description, String sender_id, String sender_city, String sender_street, String sender_street_number, String recipient_id, String recipient_city, String recipient_street, String recipient_street_number) {
+	public boolean addShipment(String[] shipment) {
 		Alerts alert = new Alerts();
-		if((checkShipmentSpelling(description, sender_city, sender_street, sender_street_number, recipient_id, recipient_city, recipient_street, recipient_street_number))) {
-			if(checkDataConsistency(sender_id, sender_city, recipient_id, recipient_city)) {
+		if((checkShipmentSpelling(shipment))) {
+			if(checkDataConsistency(shipment[1], shipment[2], shipment[5], shipment[6])) {
 				String sql = "INSERT INTO shipment(status, description, sender_id, sender_city, sender_street, sender_street_number,"
-						+ "carrier_id, recipient_id, recipient_city, recipient_street, recipient_street_number) values ('1','" + description + "','"
-						+ sender_id + "','" + sender_city + "','" + sender_street + "','" + sender_street_number + "', '-2', '" + recipient_id + "','"
-						+ recipient_city + "','" + recipient_street + "','" + recipient_street_number + "')";
+						+ "carrier_id, recipient_id, recipient_city, recipient_street, recipient_street_number) values ('1','" + shipment[0] + "','"
+						+ shipment[1] + "','" + shipment[2] + "','" + shipment[3] + "','" + shipment[4] + "', '-2', '" + shipment[5] + "','"
+						+ shipment[6] + "','" + shipment[7] + "','" + shipment[8] + "')";
 				getConnection();
 				createStatementForUpdate(sql);
 				alert.printShipmentAddedMessage();
@@ -37,14 +37,14 @@ public class Shipment extends DatabaseConnection {
 		return false;
 	}
 
-	private boolean checkShipmentSpelling(String description, String sender_city, String sender_street, String sender_street_number, String recipient_id, String recipient_city, String recipient_street, String recipient_street_number) {
+	private boolean checkShipmentSpelling(String[] shipment) {
 		//Raggruppa le stringhe per tipo (quelle che devono contenere solo lettere e quelle che possono contenere lettere e numeri)
-		String[] characters = {sender_city, sender_street, recipient_city, recipient_street};
-		String[] numbers = {sender_street_number, recipient_id, recipient_street_number};
+		String[] characters = {shipment[2], shipment[3], shipment[6], shipment[7]};
+		String[] numbers = {shipment[4], shipment[5], shipment[8]};
 		StringChecker check = new StringChecker();
 		Alerts alert = new Alerts();
 		//Controllo la correttezza della descrizione
-		switch(check.characterNumberAndSpacesChecker(description)) {
+		switch(check.characterNumberAndSpacesChecker(shipment[0])) {
 			case 0: {
 				alert.printEmptyFieldsMessage();
 				return false;
@@ -94,7 +94,7 @@ public class Shipment extends DatabaseConnection {
 			alert.printUnknownIdMessage();
 			return false;
 		}
-		if(citycheck.cityChecker(sender_city) && citycheck.cityChecker(recipient_city)) {
+		if(citycheck.cityChecker(sender_city) == 1 && citycheck.cityChecker(recipient_city) == 1) {
 			return true;
 		}
 		else {
