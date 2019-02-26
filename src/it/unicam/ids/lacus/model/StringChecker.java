@@ -85,6 +85,25 @@ public class StringChecker {
 			return -1; //La stringa non è valida
 	}
 
+	int cfChecker(String cf) {
+		if(cf == null || cf.trim().isEmpty()) {
+			return 0; //La stringa è vuota
+		}
+		if(cf.length() == 16) {
+			boolean flag1 = cf.substring(0,6).matches("[a-zA-Z]+");
+			boolean flag2 = cf.substring(6,8).matches("\\d+");
+			boolean flag3 = Character.isLetter(cf.charAt(8));
+			boolean flag4 = cf.substring(9,11).matches("\\d+");
+			boolean flag5 = Character.isLetter(cf.charAt(11));
+			boolean flag6 = cf.substring(12,15).matches("\\d+");
+			boolean flag7 = Character.isLetter(cf.charAt(15));
+			if(flag1 && flag2 && flag3 && flag4 && flag5 && flag6 && flag7) {
+				return 1; //La stringa è valida
+			}
+		}
+		return -1; //La stringa non è valida
+	}
+
 	int cityChecker(String city) {
 		if (city == null || city.trim().isEmpty()) {
 			return 0; //La stringa è vuota

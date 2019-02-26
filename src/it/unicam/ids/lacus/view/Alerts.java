@@ -59,6 +59,13 @@ public class Alerts {
 		alert.showAndWait();
 	}
 
+	public void printInvalidCFMessage() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		initAlertsStyle(alert);
+		alert.setContentText("Il codice fiscale non è valido!");
+		alert.showAndWait();
+	}
+
 	public void	printNoPasswordMatchMessage() {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		initAlertsStyle(alert);

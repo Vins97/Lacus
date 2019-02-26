@@ -536,7 +536,6 @@ public class HomeController {
 			user.updateUser(sql);
 		}
 		if(!txtUsernameProf.getText().trim().isEmpty()) {
-
 			if(!user.searchUser(Hash.getMd5(txtUsernameProf.getText()), user.getPswFromDatabase(user.getUserid()))) {
 				String sql = "UPDATE users SET id='" + Hash.getMd5(txtUsernameProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
 				user.updateUser(sql);
@@ -552,7 +551,7 @@ public class HomeController {
 				user.updateUser(sql);
 			}
 			else {
-				alert.printCFTakenMessage();
+				alert.printInvalidCFMessage();
 				return;
 			}
 		}

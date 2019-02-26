@@ -38,7 +38,7 @@ public class Users extends DatabaseConnection {
 	public boolean checkText(String[] user, boolean empty_allowed) {
 		//Raggruppa le stringhe per tipo (quelle che devono contenere solo lettere e quelle che possono contenere lettere e numeri)
 		String[] characters = {user[0], user[1], user[6], user[7]};
-		String[] charandnumb = {user[2], user[3], user[5]};
+		String[] charandnumb = {user[2], user[3]};
 		StringChecker check = new StringChecker();
 		Alerts alert = new Alerts();
 		//Controlla le stringhe che devono contenere solo lettere o spazi
@@ -58,7 +58,7 @@ public class Users extends DatabaseConnection {
 			}
 		}
 		//Controlla le stringhe che devono contenere solo lettere o numeri
-		for(int i=0; i<3; i++) {
+		for(int i=0; i<2; i++) {
 			switch(check.characterAndNumberChecker(charandnumb[i])) {
 				case 0: {
 					if(!empty_allowed) {
@@ -73,8 +73,22 @@ public class Users extends DatabaseConnection {
 				}
 			}
 		}
+		//Controlla che il codice fiscale sia corretto
+		switch(check.cfChecker(user[5])) {
+			case 0: {
+				if(!empty_allowed) {
+					alert.printEmptyFieldsMessage();
+					return false;
+				}
+				break;
+			}
+			case -1: {
+				alert.printInvalidCFMessage();
+				return false;
+			}
+		}
 		//Controlla che la città sia corretta
-		switch (check.cityChecker(user[6])) {
+		switch(check.cityChecker(user[6])) {
 			case 0: {
 				if(!empty_allowed) {
 					alert.printEmptyFieldsMessage();
@@ -184,26 +198,32 @@ public class Users extends DatabaseConnection {
 
 	//Controlla che il codice fiscale non sia mai stato inserito: restituisce true se è nuovo o false se è già in uso
 	public boolean verifyNewCF(String cf) {
-		String sql = "SELECT cf FROM users WHERE cf = '" + cf + "';";
+		StringChecker sc = new StringChecker();
 		boolean response = true;
-		try {
-			getConnection();
-			rs = createStatementAndRSForQuery(sql);
-			rs.first();
-			int firstPosition = rs.getRow();
-			rs.last();
-			int lastPosition = rs.getRow();
-			if(firstPosition == 1 && lastPosition == 1) {
-				response = false;
+		if(sc.cfChecker(cf) == 1) {
+			String sql = "SELECT cf FROM users WHERE cf = '" + cf + "';";
+			try {
+				getConnection();
+				rs = createStatementAndRSForQuery(sql);
+				rs.first();
+				int firstPosition = rs.getRow();
+				rs.last();
+				int lastPosition = rs.getRow();
+				if(firstPosition == 1 && lastPosition == 1) {
+					response = false;
+				}
+				// Mi devo posizionare sulla prima riga e devo analizzare l'ID del primo record
+				closeResultSet();
+				closeStatement();
+				closeConnection();
 			}
-			// Mi devo posizionare sulla prima riga e devo analizzare l'ID del primo record
-			closeResultSet();
-			closeStatement();
-			closeConnection();
+			catch (SQLException e) {
+				Alerts alert = new Alerts();
+				alert.printDatabaseConnectionError();
+			}
 		}
-		catch (SQLException e) {
-			Alerts alert = new Alerts();
-			alert.printDatabaseConnectionError();
+		else {
+			return false;
 		}
 		return response;
 
