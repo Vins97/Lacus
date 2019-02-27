@@ -155,11 +155,12 @@ public class Users extends DatabaseConnection {
 
 	private boolean addUser(String[] user) {
 		//BUILDER PATTERN TO IMPLEMENT
+		Hash hash = new Hash();
 		String sql = "INSERT INTO users (firstname, surname, id, psw, email, cf, city, street, street_number) VALUES " + "('"
-				+ Hash.getMd5(user[0]) + "','" + Hash.getMd5(user[1]) + "','" + Hash.getMd5(user[2]) + "','" + Hash.getMd5(user[3])
-				+ "','" + Hash.getMd5(user[4]) + "','" + user[5] + "','" + user[6] + "','" + user[7] + "','" + user[8] + "');";
+				+ hash.getMd5(user[0]) + "','" + hash.getMd5(user[1]) + "','" + hash.getMd5(user[2]) + "','" + hash.getMd5(user[3])
+				+ "','" + hash.getMd5(user[4]) + "','" + user[5] + "','" + user[6] + "','" + user[7] + "','" + user[8] + "');";
 		//Controllo che il codice fiscale e la coppia id/password non siano già registrati
-		if (verifyNewCF(user[5]) && !searchUser(Hash.getMd5(user[2]), Hash.getMd5(user[3]))) {
+		if (verifyNewCF(user[5]) && !searchUser(hash.getMd5(user[2]), hash.getMd5(user[3]))) {
 			try {
 				getConnection();
 				stmt = conn.createStatement();

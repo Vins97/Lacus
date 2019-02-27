@@ -87,13 +87,6 @@ public class Alerts {
 		alert.showAndWait();
 	}
 
-	public void printCFTakenMessage() {
-		Alert alert = new Alert(Alert.AlertType.ERROR);
-		initAlertsStyle(alert);
-		alert.setContentText("Il Codice Fiscale inserito è già in uso!");
-		alert.showAndWait();
-	}
-
 	public void	printInvalidPasswordMessage() {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		initAlertsStyle(alert);

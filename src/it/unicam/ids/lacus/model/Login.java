@@ -27,9 +27,10 @@ public class Login {
 						return false;
 					}
 					case  1: {
+						Hash hash = new Hash();
 						try {
-							if(user.searchUser(Hash.getMd5(id), Hash.getMd5(psw))) {
-								user.setUserid(user.getUseridFromDatabase(Hash.getMd5(id), Hash.getMd5(psw)));
+							if(user.searchUser(hash.getMd5(id), hash.getMd5(psw))) {
+								user.setUserid(user.getUseridFromDatabase(hash.getMd5(id), hash.getMd5(psw)));
 								return true;
 							}
 							alert.printLoginErrorMessage();

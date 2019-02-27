@@ -42,7 +42,7 @@ public class Main extends Application {
 		primaryStage.show();
 	}
 
-	public void minimize() {
+	public static void minimize() {
 		primaryStage.setIconified(true);
 	}
 

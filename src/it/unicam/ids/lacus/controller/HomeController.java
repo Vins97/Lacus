@@ -382,8 +382,7 @@ public class HomeController {
 
 	@FXML
 	void btnMinimizeAction() {
-		Main main = new Main();
-		main.minimize();
+		Main.minimize();
 	}
 
     @FXML
@@ -519,25 +518,26 @@ public class HomeController {
 	private void editProfile() {
 		Users user = new Users();
 		Alerts alert = new Alerts();
+		Hash hash = new Hash();
 		String[] utente = {txtNomeProf.getText(), txtCognomeProf.getText(), txtUsernameProf.getText(), txtPasswordProf.getText(), txtEmailProf.getText(), txtCodiceFiscaleProf.getText(), txtCittaProf.getText(), txtIndirizzoProf.getText(), txtNumeroProf.getText()};
 		if(!user.checkText(utente, true)) {
 			return;
 		}
 		if(!txtNomeProf.getText().trim().isEmpty()) {
-			String sql = "UPDATE users SET firstname='" + Hash.getMd5(txtNomeProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
+			String sql = "UPDATE users SET firstname='" + hash.getMd5(txtNomeProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
 			user.updateUser(sql);
 		}
 		if(!txtCognomeProf.getText().trim().isEmpty()) {
-			String sql = "UPDATE users SET surname='" + Hash.getMd5(txtCognomeProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
+			String sql = "UPDATE users SET surname='" + hash.getMd5(txtCognomeProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
 			user.updateUser(sql);
 		}
 		if(!txtEmailProf.getText().trim().isEmpty()) {
-			String sql = "UPDATE users SET email='" + Hash.getMd5(txtEmailProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
+			String sql = "UPDATE users SET email='" + hash.getMd5(txtEmailProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
 			user.updateUser(sql);
 		}
 		if(!txtUsernameProf.getText().trim().isEmpty()) {
-			if(!user.searchUser(Hash.getMd5(txtUsernameProf.getText()), user.getPswFromDatabase(user.getUserid()))) {
-				String sql = "UPDATE users SET id='" + Hash.getMd5(txtUsernameProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
+			if(!user.searchUser(hash.getMd5(txtUsernameProf.getText()), user.getPswFromDatabase(user.getUserid()))) {
+				String sql = "UPDATE users SET id='" + hash.getMd5(txtUsernameProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
 				user.updateUser(sql);
 			}
 			else {
@@ -570,7 +570,7 @@ public class HomeController {
 		if(!txtPasswordProf.getText().trim().isEmpty()) {
 			if(user.verifyPasswordMatch(txtPasswordProf.getText(), txtConfermaPasswordProf.getText())) {
 				if(!user.searchUser(user.getIdFromDatabase(user.getUserid()), txtPasswordProf.getText())) {
-					String sql = "UPDATE users SET psw='" + Hash.getMd5(txtPasswordProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
+					String sql = "UPDATE users SET psw='" + hash.getMd5(txtPasswordProf.getText()) + "' WHERE userid='" + user.getUserid() + "'";
 					user.updateUser(sql);
 				}
 				else {
